@@ -1,0 +1,370 @@
+
+Discarded input sections
+
+ .text          0x00000000        0x0 FCCutils.o
+ .data          0x00000000        0x0 FCCutils.o
+ .bss           0x00000000        0x0 FCCutils.o
+ .debug_abbrev  0x00000000       0x16 FCCutils.o
+ .debug_info    0x00000000       0x29 FCCutils.o
+ .debug_line    0x00000000       0x40 FCCutils.o
+ .debug_macinfo
+                0x00000000      0xda2 FCCutils.o
+ .debug_str     0x00000000       0x5b FCCutils.o
+ .comment       0x00000000       0x31 FCCutils.o
+ .text          0x00000000        0x0 FCC project.o
+ .data          0x00000000        0x0 FCC project.o
+ .bss           0x00000000        0x8 FCC project.o
+ .debug_abbrev  0x00000000      0x155 FCC project.o
+ .debug_info    0x00000000      0x746 FCC project.o
+ .debug_line    0x00000000      0x2a7 FCC project.o
+ .debug_macinfo
+                0x00000000   0x12f3ec FCC project.o
+ .text.main     0x00000000       0x3c FCC project.o
+ .debug_frame   0x00000000       0x20 FCC project.o
+ .debug_pubnames
+                0x00000000       0x31 FCC project.o
+ .debug_aranges
+                0x00000000       0x20 FCC project.o
+ .debug_ranges  0x00000000       0x18 FCC project.o
+ .debug_str     0x00000000      0x33b FCC project.o
+ .comment       0x00000000       0x31 FCC project.o
+
+Memory Configuration
+
+Name             Origin             Length             Attributes
+FLASH            0x80000000         0x00010000         axrl !w
+CPUSRAM          0x00000004         0x00003ffc         axw !rl
+USERPAGE         0x80800000         0x00000200
+FACTORYPAGE      0x80800200         0x00000200
+FLASHVAULT_FLASH_SIZE 0x80800400         0x00000008         r
+FLASHVAULT_RAM_SIZE 0x80800408         0x00000008         r
+*default*        0x00000000         0xffffffff
+
+Linker script and memory map
+
+                0x00001000                _stack_size = 0x1000
+LOAD FCCutils.o
+LOAD FCC project.o
+START GROUP
+LOAD c:/program files (x86)/atmel/studio/7.0/toolchain/avr32/avr32-gnu-toolchain/bin/../lib/gcc/avr32/4.4.7/../../../../avr32/lib/ucr3fp\libm.a
+END GROUP
+                0x80000000                PROVIDE (__executable_start, 0x80000000)
+                0x80000000                . = 0x80000000
+
+.interp
+ *(.interp)
+
+.reset
+ *(.reset)
+
+.hash
+ *(.hash)
+
+.dynsym
+ *(.dynsym)
+
+.dynstr
+ *(.dynstr)
+
+.gnu.version
+ *(.gnu.version)
+
+.gnu.version_d
+ *(.gnu.version_d)
+
+.gnu.version_r
+ *(.gnu.version_r)
+
+.rel.init
+ *(.rel.init)
+
+.rela.init
+ *(.rela.init)
+
+.rel.text
+ *(.rel.text .rel.text.* .rel.gnu.linkonce.t.*)
+
+.rela.text
+ *(.rela.text .rela.text.* .rela.gnu.linkonce.t.*)
+
+.rel.fini
+ *(.rel.fini)
+
+.rela.fini
+ *(.rela.fini)
+
+.rel.rodata
+ *(.rel.rodata .rel.rodata.* .rel.gnu.linkonce.r.*)
+
+.rela.rodata
+ *(.rela.rodata .rela.rodata.* .rela.gnu.linkonce.r.*)
+
+.rel.data.rel.ro
+ *(.rel.data.rel.ro*)
+
+.rela.data.rel.ro
+ *(.rel.data.rel.ro*)
+
+.rel.data
+ *(.rel.data .rel.data.* .rel.gnu.linkonce.d.*)
+
+.rela.data
+ *(.rela.data .rela.data.* .rela.gnu.linkonce.d.*)
+
+.rel.tdata
+ *(.rel.tdata .rel.tdata.* .rel.gnu.linkonce.td.*)
+
+.rela.tdata
+ *(.rela.tdata .rela.tdata.* .rela.gnu.linkonce.td.*)
+
+.rel.tbss
+ *(.rel.tbss .rel.tbss.* .rel.gnu.linkonce.tb.*)
+
+.rela.tbss
+ *(.rela.tbss .rela.tbss.* .rela.gnu.linkonce.tb.*)
+
+.rel.ctors
+ *(.rel.ctors)
+
+.rela.ctors
+ *(.rela.ctors)
+
+.rel.dtors
+ *(.rel.dtors)
+
+.rela.dtors
+ *(.rela.dtors)
+
+.rel.got
+ *(.rel.got)
+
+.rela.got
+ *(.rela.got)
+
+.rel.bss
+ *(.rel.bss .rel.bss.* .rel.gnu.linkonce.b.*)
+
+.rela.bss
+ *(.rela.bss .rela.bss.* .rela.gnu.linkonce.b.*)
+
+.rel.plt
+ *(.rel.plt)
+
+.rela.plt
+ *(.rela.plt)
+
+.init
+ *(.init)
+
+.plt
+ *(.plt)
+
+.text
+ *(.text .stub .text.* .gnu.linkonce.t.*)
+ *(.text.*personality*)
+ *(.gnu.warning)
+
+.fini
+ *(.fini)
+                0x80000000                PROVIDE (__etext, .)
+                0x80000000                PROVIDE (_etext, .)
+                0x80000000                PROVIDE (etext, .)
+
+.rodata
+ *(.rodata .rodata.* .gnu.linkonce.r.*)
+
+.rodata1
+ *(.rodata1)
+
+.eh_frame_hdr
+ *(.eh_frame_hdr)
+
+.eh_frame
+ *(.eh_frame)
+
+.gcc_except_table
+ *(.gcc_except_table)
+ *(.gcc_except_table.*)
+
+.dalign         0x80000000        0x0
+                0x80000000                . = ALIGN (0x8)
+                0x80000000                PROVIDE (_data_lma, .)
+                0x00000004                PROVIDE (_data, ORIGIN (CPUSRAM))
+                0x00000004                . = ORIGIN (CPUSRAM)
+
+.eh_frame
+ *(.eh_frame)
+
+.gcc_except_table
+ *(.gcc_except_table)
+ *(.gcc_except_table.*)
+
+.tdata
+ *(.tdata .tdata.* .gnu.linkonce.td.*)
+
+.tbss
+ *(.tbss .tbss.* .gnu.linkonce.tb.*)
+ *(.tcommon)
+                0x00000004                PROVIDE (__preinit_array_start, ALIGN (0x4))
+
+.preinit_array
+ *(.preinit_array)
+                0x00000004                PROVIDE (__preinit_array_end, .)
+                0x00000004                PROVIDE (__init_array_start, .)
+
+.init_array
+ *(.init_array)
+                0x00000004                PROVIDE (__init_array_end, .)
+                0x00000004                PROVIDE (__fini_array_start, .)
+
+.fini_array
+ *(.fini_array)
+                0x00000004                PROVIDE (__fini_array_end, .)
+
+.ctors
+ *crtbegin*.o(.ctors)
+ *(EXCLUDE_FILE(*crtend*.o) .ctors)
+ *(SORT(.ctors.*))
+ *(.ctors)
+
+.dtors
+ *crtbegin*.o(.dtors)
+ *(EXCLUDE_FILE(*crtend*.o) .dtors)
+ *(SORT(.dtors.*))
+ *(.dtors)
+
+.jcr
+ *(.jcr)
+
+.data.rel.ro
+ *(.data.rel.ro.local)
+ *(.data.rel.ro*)
+
+.dynamic
+ *(.dynamic)
+
+.got
+ *(.got.plt)
+ *(.got)
+
+.data
+ *(.data .data.* .gnu.linkonce.d.*)
+ *(.gnu.linkonce.d.*personality*)
+
+.data1
+ *(.data1)
+
+.balign         0x00000004        0x4 load address 0x80000000
+                0x00000008                . = ALIGN (0x8)
+ *fill*         0x00000004        0x4 
+                0x00000008                _edata = .
+                0x00000008                _edata = .
+                0x00000008                PROVIDE (edata, .)
+                0x00000008                __bss_start = .
+
+.bss            0x00000008        0x0 load address 0x80000000
+ *(.dynbss)
+ *(.bss .bss.* .gnu.linkonce.b.*)
+ *(COMMON)
+                0x00000008                . = ALIGN (0x8)
+                0x00000008                . = ALIGN (0x8)
+                0x00000008                _end = .
+                0x00000008                PROVIDE (end, .)
+                0x00000008                __heap_start__ = ALIGN (0x8)
+                0x00003000                . = ((ORIGIN (CPUSRAM) + 0x3ffc) - _stack_size)
+                0x00003000                __heap_end__ = .
+
+.stab
+ *(.stab)
+
+.stabstr
+ *(.stabstr)
+
+.stab.excl
+ *(.stab.excl)
+
+.stab.exclstr
+ *(.stab.exclstr)
+
+.stab.index
+ *(.stab.index)
+
+.stab.indexstr
+ *(.stab.indexstr)
+
+.comment
+ *(.comment)
+
+.debug
+ *(.debug)
+
+.line
+ *(.line)
+
+.debug_srcinfo
+ *(.debug_srcinfo)
+
+.debug_sfnames
+ *(.debug_sfnames)
+
+.debug_aranges
+ *(.debug_aranges)
+
+.debug_pubnames
+ *(.debug_pubnames)
+
+.debug_info
+ *(.debug_info .gnu.linkonce.wi.*)
+
+.debug_abbrev
+ *(.debug_abbrev)
+
+.debug_line
+ *(.debug_line)
+
+.debug_frame
+ *(.debug_frame)
+
+.debug_str
+ *(.debug_str)
+
+.debug_loc
+ *(.debug_loc)
+
+.debug_macinfo
+ *(.debug_macinfo)
+
+.debug_weaknames
+ *(.debug_weaknames)
+
+.debug_funcnames
+ *(.debug_funcnames)
+
+.debug_typenames
+ *(.debug_typenames)
+
+.debug_varnames
+ *(.debug_varnames)
+
+.stack          0x00003000     0x1000
+                0x00003000                _stack = .
+ *(.stack)
+                0x00001000                . = _stack_size
+ *fill*         0x00003000     0x1000 
+                0x00004000                _estack = .
+
+.userpage
+ *(.userpage .userpage.*)
+
+.factorypage
+ *(.factorypage .factorypage.*)
+
+.flashvault_flash_size
+ *(.flashvault_flash_size .flashvault_flash_size.*)
+
+.flashvault_ram_size
+ *(.flashvault_ram_size .flashvault_ram_size.*)
+
+/DISCARD/
+ *(.note.GNU-stack)
+OUTPUT(FCC project.elf elf32-avr32)
