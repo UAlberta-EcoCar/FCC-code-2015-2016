@@ -26,3 +26,17 @@
 *.exe
 *.out
 *.app
+
+
+#Atmel Studio
+*.at*
+*.d
+*.eep
+*.elf
+*.hex
+*.lss
+*.map
+*.srec
+*.d
+*.mk
+*.cppproj
