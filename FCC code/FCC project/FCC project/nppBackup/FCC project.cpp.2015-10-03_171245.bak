@@ -10,7 +10,7 @@
 
 #include <avr32/io.h>
 #include <avr32/rtc_100.h>
-#include "Output_defs.h"
+#include "FCCutils.h"
 
 
 avr32_rtc_isr_t rtcint;
