@@ -68,7 +68,7 @@ unsigned int AnalogRead(unsigned int SequencerSelect)
 			//do nothing
 		}
 		//read value
-		//send read acknowledgment: write a 1 in the SEOSx bit of SCR register
+		//send read acknowledgment :write a 1 in the SEOSx bit of SCR register
 		AVR32_ADCIFA.scr |= (1 << AVR32_ADCIFA_SCR_SEOS0);
 		//return value
 		return(AVR32_ADCIFA.resx[0]);
