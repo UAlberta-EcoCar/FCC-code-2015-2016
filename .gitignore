@@ -29,7 +29,7 @@
 
 
 #Atmel Studio
-*.at*
+
 *.eep
 *.elf
 *.hex
@@ -37,8 +37,7 @@
 *.map
 *.srec
 *.d
-*.mk
-*.cppproj
+
 *.bak
-*Makefile
+
 *.mk
