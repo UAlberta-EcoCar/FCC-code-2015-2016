@@ -30,7 +30,6 @@
 
 #Atmel Studio
 *.at*
-*.d
 *.eep
 *.elf
 *.hex
@@ -41,3 +40,5 @@
 *.mk
 *.cppproj
 *.bak
+*Makefile
+*.mk

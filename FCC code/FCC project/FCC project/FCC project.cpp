@@ -35,5 +35,10 @@ int main(void)
     {
 		OP_OVRS = OP1;
 		LED_OVRS = LED1;
+		SendNumAsASCII(ReadCAPVOLT());
+		
+		SendNumAsASCII(ReadAMBTEMP1());
+		//this might not work due to issues with this Analog pin being an negative input.
+		//not sure if it just returns a negative value (i'm using unsigned int :)  ) or will just not work 
     }
 }

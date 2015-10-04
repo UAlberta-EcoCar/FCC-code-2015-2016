@@ -10,8 +10,8 @@
 #define myADC
 
 void ADCInit(void);
-void SetAsAnalogIn(unsigned int GPIOPort,unsigned int GPIOPin);
-unsigned int AnalogRead(unsigned int SequencerSelect);
+void SetAsAnalogIn(unsigned char GPIOPort,unsigned char GPIOPin);
+unsigned int AnalogRead(unsigned char SequencerSelect);
 
 
 

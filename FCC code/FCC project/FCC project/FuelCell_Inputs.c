@@ -22,7 +22,7 @@ void InputsInit (void)
 	ADCInit();
 }
 
-unsigned int ReadSTART(void)
+unsigned char ReadSTART(void)
 {
 	//The START signal tiggers the Fuel Cell Controller
 	//to go into its startup mode
@@ -34,7 +34,7 @@ unsigned int ReadSTART(void)
 	return(0); 
 }
 
-unsigned int ReadSYSOK(void)
+unsigned char ReadSYSOK(void)
 {
 	//The SYSOK signal indicates that the system 
 	//is in proper operating condition. 
@@ -95,7 +95,7 @@ unsigned int ReadFCVOLT(void)
 	return(AnalogRead(0));
 }
 
-unsigned int ReadFCCON(void)
+unsigned char ReadFCCON(void)
 {
 	//determines if the fuel cell is connected
 	//PB23 = GPIO port 2 pin 23
@@ -115,7 +115,7 @@ unsigned int ReadCAPCURR(void)
 	return(AnalogRead(0));
 }
 
-unsigned int ReadCAPCON(void)
+unsigned char ReadCAPCON(void)
 {
 	//determines if the ultra capacitors are connected
 	//PC0 = GPIO port 3 pin 0
@@ -135,7 +135,7 @@ unsigned int ReadCAPVOLT(void)
 	return(AnalogRead(0));
 }
 
-unsigned int ReadRESCON(void)
+unsigned char ReadRESCON(void)
 {
 	//determines if the start-up power resistors are connected
 	//PB22 = GPIO port 2 pin 22
@@ -159,41 +159,47 @@ unsigned int ReadAMBTEMP2(void)
 {
 	//PA23
 	AVR32_ADCIFA.inpsel00 = 10; //ground as positive ref
-	return(0); //to remove warning
+	AVR32_ADCIFA.innsel00 = 4; //conversion 1, adcin 12, seq 0
+	return(AnalogRead(0)); 
 }
 
 unsigned int ReadAMBTEMP3(void)
 {
 	//PA24
 	AVR32_ADCIFA.inpsel00 = 10; //ground as positive ref
-	return(0); //to remove warning
+	AVR32_ADCIFA.innsel00 = 5; //conversion 1, adcin 13, seq 0
+	return(AnalogRead(0);
 }
 
 unsigned int ReadAMBTEMP4(void)
 {
 	//PA25
 	AVR32_ADCIFA.inpsel00 = 10; //ground as positive ref
-	return(0); //to remove warning
+	AVR32_ADCIFA.innsel00 = 6; //conversion 1, adcin 14, seq 0
+	return(AnalogRead(0);
 }
 
 unsigned int ReadFCTEMP1(void)
 {
 	//PA20
 	AVR32_ADCIFA.inpsel00 = 10; //ground as positive ref
-	return(0); //to remove warning
+	AVR32_ADCIFA.innsel00 = 1; //conversion 1, adcin 9, seq 0
+	return(AnalogRead(0)); 
 }
 
 unsigned int ReadFCTEMP2(void)
 {
 	//PA21
 	AVR32_ADCIFA.inpsel00 = 10; //ground as positive ref
-	return(0); //to remove warning
+	AVR32_ADCIFA.innsel00 = 2; //conversion 1, adcin 10, seq 0
+	return(AnalogRead(0));
 }
 
 unsigned int ReadMFLOW(void)
 {
 	//PA19
 	AVR32_ADCIFA.inpsel00 = 10; //ground as positive ref
-	return(0); //to remove warning
+	AVR32_ADCIFA.innsel00 = 0; //conv 1, adcin 8, seq 0
+	return(AnalogRead(0));
 }
 

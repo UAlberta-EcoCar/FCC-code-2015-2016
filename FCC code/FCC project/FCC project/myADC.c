@@ -23,6 +23,7 @@ void ADCInit(void)
 	//need 1.5MHz - 125KHz
 	//CKDIV register sets prescaler
 	//120MHz clock / 500KHz = 240 divider (I think)
+	//data sheet doesn't mention how 
 	AVR32_ADCIFA.ckdiv = 240;
 	
 	
@@ -45,7 +46,7 @@ void ADCInit(void)
 }
 
 
-void SetAsAnalogIn(unsigned int GPIOPort,unsigned int GPIOPin)
+void SetAsAnalogIn(unsigned char GPIOPort,unsigned char GPIOPin)
 {
 	//set pin to function A
 	AVR32_GPIO.port[GPIOPort].pmr0c = 1 << GPIOPin;
@@ -53,11 +54,11 @@ void SetAsAnalogIn(unsigned int GPIOPort,unsigned int GPIOPin)
 	AVR32_GPIO.port[GPIOPort].pmr2c = 1 << GPIOPin;
 }
 
-unsigned int AnalogRead(unsigned int SequencerSelect)
+unsigned int AnalogRead(unsigned char unsigned char SequencerSelect)
 {
 	//starts conversion and returns value
-	//analog multiplexer must be set separately
-	//see usage examples
+	//analog multiplexer must be set separately because I don't want to write a ton of if/switch statements in this function
+	//see FuelCell_Inputs.c on how to set multiplexer 
 	if (SequencerSelect == 0)
 	{	
 		//start conversion
