@@ -27,7 +27,11 @@ unsigned int ReadSTART(void)
 	//The START signal tiggers the Fuel Cell Controller
 	//to go into its startup mode
 	//Connected to PB3 = GPIO port 2 pin 3
-	return(AVR32_GPIO.port[2].pvr & (1 << 3)); //returns zero if clear and !=0 if set
+	if(AVR32_GPIO.port[2].pvr & (1 << 3))
+	{
+		return(1);
+	}
+	return(0); 
 }
 
 unsigned int ReadSYSOK(void)
@@ -95,7 +99,11 @@ unsigned int ReadFCCON(void)
 {
 	//determines if the fuel cell is connected
 	//PB23 = GPIO port 2 pin 23
-	return(AVR32_GPIO.port[2].pvr & (1 << 23));
+	if(AVR32_GPIO.port[2].pvr & (1 << 23))
+	{
+		return(1);
+	}
+	return(0);
 }
 
 unsigned int ReadCAPCURR(void)
@@ -111,7 +119,11 @@ unsigned int ReadCAPCON(void)
 {
 	//determines if the ultra capacitors are connected
 	//PC0 = GPIO port 3 pin 0
-	return(AVR32_GPIO.port[3].pvr & 1);
+	if(AVR32_GPIO.port[3].pvr & 1)
+	{
+		return(1);
+	}
+	return(0);
 }
 
 unsigned int ReadCAPVOLT(void)
@@ -127,7 +139,11 @@ unsigned int ReadRESCON(void)
 {
 	//determines if the start-up power resistors are connected
 	//PB22 = GPIO port 2 pin 22
-	return(AVR32_GPIO.port[2].pvr & (1 << 22));
+	if(AVR32_GPIO.port[2].pvr & (1 << 22))
+	{
+		return(1);
+	}
+	return(0);
 }
 
 unsigned int ReadAMBTEMP1(void)

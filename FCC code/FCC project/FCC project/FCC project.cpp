@@ -6,8 +6,6 @@
  */ 
 
 
-#define F_CPU 80000000
-
 #include <avr32/io.h>
 #include <avr32/rtc_100.h>
 #include "CLKconfig.h"
@@ -21,7 +19,7 @@ avr32_rtc_imr_t rtcimr;
 int main(void)
 {
 	ConfigureClock();
-	ADCInit();
+	InputsInit();
 	
 	//not sure what these do
 	rtcint.topi=0;
