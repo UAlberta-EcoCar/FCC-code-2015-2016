@@ -54,7 +54,7 @@ void SetAsAnalogIn(unsigned char GPIOPort,unsigned char GPIOPin)
 	AVR32_GPIO.port[GPIOPort].pmr2c = 1 << GPIOPin;
 }
 
-unsigned int AnalogRead(unsigned char unsigned char SequencerSelect)
+unsigned int AnalogRead(unsigned char SequencerSelect)
 {
 	//starts conversion and returns value
 	//analog multiplexer must be set separately because I don't want to write a ton of if/switch statements in this function

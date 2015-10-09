@@ -30,7 +30,7 @@
 #define OP10 (1 << 8)
 
 
-#define LED_GPERS_GPERS AVR32_GPIO.port[1].gpers
+#define LED_GPERS AVR32_GPIO.port[1].gpers
 #define LED_ODERS AVR32_GPIO.port[1].oders
 #define LED_OVRS AVR32_GPIO.port[1].ovrs
 #define LED_OVRC AVR32_GPIO.port[1].ovc

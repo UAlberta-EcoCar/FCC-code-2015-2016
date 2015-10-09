@@ -168,7 +168,7 @@ unsigned int ReadAMBTEMP3(void)
 	//PA24
 	AVR32_ADCIFA.inpsel00 = 10; //ground as positive ref
 	AVR32_ADCIFA.innsel00 = 5; //conversion 1, adcin 13, seq 0
-	return(AnalogRead(0);
+	return(AnalogRead(0));
 }
 
 unsigned int ReadAMBTEMP4(void)
@@ -176,7 +176,7 @@ unsigned int ReadAMBTEMP4(void)
 	//PA25
 	AVR32_ADCIFA.inpsel00 = 10; //ground as positive ref
 	AVR32_ADCIFA.innsel00 = 6; //conversion 1, adcin 14, seq 0
-	return(AnalogRead(0);
+	return(AnalogRead(0));
 }
 
 unsigned int ReadFCTEMP1(void)
