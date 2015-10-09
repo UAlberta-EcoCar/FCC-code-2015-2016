@@ -1,10 +1,9 @@
 /*
- * FCC_project.cpp
+ * FCC_code_V1.cpp
  *
- * Created: 2015-09-19 2:00:27 PM-9
- *  Author: Me
+ * Created: 2015-10-09 3:54:27 PM
+ *  Author: Reegan
  */ 
-
 
 #include <avr32/io.h>
 #include <avr32/rtc_100.h>
@@ -30,15 +29,15 @@ int main(void)
 	OP_ODERS |= OP1 | OP2 | OP3 | OP4 | OP5 | OP6 | OP7 | OP8 | OP9 | OP10;
 	LED_GPERS |= LED0 | LED1 | LED2 | LED3;
 	LED_ODERS |= LED0 | LED1 | LED2 | LED3;
-    
+	
 	while(1)
-    {
+	{
 		OP_OVRS = OP1;
 		LED_OVRS = LED1;
 		SendNumAsASCII(ReadCAPVOLT());
 		
 		SendNumAsASCII(ReadAMBTEMP1());
 		//this might not work due to issues with this Analog pin being an negative input.
-		//not sure if it just returns a negative value (i'm using unsigned int :)  ) or will just not work 
-    }
+		//not sure if it just returns a negative value (i'm using unsigned int :)  ) or will just not work
+	}
 }

@@ -35,9 +35,7 @@
 *.hex
 *.lss
 *.map
-*.srec
 *.d
 
+#notepad++
 *.bak
-
-*.mk
