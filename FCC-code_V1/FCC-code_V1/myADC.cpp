@@ -23,8 +23,8 @@ void ADCInit(void)
 	//need 1.5MHz - 125KHz
 	//CKDIV register sets prescaler
 	//120MHz clock / 500KHz = 240 divider (I think)
-	//data sheet doesn't mention how 
-	AVR32_ADCIFA.ckdiv = 480;
+	//data sheet doesn't really mention what the clock is
+	AVR32_ADCIFA.ckdiv = 240;
 	
 	
 	AVR32_ADCIFA.cr |= (1 << AVR32_ADCIFA_CR_TSTART); //start timer
@@ -37,10 +37,10 @@ void ADCInit(void)
 	AVR32_ADCIFA.seqcfg0 |= (1 << AVR32_ADCIFA_SEQCFG0_SA);//set Software Acknowledge bit
 	
 	//sequencer 1 //not using
-	//AVR32_ADCIFA.seqcfg1 &= ~(3 << AVR32_ADCIFA_SEQCFG0_SRES); //12 bit resolution
-	//AVR32_ADCIFA.seqcfg1 &= ~(3 << AVR32_ADCIFA_SEQCFG0_TRGSEL); //software trigger select
-	//AVR32_ADCIFA.seqcfg1 &= ~(1 << AVR32_ADCIFA_SEQCFG1_SOCB); //single conversion
-	//AVR32_ADCIFA.seqcfg1 |= (1 << AVR32_ADCIFA_SEQCFG1_SA);//set Software Acknowledge bit
+	AVR32_ADCIFA.seqcfg1 &= ~(3 << AVR32_ADCIFA_SEQCFG0_SRES); //12 bit resolution
+	AVR32_ADCIFA.seqcfg1 &= ~(3 << AVR32_ADCIFA_SEQCFG0_TRGSEL); //software trigger select
+	AVR32_ADCIFA.seqcfg1 &= ~(1 << AVR32_ADCIFA_SEQCFG1_SOCB); //single conversion
+	AVR32_ADCIFA.seqcfg1 |= (1 << AVR32_ADCIFA_SEQCFG1_SA);//set Software Acknowledge bit
 	
 	AVR32_ADCIFA.cfg  |= (1 << AVR32_ADCIFA_CFG_ADCEN); //enable ADC
 }
@@ -60,7 +60,7 @@ unsigned int AnalogRead(unsigned char SequencerSelect)
 	//analog multiplexer must be set separately because I don't want to write a ton of if/switch statements in this function
 	//see FuelCell_Inputs.c on how to set multiplexer 
 	if (SequencerSelect == 0)
-	{	
+	{
 		//start conversion
 		AVR32_ADCIFA.cr |= (1 << AVR32_ADCIFA_CR_SOC0);
 		//wait for end of conversion
@@ -72,7 +72,22 @@ unsigned int AnalogRead(unsigned char SequencerSelect)
 		//send read acknowledgment: write a 1 in the SEOSx bit of SCR register
 		AVR32_ADCIFA.scr |= (1 << AVR32_ADCIFA_SCR_SEOS0);
 		//return value
-		return(AVR32_ADCIFA.resx[0]);
+		return(AVR32_ADCIFA.lcv0); //or RESx ??
+	}
+	else if (SequencerSelect == 1)
+	{
+		//start conversion
+		AVR32_ADCIFA.cr |= (1 << AVR32_ADCIFA_CR_SOC1);
+		//wait for end of conversion
+		while(~AVR32_ADCIFA.sr & (1 << AVR32_ADCIFA_SR_SEOC1))
+		{
+			//do nothing
+		}
+		//read value
+		//send read acknowledgment: write a 1 in the SEOSx bit of SCR register
+		AVR32_ADCIFA.scr |= (1 << AVR32_ADCIFA_SCR_SEOS1);
+		//return value
+		return(AVR32_ADCIFA.lcv1);
 	}
 	else
 	{
