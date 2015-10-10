@@ -1,0 +1,166 @@
+digital inputs
+-cap con
+-fc con
+-res con
+-h2ok
+-start button
+Analog inputs
+-fc temp 1
+-fc temp 2
+-amb temp 1-4
+-fc volt
+-fc current
+-cap voltage
+-cap current
+-thermistor refrence voltage (5V rail)
+-Mass flow meter
+-Tankepress
+-Fcpress
+
+Digital outputs
+-Hydrogen in valve
+-Purge valve
+-startup relay
+-motor relay
+-relay cap
+-relay res
+
+//-damper solenoid (locks dampers)
+
+Analog outputs
+//-dampers (for controlling air intake)
+-fans (controls all 5 fans)
+
+States
+-Standby
+-Shutdown
+-Startup/H2
+-Startup/Purge
+-Startup/Charge
+-Run
+
+Main loop
+	struct constants;
+	measure constants(function);
+	error_msg=check alarms
+	if (error_msg){
+		state=shutdown;
+	}
+	
+	switch (state){
+		case 1:
+			error_msg,state=Standby
+		case 2:
+			error_msg,state=Startup/H2
+		.
+		.
+		.
+		.
+
+	}
+	if (error_msg){
+		CANBUS(error_msg);
+	}
+	
+	number=states
+	
+//Example function
+number Standby(measured value(s)){
+	number state;
+	if (startbutton){
+		state=startup/h2;
+	}
+	else{
+		state=standby;
+	}
+	return state;
+	
+
+}
+number StartupH2(measured value(s)){
+	set fans to min;
+	open h2 valve;
+	if (fcvolt<30){
+		return StartupH2;
+	}
+	else{
+		return Startuppurge;
+	}
+number StartupPurge(measured value(s)){
+	//Purge step isnt skipped on !Rescon to get air out of lines on startup
+	number state;
+	close startup relay;
+	//hardware timing mechanism should be worked out
+	open purge valve;
+	if (time() <3s){
+		return StartupPurge;
+	}
+	close purge valve;
+	open startup relay;
+	return startupcharge;
+	
+
+}
+number StartupCharge(measured value(s)){
+	number state;
+	//Skip charge step if resistors arent connected
+	if (!Rescon){
+		return some number;
+	}
+	close resistor relay;
+	if (capvolt <40){
+		return startupcharge;
+	}
+	open resistor relay;
+	some delay;
+	close cap relay;
+	delay;
+	close motor relay;
+	return state;
+	
+
+}
+number run(){
+	pid control for temp;
+	purge control; //Purge based on amount of charge extracted from hydrogen (integral of current with respect to time)
+	if (shutdown){
+		err.shutdown=1; //Call shutdown an "error", and run shutdown routine from error check function
+	}
+}
+shutdown procedure
+-close all valves
+-open all relays
+
+measure constants(){
+	set numbers in the global structure "measurements";
+	
+}
+	
+	-Make error code a single number (where particular bits are set based on error messagesError
+	
+Error Codes:
+	
+Caps disconnected 
+FC disconnected
+Res disconnected
+H2ok low
+FC temp low (-10C)
+FC temp high (75C)
+FC press high (only checked in purge, charge, run) (9.81 PSI)
+FC press low (only checked in purge, charge, run) (0.8 PSI)
+FC overcurr (78A)
+FC undercurr (-3A)
+FC overvolt (50.6)
+
+Commands
+-In shutdown or standby, manual de pressurize
+-
+
+
+-deal with timing (clock sources, timer modules etc) for shit like temp control
+	
+
+(External "turn on logging" switch on the sensors network so filling up eeprom doesnt happen).
+
+-Have non shutdown error state that must be manually overridden to go back to standby
+-Have checks for extreme values

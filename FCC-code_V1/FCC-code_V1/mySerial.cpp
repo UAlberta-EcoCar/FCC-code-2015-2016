@@ -60,6 +60,7 @@ void SerialTransmitInit(void) //page 567 of data sheet
 
 void Send(unsigned char SendValue)
 {
+
   while((AVR32_USART3.csr & ( 1 << AVR32_USART_CSR_TXRDY)) == 0) //wait for transmitter to be ready
   {
 	  //do nothing while waiting

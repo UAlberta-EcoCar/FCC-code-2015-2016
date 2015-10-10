@@ -7,7 +7,6 @@ void InputsInit (void)
 	//set DDR for all inputs
 	//page 11 of datasheet needed
 	
-	//pins default as digital inputs
 	
 	//set analog inputs
 	SetAsAnalogIn(1,5); //set PA5 as ADCIN1
@@ -27,7 +26,7 @@ unsigned char ReadSTART(void)
 	//The START signal tiggers the Fuel Cell Controller
 	//to go into its startup mode
 	//Connected to PB3 = GPIO port 2 pin 3
-	if(AVR32_GPIO.port[2].pvr & (1 << 3))
+	if(AVR32_GPIO.port[1].pvr & (1 << 3))
 	{
 		return(1);
 	}
@@ -42,8 +41,11 @@ unsigned char ReadSYSOK(void)
 	//emergency stop event such as an emergency 
 	//stop button press, or unsafe hydrogen level.
 	//Connected to PB2
-	//Should Probably be an interrupt
-	return(0); //to remove compiler warning
+	if(AVR32_GPIO.port[1].pvr & (1 << 2))
+	{
+		return(1);
+	}
+	return(0); 
 }
 
 unsigned int ReadTANKPRES(void)
@@ -95,11 +97,12 @@ unsigned int ReadFCVOLT(void)
 	return(AnalogRead(0));
 }
 
+
 unsigned char ReadFCCON(void)
 {
 	//determines if the fuel cell is connected
-	//PB23 = GPIO port 2 pin 23
-	if(AVR32_GPIO.port[2].pvr & (1 << 23))
+	//PB23 = GPIO port 1 pin 23
+	if(AVR32_GPIO.port[1].pvr & (1 << 23))
 	{
 		return(1);
 	}
@@ -119,7 +122,7 @@ unsigned char ReadCAPCON(void)
 {
 	//determines if the ultra capacitors are connected
 	//PC0 = GPIO port 3 pin 0
-	if(AVR32_GPIO.port[3].pvr & 1)
+	if(AVR32_GPIO.port[2].pvr & 1)
 	{
 		return(1);
 	}
@@ -139,7 +142,7 @@ unsigned char ReadRESCON(void)
 {
 	//determines if the start-up power resistors are connected
 	//PB22 = GPIO port 2 pin 22
-	if(AVR32_GPIO.port[2].pvr & (1 << 22))
+	if(AVR32_GPIO.port[1].pvr & (1 << 22))
 	{
 		return(1);
 	}

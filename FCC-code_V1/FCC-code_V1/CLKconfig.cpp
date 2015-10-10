@@ -1,5 +1,6 @@
-#include "CLKconfig.h"
+
 #include <avr32/io.h>
+#include "CLKconfig.h"
 
 void ConfigureClock (void)
 {

@@ -2,17 +2,19 @@
 # Automatically-generated file. Do not edit or delete the file
 ################################################################################
 
-CLKconfig.c
+CLKconfig.cpp
+
+FuelCell_Outputs.cpp
 
 FCC-code_V1.cpp
 
-FuelCell_Inputs.c
+FuelCell_Inputs.cpp
 
-myADC.c
+myADC.cpp
 
-myPWM.c
+myPWM.cpp
 
-mySerial.c
+mySerial.cpp
 
-myTIMER.c
+myTIMER.cpp
 

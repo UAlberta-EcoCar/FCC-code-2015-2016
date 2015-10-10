@@ -24,7 +24,7 @@ void ADCInit(void)
 	//CKDIV register sets prescaler
 	//120MHz clock / 500KHz = 240 divider (I think)
 	//data sheet doesn't mention how 
-	AVR32_ADCIFA.ckdiv = 240;
+	AVR32_ADCIFA.ckdiv = 480;
 	
 	
 	AVR32_ADCIFA.cr |= (1 << AVR32_ADCIFA_CR_TSTART); //start timer
