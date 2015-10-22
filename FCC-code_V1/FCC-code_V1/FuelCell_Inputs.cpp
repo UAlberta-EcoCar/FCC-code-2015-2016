@@ -122,7 +122,16 @@ unsigned char ReadCAPCON(void)
 {
 	//determines if the ultra capacitors are connected
 	//PC0 = GPIO port 3 pin 0
+	/*
 	if(AVR32_GPIO.port[2].pvr & 1)
+	{
+		return(1);
+	}
+	*/
+	
+	//has been rewired to PC12
+	// = GPIO port 2 pin 12
+	if(AVR32_GPIO.port[2].pvr & (1 << 12))
 	{
 		return(1);
 	}
