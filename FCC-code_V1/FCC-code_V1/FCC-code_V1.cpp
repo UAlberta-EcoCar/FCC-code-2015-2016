@@ -7,36 +7,49 @@
 
 
 #include <avr32/io.h>
-#include <avr32/rtc_100.h>
 
 #include "FuelCell_Outputs.h"
 #include "CLKconfig.h"
 #include "FuelCell_Inputs.h"
 #include "mySerial.h"
 #include "myTIMER.h"
-
-avr32_rtc_isr_t rtcint;
-avr32_rtc_imr_t rtcimr;
+#include "ast.h"
 
 unsigned int x;
 unsigned int y;
 
 int main(void)
 {
+	opt.startup = AVR32_SCIF_OSCCTRL32_STARTUP_128_RCOSC;
 	ConfigureClock();
 	InputsInit();
 	EnableLeds();
+	AVR32_AST.cr |= 1 << AVR32_AST_CR_EN;
+	AVR32_AST.clock = (0 << AVR32_AST_CLOCK_CEN);
+	//set up Asynchronous timer
+	//select clock sourcecccccc 
+	//wait until SR.CLKBUSY reads zero
+	x=AVR32_AST.sr;
+	y=AVR32_AST.cr;
+	while (AVR32_AST.sr & (1 << AVR32_AST_SR_CLKBUSY));
+	//write one to clock.cen without changing clock.cssel
 	
-	rtcint.topi=0;
-	rtcimr.topi=0;
+	//Wait until sr.clkbusy reads as zero
+	while (AVR32_AST.sr & (1 << AVR32_AST_SR_CLKBUSY));
+	//set AST prescaler
+	AVR32_AST.cr |= 1 << AVR32_AST_CR_PCLR; //clear prescaler
+	//wait until SR.CLKBUSY reads zero
+	while (AVR32_AST.sr & (1 << AVR32_AST_SR_CLKBUSY));
+	//enable AST
+	AVR32_AST.clock |= 1 << AVR32_AST_CLOCK_CEN;
 	
-	//Set coil driving outputs as outputs
-	OP_GPERS = OP1 | OP2 | OP3 | OP4 | OP5 | OP6 | OP7 | OP8 | OP9 | OP10;
-	OP_ODERS = OP1 | OP2 | OP3 | OP4 | OP5 | OP6 | OP7 | OP8 | OP9 | OP10;
+	DLED_GPERS=(LED0 | LED1 | LED2 | LED3);
+	DLED_ODERS=(LED0 | LED1 | LED2 | LED3);
 	
 	
 	while(1)
 	{
-		
+		x=AVR32_AST.cv;
+		x++;
 	}
 }
