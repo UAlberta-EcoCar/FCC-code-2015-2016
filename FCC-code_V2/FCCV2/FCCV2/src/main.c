@@ -51,6 +51,7 @@ int main (void)
 	b=ast_init_counter(&AVR32_AST,AST_OSC_RC,AST_PSEL_32KHZ_1HZ,counta);
 	ast_enable(&AVR32_AST);
 	while(1){
+		a=ast_get_counter_value(&AVR32_AST);
 		if((ast_get_counter_value(&AVR32_AST)%7)==0){
 			DLED_OVRS |= LED0;
 		}
