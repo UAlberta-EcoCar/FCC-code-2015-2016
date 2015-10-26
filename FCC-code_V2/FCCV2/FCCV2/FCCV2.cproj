@@ -30,13 +30,14 @@
     <AsfFrameworkConfig>
       <framework-data>
   <options>
-    <option id="common.boards" value="Add" config="" content-id="Atmel.ASF" />
     <option id="avr32.drivers.adcifa" value="Add" config="" content-id="Atmel.ASF" />
-    <option id="avr32.services.network.can" value="Add" config="" content-id="Atmel.ASF" />
-    <option id="avr32.drivers.canif" value="Add" config="" content-id="Atmel.ASF" />
     <option id="avr32.drivers.ast" value="Add" config="" content-id="Atmel.ASF" />
+    <option id="avr32.drivers.canif" value="Add" config="" content-id="Atmel.ASF" />
     <option id="avr32.drivers.gpio" value="Add" config="" content-id="Atmel.ASF" />
     <option id="avr32.drivers.scif" value="Add" config="" content-id="Atmel.ASF" />
+    <option id="avr32.services.network.can" value="Add" config="" content-id="Atmel.ASF" />
+    <option id="common.boards" value="Add" config="" content-id="Atmel.ASF" />
+    <option id="avr32.drivers.pm" value="Add" config="" content-id="Atmel.ASF" />
   </options>
   <configurations>
     <configuration key="config.avr32.utils.trampoline" value="yes" default="yes" content-id="Atmel.ASF" />
@@ -99,6 +100,11 @@
     <file path="src/ASF/common/services/clock/pll.h" framework="" version="3.27.3" source="common\services\clock\pll.h" changed="False" content-id="Atmel.ASF" />
     <file path="src/Config/conf_clock.h" framework="" version="3.27.3" source="common\services\clock\uc3c\module_config\conf_clock.h" changed="False" content-id="Atmel.ASF" />
     <file path="src/ASF/common/services/delay/delay.h" framework="" version="3.27.3" source="common\services\delay\delay.h" changed="False" content-id="Atmel.ASF" />
+    <file path="src/ASF/avr32/drivers/pm/pm_uc3c.c" framework="" version="3.27.3" source="avr32\drivers\pm\pm_uc3c.c" changed="False" content-id="Atmel.ASF" />
+    <file path="src/ASF/avr32/drivers/pm/power_clocks_lib.c" framework="" version="3.27.3" source="avr32\drivers\pm\power_clocks_lib.c" changed="False" content-id="Atmel.ASF" />
+    <file path="src/ASF/avr32/drivers/pm/power_clocks_lib.h" framework="" version="3.27.3" source="avr32\drivers\pm\power_clocks_lib.h" changed="False" content-id="Atmel.ASF" />
+    <file path="src/ASF/avr32/drivers/pm/pm_uc3c.h" framework="" version="3.27.3" source="avr32\drivers\pm\pm_uc3c.h" changed="False" content-id="Atmel.ASF" />
+    <file path="src/ASF/avr32/drivers/pm/sleep.h" framework="" version="3.27.3" source="avr32\drivers\pm\sleep.h" changed="False" content-id="Atmel.ASF" />
   </files>
   <documentation help="http://asf.atmel.com/docs/3.27.3/common.applications.user_application.user_board.uc3c/html/index.html" />
   <offline-documentation help="" />
@@ -159,6 +165,7 @@
       <Value>../src/ASF/avr32/drivers/scif</Value>
       <Value>../src/ASF/common/services/clock</Value>
       <Value>../src/ASF/common/services/delay</Value>
+      <Value>../src/ASF/avr32/drivers/pm</Value>
     </ListValues>
   </avr32gcc.compiler.directories.IncludePaths>
   <avr32gcc.compiler.optimization.level>Optimize for size (-Os)</avr32gcc.compiler.optimization.level>
@@ -199,6 +206,7 @@
       <Value>../src/ASF/avr32/drivers/scif</Value>
       <Value>../src/ASF/common/services/clock</Value>
       <Value>../src/ASF/common/services/delay</Value>
+      <Value>../src/ASF/avr32/drivers/pm</Value>
     </ListValues>
   </avr32gcc.assembler.general.IncludePaths>
   <avr32gcc.preprocessingassembler.general.AssemblerFlags>-mrelax -DBOARD=USER_BOARD</avr32gcc.preprocessingassembler.general.AssemblerFlags>
@@ -224,6 +232,7 @@
       <Value>../src/ASF/avr32/drivers/scif</Value>
       <Value>../src/ASF/common/services/clock</Value>
       <Value>../src/ASF/common/services/delay</Value>
+      <Value>../src/ASF/avr32/drivers/pm</Value>
     </ListValues>
   </avr32gcc.preprocessingassembler.general.IncludePaths>
 </Avr32Gcc>
@@ -264,6 +273,7 @@
       <Value>../src/ASF/avr32/drivers/scif</Value>
       <Value>../src/ASF/common/services/clock</Value>
       <Value>../src/ASF/common/services/delay</Value>
+      <Value>../src/ASF/avr32/drivers/pm</Value>
     </ListValues>
   </avr32gcc.compiler.directories.IncludePaths>
   <avr32gcc.compiler.optimization.level>Optimize (-O1)</avr32gcc.compiler.optimization.level>
@@ -305,6 +315,7 @@
       <Value>../src/ASF/avr32/drivers/scif</Value>
       <Value>../src/ASF/common/services/clock</Value>
       <Value>../src/ASF/common/services/delay</Value>
+      <Value>../src/ASF/avr32/drivers/pm</Value>
     </ListValues>
   </avr32gcc.assembler.general.IncludePaths>
   <avr32gcc.assembler.debugging.DebugLevel>Default (-g)</avr32gcc.assembler.debugging.DebugLevel>
@@ -331,6 +342,7 @@
       <Value>../src/ASF/avr32/drivers/scif</Value>
       <Value>../src/ASF/common/services/clock</Value>
       <Value>../src/ASF/common/services/delay</Value>
+      <Value>../src/ASF/avr32/drivers/pm</Value>
     </ListValues>
   </avr32gcc.preprocessingassembler.general.IncludePaths>
   <avr32gcc.preprocessingassembler.debugging.DebugLevel>Default (-Wa,-g)</avr32gcc.preprocessingassembler.debugging.DebugLevel>
@@ -353,6 +365,21 @@
     <Compile Include="src\ASF\avr32\drivers\gpio\gpio.c">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="src\ASF\avr32\drivers\pm\pm_uc3c.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <None Include="src\ASF\avr32\drivers\pm\sleep.h">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="src\ASF\avr32\drivers\pm\pm_uc3c.h">
+      <SubType>compile</SubType>
+    </None>
+    <Compile Include="src\ASF\avr32\drivers\pm\power_clocks_lib.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <None Include="src\ASF\avr32\drivers\pm\power_clocks_lib.h">
+      <SubType>compile</SubType>
+    </None>
     <Compile Include="src\ASF\avr32\drivers\scif\scif_uc3c.c">
       <SubType>compile</SubType>
     </Compile>
@@ -520,6 +547,7 @@
     <Folder Include="src\ASF\avr32\drivers\flashc\" />
     <Folder Include="src\ASF\avr32\drivers\gpio\" />
     <Folder Include="src\ASF\avr32\drivers\intc\" />
+    <Folder Include="src\ASF\avr32\drivers\pm\" />
     <Folder Include="src\ASF\avr32\drivers\scif\" />
     <Folder Include="src\ASF\avr32\services\" />
     <Folder Include="src\ASF\avr32\services\network\" />

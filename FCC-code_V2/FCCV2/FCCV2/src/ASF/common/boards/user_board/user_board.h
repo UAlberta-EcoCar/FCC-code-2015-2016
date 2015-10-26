@@ -19,6 +19,7 @@
 
 #define BOARD_OSC0_HZ 40000
 #define BOARD_OSC0_STARTUP_US 100
+#define OSC0_GAIN_VALUE 0
 
 #include <conf_board.h>
 
