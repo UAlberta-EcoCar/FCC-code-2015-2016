@@ -1,0 +1,32 @@
+digraph G
+{
+  edge [fontname="FreeSans",fontsize="10",labelfontname="FreeSans",labelfontsize="10"];
+  node [fontname="FreeSans",fontsize="10",shape=record];
+  rankdir=LR;
+  Node1 [label="pcl_configure_clocks",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled" fontcolor="black"];
+  Node1 -> Node2 [color="midnightblue",fontsize="10",style="solid",fontname="FreeSans"];
+  Node2 [label="pcl_configure_clocks_uc3l",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$a00035.html#a45086dd1cdcb50840fd4058daaee915d"];
+  Node2 -> Node3 [color="midnightblue",fontsize="10",style="solid",fontname="FreeSans"];
+  Node3 [label="pcl_configure_clocks_dfll0",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$a00035.html#a8528af6e455a48f6d7b134bbd51d5840",tooltip="Automatically configure the CPU, PBA, PBB, and HSB clocks using the DFLL0 as main..."];
+  Node3 -> Node4 [color="midnightblue",fontsize="10",style="solid",fontname="FreeSans"];
+  Node4 [label="pcl_configure_synchronous_clocks",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$a00035.html#a92e75eae7678315865429a64f7562644",tooltip="Device-specific implementation."];
+  Node4 -> Node5 [color="midnightblue",fontsize="10",style="solid",fontname="FreeSans"];
+  Node5 [label="pm_set_mclk_source",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$a00033.html#ae8ae9d9b5af1bbd592f7dce6e11677b0",tooltip="Clock Functions."];
+  Node2 -> Node6 [color="midnightblue",fontsize="10",style="solid",fontname="FreeSans"];
+  Node6 [label="pcl_configure_clocks_osc0",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$a00035.html#a4ff3149ebc8bf3064e77dc4b158aafad",tooltip="Automatically configure the CPU, PBA, PBB, and HSB clocks using the OSC0 osc as main..."];
+  Node6 -> Node4 [color="midnightblue",fontsize="10",style="solid",fontname="FreeSans"];
+  Node6 -> Node7 [color="midnightblue",fontsize="10",style="solid",fontname="FreeSans"];
+  Node7 [label="scif_configure_osc_crystalmode",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$a00041.html#a07a99c5e193620b3d4a6825bcd054e37",tooltip="Configure an oscillator in crystal mode."];
+  Node6 -> Node8 [color="midnightblue",fontsize="10",style="solid",fontname="FreeSans"];
+  Node8 [label="scif_enable_osc",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$a00041.html#ae6a41bbff30ad3544abd620bb8b50612",tooltip="Enable an oscillator with a given startup time."];
+  Node8 -> Node9 [color="midnightblue",fontsize="10",style="solid",fontname="FreeSans"];
+  Node9 [label="scif_pclksr_statushigh_wait",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$a00041.html#a5f0069245d4d5cbfea5cb6b3300a6c0b",tooltip="Wait for a status high in the Power and Clocks status register."];
+  Node2 -> Node10 [color="midnightblue",fontsize="10",style="solid",fontname="FreeSans"];
+  Node10 [label="pcl_configure_clocks_rc120m",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$a00035.html#a73982b53f03832280909af1b437220ba",tooltip="Automatically configure the CPU, PBA, PBB, and HSB clocks using the RC120M osc as..."];
+  Node10 -> Node4 [color="midnightblue",fontsize="10",style="solid",fontname="FreeSans"];
+  Node10 -> Node11 [color="midnightblue",fontsize="10",style="solid",fontname="FreeSans"];
+  Node11 [label="scif_start_rc120M",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$a00041.html#a059e71c82dac925ae59dc36cdbf30222",tooltip="120MHz RCosc Functions"];
+  Node2 -> Node12 [color="midnightblue",fontsize="10",style="solid",fontname="FreeSans"];
+  Node12 [label="pcl_configure_clocks_rcsys",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$a00035.html#a37e123796912716a80c10045f483e618",tooltip="Automatically configure the CPU, PBA, PBB, and HSB clocks using the RCSYS osc as..."];
+  Node12 -> Node4 [color="midnightblue",fontsize="10",style="solid",fontname="FreeSans"];
+}

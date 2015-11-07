@@ -39,6 +39,12 @@ char b;
 unsigned int g;
 unsigned long counta;
 
+void PWM() {
+	
+	
+	
+}
+
 adcifa_opt_t adcifa_opt = {
 	.frequency                = 10000,  // ADC frequency (Hz)
 	.reference_source         = ADCIFA_REF1V, // Reference Source

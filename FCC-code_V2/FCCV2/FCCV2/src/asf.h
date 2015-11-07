@@ -96,6 +96,9 @@
 #include <power_clocks_lib.h>
 #include <sleep.h>
 
+// From module: PWM - UC3C implementation
+#include <pwm4.h>
+
 // From module: Part identification macros
 #include <parts.h>
 

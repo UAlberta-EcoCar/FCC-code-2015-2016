@@ -1,0 +1,38 @@
+digraph G
+{
+  edge [fontname="FreeSans",fontsize="10",labelfontname="FreeSans",labelfontsize="10"];
+  node [fontname="FreeSans",fontsize="10",shape=record];
+  rankdir=LR;
+  Node1 [label="flashc_memset32",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled" fontcolor="black"];
+  Node1 -> Node2 [color="midnightblue",fontsize="10",style="solid",fontname="FreeSans"];
+  Node2 [label="flashc_memset64",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$a00022.html#ad232684f65e596ffd85a63e0c1a5c41d",tooltip="Copies nbytes bytes to the flash destination pointed to by dst from the repeated..."];
+  Node2 -> Node3 [color="midnightblue",fontsize="10",style="solid",fontname="FreeSans"];
+  Node3 [label="flashc_clear_page_buffer",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$a00022.html#affafe9cb74731d817b721d2a52093412",tooltip="Clears the page buffer."];
+  Node3 -> Node4 [color="midnightblue",fontsize="10",style="solid",fontname="FreeSans"];
+  Node4 [label="flashc_issue_command",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$a00022.html#a8045c427c32cf3617e861067d76c9c11",tooltip="Issues a FLASHC command."];
+  Node4 -> Node5 [color="midnightblue",fontsize="10",style="solid",fontname="FreeSans"];
+  Node5 [label="flashc_get_error_status",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$a00022.html#ae7d38c60001d5d8d00363a6cb07f89f0",tooltip="Gets the error status of the FLASHC."];
+  Node2 -> Node6 [color="midnightblue",fontsize="10",style="solid",fontname="FreeSans"];
+  Node6 [label="flashc_erase_page",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$a00022.html#a8de3bbd50094f548ca293f07b136cc6d",tooltip="Erases a page."];
+  Node6 -> Node4 [color="midnightblue",fontsize="10",style="solid",fontname="FreeSans"];
+  Node6 -> Node7 [color="midnightblue",fontsize="10",style="solid",fontname="FreeSans"];
+  Node7 [label="flashc_quick_page_read",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$a00022.html#acd50527aacf1d9ae11608fcc49a4fdcf",tooltip="Applies the Quick Page Read command to a page."];
+  Node7 -> Node8 [color="midnightblue",fontsize="10",style="solid",fontname="FreeSans"];
+  Node8 [label="flashc_is_page_erased",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$a00022.html#acdea4bfb0cb1066fba239a9302196ee5",tooltip="Tells whether the page to which the last Quick Page Read or Quick Page Read User..."];
+  Node7 -> Node4 [color="midnightblue",fontsize="10",style="solid",fontname="FreeSans"];
+  Node2 -> Node9 [color="midnightblue",fontsize="10",style="solid",fontname="FreeSans"];
+  Node9 [label="flashc_erase_user_page",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$a00022.html#a2ef66c5ffa0974223c44e151a8719b6d",tooltip="Erases the User page."];
+  Node9 -> Node4 [color="midnightblue",fontsize="10",style="solid",fontname="FreeSans"];
+  Node9 -> Node10 [color="midnightblue",fontsize="10",style="solid",fontname="FreeSans"];
+  Node10 [label="flashc_quick_user_page_read",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$a00022.html#a4cdef3bd6e4b7da53e4b7b7dc1adcd2f",tooltip="Issues a Quick Page Read User Page command to the FLASHC."];
+  Node10 -> Node8 [color="midnightblue",fontsize="10",style="solid",fontname="FreeSans"];
+  Node10 -> Node4 [color="midnightblue",fontsize="10",style="solid",fontname="FreeSans"];
+  Node2 -> Node11 [color="midnightblue",fontsize="10",style="solid",fontname="FreeSans"];
+  Node11 [label="flashc_get_flash_size",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$a00022.html#a8071c315b02d038c49fa0bf89a40ba1b",tooltip="Gets the size of the whole flash array."];
+  Node2 -> Node12 [color="midnightblue",fontsize="10",style="solid",fontname="FreeSans"];
+  Node12 [label="flashc_write_page",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$a00022.html#aa10438433246139bee71da6db2bb5bd5",tooltip="Writes a page from the page buffer."];
+  Node12 -> Node4 [color="midnightblue",fontsize="10",style="solid",fontname="FreeSans"];
+  Node2 -> Node13 [color="midnightblue",fontsize="10",style="solid",fontname="FreeSans"];
+  Node13 [label="flashc_write_user_page",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$a00022.html#ad04374b721dca9c534d7cd041ae24712",tooltip="Writes the User page from the page buffer."];
+  Node13 -> Node4 [color="midnightblue",fontsize="10",style="solid",fontname="FreeSans"];
+}
