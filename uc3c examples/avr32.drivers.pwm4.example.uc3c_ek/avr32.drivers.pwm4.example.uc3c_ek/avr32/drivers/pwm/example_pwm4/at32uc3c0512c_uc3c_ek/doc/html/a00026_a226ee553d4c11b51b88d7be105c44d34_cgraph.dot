@@ -1,0 +1,11 @@
+digraph G
+{
+  edge [fontname="FreeSans",fontsize="10",labelfontname="FreeSans",labelfontsize="10"];
+  node [fontname="FreeSans",fontsize="10",shape=record];
+  rankdir=LR;
+  Node1 [label="INTC_init_interrupts",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled" fontcolor="black"];
+  Node1 -> Node2 [color="midnightblue",fontsize="10",style="solid",fontname="FreeSans"];
+  Node2 [label="_unhandled_interrupt",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$a00026.html#a28ab192abcbadb2494292dc1c4ff0a93",tooltip="Default interrupt handler."];
+  Node1 -> Node3 [color="midnightblue",fontsize="10",style="solid",fontname="FreeSans"];
+  Node3 [label="INTC_init_evba",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$a00026.html#a5f406cf0da7ae289a937a286ed7a751f",tooltip="Init EVBA address. This sequence might also be done in the utils/startup/startup_uc3..."];
+}

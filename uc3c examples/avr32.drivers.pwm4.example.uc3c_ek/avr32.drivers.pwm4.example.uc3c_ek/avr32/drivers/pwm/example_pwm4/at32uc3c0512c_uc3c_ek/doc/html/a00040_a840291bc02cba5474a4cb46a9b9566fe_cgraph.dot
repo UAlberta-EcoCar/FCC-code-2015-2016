@@ -1,0 +1,45 @@
+digraph G
+{
+  edge [fontname="FreeSans",fontsize="10",labelfontname="FreeSans",labelfontsize="10"];
+  node [fontname="FreeSans",fontsize="10",shape=record];
+  rankdir=LR;
+  Node1 [label="main",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled" fontcolor="black"];
+  Node1 -> Node2 [color="midnightblue",fontsize="10",style="solid",fontname="FreeSans"];
+  Node2 [label="gpio_enable_module_pin",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$a00024.html#af9f1a0613d0095efbcd451aea19aad61",tooltip="Enables a specific module mode for a pin."];
+  Node1 -> Node3 [color="midnightblue",fontsize="10",style="solid",fontname="FreeSans"];
+  Node3 [label="local_start_highfreq_clock",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$a00040.html#a27a6dbc44fe2e153ae3c9a4c1dd491b0"];
+  Node3 -> Node4 [color="midnightblue",fontsize="10",style="solid",fontname="FreeSans"];
+  Node4 [label="pcl_switch_to_osc",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$a00035.html#ac557cb29483bdd41f36dea2dba5bf9ab",tooltip="UC3C Device-specific implementation."];
+  Node4 -> Node5 [color="midnightblue",fontsize="10",style="solid",fontname="FreeSans"];
+  Node5 [label="pm_set_mclk_source",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$a00033.html#ae8ae9d9b5af1bbd592f7dce6e11677b0",tooltip="Clock Functions."];
+  Node4 -> Node6 [color="midnightblue",fontsize="10",style="solid",fontname="FreeSans"];
+  Node6 [label="scif_configure_osc_crystalmode",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$a00041.html#a07a99c5e193620b3d4a6825bcd054e37",tooltip="Configure an oscillator in crystal mode."];
+  Node4 -> Node7 [color="midnightblue",fontsize="10",style="solid",fontname="FreeSans"];
+  Node7 [label="scif_enable_osc",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$a00041.html#ae6a41bbff30ad3544abd620bb8b50612",tooltip="Enable an oscillator with a given startup time."];
+  Node7 -> Node8 [color="midnightblue",fontsize="10",style="solid",fontname="FreeSans"];
+  Node8 [label="scif_pclksr_statushigh_wait",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$a00041.html#a5f0069245d4d5cbfea5cb6b3300a6c0b",tooltip="Wait for a status high in the Power and Clocks status register."];
+  Node3 -> Node9 [color="midnightblue",fontsize="10",style="solid",fontname="FreeSans"];
+  Node9 [label="scif_pll_enable",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$a00041.html#afb379ef54174ea12680afe48a82c14b9",tooltip="This function will enable a PLL."];
+  Node3 -> Node10 [color="midnightblue",fontsize="10",style="solid",fontname="FreeSans"];
+  Node10 [label="scif_pll_setup",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$a00041.html#a0762c326026298131479b2eb6c66966e",tooltip="PLL0/PLL1 Functions."];
+  Node3 -> Node11 [color="midnightblue",fontsize="10",style="solid",fontname="FreeSans"];
+  Node11 [label="scif_wait_for_pll_locked",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$a00041.html#a8d9f1c5f02e409cac54b5e518eb6b717",tooltip="This function will wait for PLL locked."];
+  Node1 -> Node12 [color="midnightblue",fontsize="10",style="solid",fontname="FreeSans"];
+  Node12 [label="pwm_channel_init",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$a00038.html#a0fd9c5d1eaab66f190adc6a125eb99a5",tooltip="Initialize a specific PWM channel."];
+  Node1 -> Node13 [color="midnightblue",fontsize="10",style="solid",fontname="FreeSans"];
+  Node13 [label="pwm_init",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$a00038.html#ac2c5b94aea8fec0a524f5967cec2e093",tooltip="This function initialize the PWM controller (mode register) and disable the interrupt..."];
+  Node13 -> Node14 [color="midnightblue",fontsize="10",style="solid",fontname="FreeSans"];
+  Node14 [label="pwm_write_protect_sw_unlock",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$a00038.html#a50ce55f3a56a65733eec8c6f912aca18",tooltip="Software Write Protect Unlock Function. This function uses the WPMR register."];
+  Node1 -> Node15 [color="midnightblue",fontsize="10",style="solid",fontname="FreeSans"];
+  Node15 [label="pwm_start_channels",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$a00038.html#a868123f5b68c9b52138015b698de3f5e",tooltip="Start PWM channels."];
+  Node1 -> Node16 [color="midnightblue",fontsize="10",style="solid",fontname="FreeSans"];
+  Node16 [label="pwm_start_gc",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$a00040.html#a351f2a827d441efea130593014774b68"];
+  Node16 -> Node17 [color="midnightblue",fontsize="10",style="solid",fontname="FreeSans"];
+  Node17 [label="scif_gc_enable",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$a00041.html#a97cca4b2eb1d71d681f7b81f54e672c3",tooltip="Enable a generic clock."];
+  Node16 -> Node18 [color="midnightblue",fontsize="10",style="solid",fontname="FreeSans"];
+  Node18 [label="scif_gc_setup",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$a00041.html#ac355443257f05c78943fdd41d8b8fb90",tooltip="Setup a generic clock."];
+  Node18 -> Node19 [color="midnightblue",fontsize="10",style="solid",fontname="FreeSans"];
+  Node19 [label="scif_stop_gclk",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$a00041.html#a703046a65be951d33d8907ca284d963a",tooltip="Stop a generic clock."];
+  Node1 -> Node20 [color="midnightblue",fontsize="10",style="solid",fontname="FreeSans"];
+  Node20 [label="pwm_update_period_value",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$a00038.html#a7985d0f7da94992bbfb60f0141ab79f1",tooltip="Define Update Period Value For Update Of Synchronous Channel."];
+}
