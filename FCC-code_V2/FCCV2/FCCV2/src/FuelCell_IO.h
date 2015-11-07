@@ -14,24 +14,7 @@
 
 
 
-#define OP_GPERS AVR32_GPIO.port[3].gpers
-#define OP_ODERS AVR32_GPIO.port[3].oders
-#define OP_OVRS AVR32_GPIO.port[3].ovrs
-#define OP_OVRC AVR32_GPIO.port[3].ovrc
-#define OP_OVRT AVR32_GPIO.port[3].ovrt
-#define OP1 (1 << 30)
-#define OP2 (1 << 29)
-#define OP3 (1 << 28)
-#define OP4 (1 << 27)
-#define OP5 (1 << 24)
-#define OP6 (1 << 12)
-#define OP7 (1 << 11)
-#define OP8 (1 << 10)
-#define OP9 (1 << 9)
-#define OP10 (1 << 8)
-
-
-//Inputs
+//Analog Inputs
 #define AMBTEMP4 AVR32_ADCIN14_PIN
 #define AMBTEMP3 AVR32_ADCIN13_PIN
 #define AMBTEMP2 AVR32_ADCIN12_PIN
@@ -48,7 +31,7 @@
 #define TANKPRES AVR32_ADCIN1_PIN
 //adcin0 unused
 
-//GPIO MAP
+//Analog GPIO MAP
 static const gpio_map_t ADCIFA_GPIO_MAP =
 {
 	{AMBTEMP4,AVR32_ADCIN14_FUNCTION},
@@ -66,39 +49,34 @@ static const gpio_map_t ADCIFA_GPIO_MAP =
 	{TANKPRES,AVR32_ADCIN1_FUNCTION};
 };
 
+//digital Inputs
+#define START AVR32_PIN_PB03
+#define SYSOK AVR32_PIN_PB02
+#define FCCON AVR32_PIN_PB23
+#define CAPCON AVR32_PIN_PC00
+#define RESCON AVR32_PIN_PB22
 
+//LEDs
+#define LED0 AVR32_PIN_PB21
+#define LED1 AVR32_PIN_PB30
+#define LED2 AVR32_PIN_PB19
+#define LED3 AVR32_PIN_PB20
+#define LED_RUN AVR32_PIN_PB31
+#define LED_START AVR32_PIN_PC01
+#define LED_ERROR AVR32_PIN_PC02
+#define LED_STOP AVR32_PIN_PC03
 
-#define DLED_GPERS AVR32_GPIO.port[1].gpers
-#define DLED_ODERS AVR32_GPIO.port[1].oders
-#define DLED_OVRS AVR32_GPIO.port[1].ovrs
-#define DLED_OVRC AVR32_GPIO.port[1].ovrc
-#define DLED_OVRT AVR32_GPIO.port[1].ovrt
-#define LED0 (1 << 21)
-#define LED1 (1 << 30)
-#define LED2 (1 << 19)
-#define LED3 (1 << 20)
-
-//status leds //on two different ports
-//port c
-#define LED_START 1
-#define LED_ERROR (1 << 2)
-#define LED_STOP (1 << 3)
-//port b
-#define LED_RUN (1 << 31)
-
-#define LED_START_ON AVR32_GPIO.port[2].ovrs = LED_START;
-#define LED_START_OFF AVR32_GPIO.port[2].ovrc = LED_START;
-#define LED_ERROR_ON AVR32_GPIO.port[2].ovrs = LED_ERROR;
-#define LED_ERROR_OFF AVR32_GPIO.port[2].ovrc = LED_ERROR;
-#define LED_STOP_ON AVR32_GPIO.port[2].ovrs = LED_STOP;
-#define LED_STOP_OFF AVR32_GPIO.port[2].ovrc = LED_STOP;
-
-#define LED_RUN_ON AVR32_GPIO.port[1].ovrs = LED_RUN;
-#define LED_RUN_OFF AVR32_GPIO.port[1].ovrc = LED_RUN;
-
-void EnableLeds(void);
-
-
+//Coil driving outputs
+#define OP_1 AVR32_PIN_PD30
+#define OP_2 AVR32_PIN_PD29
+#define OP_3 AVR32_PIN_PD28
+#define OP_4 AVR32_PIN_PD27
+#define OP_5 AVR32_PIN_PD24
+#define OP_6 AVR32_PIN_PD12
+#define OP_7 AVR32_PIN_PD11
+#define OP_8 AVR32_PIN_PD10
+#define OP_9 AVR32_PIN_PD09
+#define OP_10 AVR32_PIN_PD08
 
 
 
