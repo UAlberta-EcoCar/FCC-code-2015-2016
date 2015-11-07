@@ -29,7 +29,7 @@
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 #include <asf.h>
-#include "FuelCell_Outputs.h"
+#include "FuelCell_IO.h"
 
 #define FALSE 0
 #define TRUE 1
@@ -96,24 +96,58 @@ adcifa_sequencer_opt_t adcifa_sequence_opt = {
 	  },
   };
 
+ adcifa_sequencer_conversion_opt_t adcifa_sequence_conversion_option_1[8] =
+ {
+	 {
+		 .channel_p = AVR32_ADCIFA_INP_ADCIN0,   // Positive Channel
+		 .channel_n = AVR32_ADCIFA_INN_GNDANA,   // Negative Channel
+		 .gain      = ADCIFA_SHG_1                     // Gain of the conversion
+	 },
+	 {
+		 .channel_p = AVR32_ADCIFA_INP_ADCIN1,             // Positive Channel
+		 .channel_n = AVR32_ADCIFA_INN_GNDANA,             // Negative Channel
+		 .gain      = ADCIFA_SHG_1                     // Gain of the conversion
+	 },
+	 {
+		 .channel_p = AVR32_ADCIFA_INP_ADCIN2,             // Positive Channel
+		 .channel_n = AVR32_ADCIFA_INN_GNDANA,             // Negative Channel
+		 .gain      = ADCIFA_SHG_1                     // Gain of the conversion
+	 },
+	 {
+		 .channel_p = AVR32_ADCIFA_INP_ADCIN3,             // Positive Channel
+		 .channel_n = AVR32_ADCIFA_INN_GNDANA,             // Negative Channel
+		 .gain      = ADCIFA_SHG_1                     // Gain of the conversion
+	 },
+	 {
+		 .channel_p = AVR32_ADCIFA_INP_ADCIN4,             // Positive Channel
+		 .channel_n = AVR32_ADCIFA_INN_GNDANA,             // Negative Channel
+		 .gain      = ADCIFA_SHG_1                     // Gain of the conversion
+	 },
+	 {
+		 .channel_p = AVR32_ADCIFA_INP_ADCIN5,             // Positive Channel
+		 .channel_n = AVR32_ADCIFA_INN_GNDANA,             // Negative Channel
+		 .gain      = ADCIFA_SHG_1                     // Gain of the conversion
+	 },
+	 {
+		 .channel_p = AVR32_ADCIFA_INP_ADCIN6,             // Positive Channel
+		 .channel_n = AVR32_ADCIFA_INN_GNDANA,             // Negative Channel
+		 .gain      = ADCIFA_SHG_1                     // Gain of the conversion
+	 },
+	 {
+		 .channel_p = AVR32_ADCIFA_INP_ADCIN7,             // Positive Channel
+		 .channel_n = AVR32_ADCIFA_INN_GNDANA,             // Negative Channel
+		 .gain      = ADCIFA_SHG_1                     // Gain of the conversion
+	 },
+ };
+
 
 int16_t adcvals[7];
-
+int16_t adcvals_1[8];
 
 
 int main (void)
 
 {
-	static const gpio_map_t ADCIFA_GPIO_MAP =
-	{
-		{AMBTEMP4,AVR32_ADCIN14_FUNCTION},
-		{AMBTEMP3,AVR32_ADCIN13_FUNCTION},
-		{AMBTEMP2,AVR32_ADCIN12_FUNCTION},
-		{AMBTEMP1,AVR32_ADCIN11_FUNCTION},
-		{FCTEMP2,AVR32_ADCIN10_FUNCTION},
-		{FCTEMP1,AVR32_ADCIN9_FUNCTION},
-		{MFLOW,AVR32_ADCIN8_FUNCTION},
-	};
 	board_init();
 	gpio_enable_module(ADCIFA_GPIO_MAP, sizeof(ADCIFA_GPIO_MAP) / sizeof(ADCIFA_GPIO_MAP[0]));
 	adcifa_configure(&AVR32_ADCIFA, &adcifa_opt, 120000);

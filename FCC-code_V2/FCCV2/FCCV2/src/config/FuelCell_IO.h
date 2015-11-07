@@ -6,8 +6,8 @@
  */ 
 
 
-#ifndef FUELCELL_IO_H
-#define FUELCELL_IO_H
+#ifndef FUELCELL_OUTPUTS_H
+#define FUELCELL_OUTPUTS_H
 
 
 #define OP1_FAN 0x00000004
