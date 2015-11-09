@@ -47,17 +47,14 @@ void PWM() {
 }
 
 
-
-int16_t adcvals[7];
-int16_t adcvals_1[8];
-
+//create arrays that adc conversion results will be stored in
+int16_t adcvals_0[7];
+int16_t adcvals_1[6];
 
 int main (void)
-
 {
+	FuelCellInit();
 	
-	
-	adcifa_configure_sequencer(&AVR32_ADCIFA, 0, &adcifa_sequence_opt, adcifa_sequence_conversion_option);
 	
 	DLED_GPERS=(LED0 | LED1 | LED2 | LED3);
 	DLED_ODERS=(LED0 | LED1 | LED2 | LED3);
@@ -72,13 +69,12 @@ int main (void)
 	b=ast_init_counter(&AVR32_AST,AST_OSC_RC,AST_PSEL_32KHZ_1HZ,counta);
 	ast_enable(&AVR32_AST);
 	while(1){
-		adcifa_start_sequencer(&AVR32_ADCIFA, 0);
-		while(adcifa_get_values_from_sequencer(&AVR32_ADCIFA,
-		0,
-		&adcifa_sequence_opt,
-		adcvals)!=ADCIFA_STATUS_COMPLETED);
+		START_SEQUENCER_0
+		START_SEQUENCER_1
+		while((READ_SEQUENCER_0!=ADCIFA_STATUS_COMPLETED)|(READ_SEQUENCER_0!=ADCIFA_STATUS_COMPLETED));
 		DLED_OVRT |= LED0;
 	}
+	
 	/*while(1){
 		a=ast_get_counter_value(&AVR32_AST);
 		if((ast_get_counter_value(&AVR32_AST)%7)==0){
@@ -89,6 +85,4 @@ int main (void)
 		}
 	}*/
 
-
-	
 }

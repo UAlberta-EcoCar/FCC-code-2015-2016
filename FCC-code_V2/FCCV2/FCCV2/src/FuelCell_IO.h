@@ -24,8 +24,8 @@
 #define MFLOW AVR32_ADCIN8_PIN
 #define FCVOLT AVR32_ADCIN7_PIN
 #define CAPVOLT AVR32_ADCIN6_PIN
-#define FCCUR AVR32_ADCIN5_PIN
-#define CAPCUR AVR32_ADCIN4_PIN
+#define FCCURR AVR32_ADCIN5_PIN
+#define CAPCURR AVR32_ADCIN4_PIN
 #define FCPRES AVR32_ADCIN3_PIN
 //adcin2 unused
 #define TANKPRES AVR32_ADCIN1_PIN
@@ -43,8 +43,8 @@ static const gpio_map_t ADCIFA_GPIO_MAP =
 	{MFLOW,AVR32_ADCIN8_FUNCTION},
 	{FCVOLT,AVR32_ADCIN7_FUNCTION),
 	{CAPVOLT,AVR32_ADCIN6_FUNCTION};
-	{FCCUR,AVR32_ADCIN5_FUNCTION};
-	{CAPCUR,AVR32_ADCIN4_FUNCTION};
+	{FCCURR,AVR32_ADCIN5_FUNCTION};
+	{CAPCURR,AVR32_ADCIN4_FUNCTION};
 	{FCPRES,AVR32_ADCIN3_FUNCTION};
 	{TANKPRES,AVR32_ADCIN1_FUNCTION};
 };
@@ -68,7 +68,7 @@ adcifa_sequencer_opt_t adcifa_sequence_opt = {
 	.software_acknowledge = ADCIFA_SA_NO_EOS_SOFTACK // Software Acknowledge
 };
 
-adcifa_sequencer_conversion_opt_t adcifa_sequence_conversion_option[7] =
+adcifa_sequencer_conversion_opt_t adcifa_sequence_conversion_option_0[7] =
 {
 	{
 		.channel_p = AVR32_ADCIFA_INP_GNDANA,   // Positive Channel
@@ -107,20 +107,19 @@ adcifa_sequencer_conversion_opt_t adcifa_sequence_conversion_option[7] =
 	},
 };
 
-adcifa_sequencer_conversion_opt_t adcifa_sequence_conversion_option_1[8] =
+//these are based off of the above sequence order
+#define MFLOWValue adcvals_0[0] //sequencer 0 adcin8
+#define FCTEMP1Value adcvals_0[1] //seq 0 adcin9
+#define FCTEMP2Value adcvals_0[2] //seq 0 adcin10
+#define AMBTEMP1Value adcvals_0[3] //seq 0 adcin11
+#define AMBTEMP2Value adcvals_0[4] //seq 0 adcin12
+#define AMBTEMP3Value adcvals_0[5] //seq 0 adcin13
+#define AMBTEMP0Value adcvals_0[6] //seq 0 adcin 14
+
+adcifa_sequencer_conversion_opt_t adcifa_sequence_conversion_option_1[6] =
 {
 	{
-		.channel_p = AVR32_ADCIFA_INP_ADCIN0,   // Positive Channel
-		.channel_n = AVR32_ADCIFA_INN_GNDANA,   // Negative Channel
-		.gain      = ADCIFA_SHG_1                     // Gain of the conversion
-	},
-	{
 		.channel_p = AVR32_ADCIFA_INP_ADCIN1,             // Positive Channel
-		.channel_n = AVR32_ADCIFA_INN_GNDANA,             // Negative Channel
-		.gain      = ADCIFA_SHG_1                     // Gain of the conversion
-	},
-	{
-		.channel_p = AVR32_ADCIFA_INP_ADCIN2,             // Positive Channel
 		.channel_n = AVR32_ADCIFA_INN_GNDANA,             // Negative Channel
 		.gain      = ADCIFA_SHG_1                     // Gain of the conversion
 	},
@@ -151,9 +150,13 @@ adcifa_sequencer_conversion_opt_t adcifa_sequence_conversion_option_1[8] =
 	},
 };
 
-
-
-
+//these are based off the above sequencer order
+#define TANKPRESValue adcvals_1[0] //seq 1 adcin1
+#define FCPRESValue adcvals_1[1] //seq 1 adcin3
+#define CAPCURRValue adcvals_1[2] //seq 1 adcin4
+#define FCCURRValue adcvals_1[3] //seq 1 adcin5
+#define CAPVOLTValue adcvals_1[4] //seq 1 adcin6
+#define FCVOLTValue adcvals_1[5] //seq 1 adcin7
 
 
 //digital Inputs
