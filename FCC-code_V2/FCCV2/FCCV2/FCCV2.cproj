@@ -527,6 +527,12 @@
     <Compile Include="src\ASF\common\boards\user_board\init.c">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="src\FuelCell_Functions.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\FuelCell_Functions.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="src\FuelCell_IO.h">
       <SubType>compile</SubType>
     </Compile>

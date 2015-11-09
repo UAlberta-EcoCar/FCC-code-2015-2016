@@ -49,6 +49,113 @@ static const gpio_map_t ADCIFA_GPIO_MAP =
 	{TANKPRES,AVR32_ADCIN1_FUNCTION};
 };
 
+//ADC settings
+adcifa_opt_t adcifa_opt = {
+	.frequency                = 10000,  // ADC frequency (Hz)
+	.reference_source         = ADCIFA_REF1V, // Reference Source
+	.sample_and_hold_disable  = FALSE,    // Disable Sample and Hold Time
+	.single_sequencer_mode    = FALSE,    // Single Sequencer Mode
+	.free_running_mode_enable = FALSE,    // Free Running Mode
+	.sleep_mode_enable        = FALSE     // Sleep Mode
+};
+
+adcifa_sequencer_opt_t adcifa_sequence_opt = {
+	.convnb               = 7, // Number of sequence
+	.resolution           = ADCIFA_SRES_12B,         // Resolution selection
+	.trigger_selection    = ADCIFA_TRGSEL_SOFT,      // Trigger selection
+	.start_of_conversion  = ADCIFA_SOCB_ALLSEQ,      // Conversion Management
+	.half_word_adjustment = ADCIFA_HWLA_NOADJ,       // Half word Adjustment
+	.software_acknowledge = ADCIFA_SA_NO_EOS_SOFTACK // Software Acknowledge
+};
+
+adcifa_sequencer_conversion_opt_t adcifa_sequence_conversion_option[7] =
+{
+	{
+		.channel_p = AVR32_ADCIFA_INP_GNDANA,   // Positive Channel
+		.channel_n = AVR32_ADCIFA_INN_ADCIN8,   // Negative Channel
+		.gain      = ADCIFA_SHG_1                     // Gain of the conversion
+	},
+	{
+		.channel_p = AVR32_ADCIFA_INP_GNDANA,             // Positive Channel
+		.channel_n = AVR32_ADCIFA_INN_ADCIN9,             // Negative Channel
+		.gain      = ADCIFA_SHG_1                     // Gain of the conversion
+	},
+	{
+		.channel_p = AVR32_ADCIFA_INP_GNDANA,             // Positive Channel
+		.channel_n = AVR32_ADCIFA_INN_ADCIN10,             // Negative Channel
+		.gain      = ADCIFA_SHG_1                     // Gain of the conversion
+	},
+	{
+		.channel_p = AVR32_ADCIFA_INP_GNDANA,             // Positive Channel
+		.channel_n = AVR32_ADCIFA_INN_ADCIN11,             // Negative Channel
+		.gain      = ADCIFA_SHG_1                     // Gain of the conversion
+	},
+	{
+		.channel_p = AVR32_ADCIFA_INP_GNDANA,             // Positive Channel
+		.channel_n = AVR32_ADCIFA_INN_ADCIN12,             // Negative Channel
+		.gain      = ADCIFA_SHG_1                     // Gain of the conversion
+	},
+	{
+		.channel_p = AVR32_ADCIFA_INP_GNDANA,             // Positive Channel
+		.channel_n = AVR32_ADCIFA_INN_ADCIN13,             // Negative Channel
+		.gain      = ADCIFA_SHG_1                     // Gain of the conversion
+	},
+	{
+		.channel_p = AVR32_ADCIFA_INP_GNDANA,             // Positive Channel
+		.channel_n = AVR32_ADCIFA_INN_ADCIN14,             // Negative Channel
+		.gain      = ADCIFA_SHG_1                     // Gain of the conversion
+	},
+};
+
+adcifa_sequencer_conversion_opt_t adcifa_sequence_conversion_option_1[8] =
+{
+	{
+		.channel_p = AVR32_ADCIFA_INP_ADCIN0,   // Positive Channel
+		.channel_n = AVR32_ADCIFA_INN_GNDANA,   // Negative Channel
+		.gain      = ADCIFA_SHG_1                     // Gain of the conversion
+	},
+	{
+		.channel_p = AVR32_ADCIFA_INP_ADCIN1,             // Positive Channel
+		.channel_n = AVR32_ADCIFA_INN_GNDANA,             // Negative Channel
+		.gain      = ADCIFA_SHG_1                     // Gain of the conversion
+	},
+	{
+		.channel_p = AVR32_ADCIFA_INP_ADCIN2,             // Positive Channel
+		.channel_n = AVR32_ADCIFA_INN_GNDANA,             // Negative Channel
+		.gain      = ADCIFA_SHG_1                     // Gain of the conversion
+	},
+	{
+		.channel_p = AVR32_ADCIFA_INP_ADCIN3,             // Positive Channel
+		.channel_n = AVR32_ADCIFA_INN_GNDANA,             // Negative Channel
+		.gain      = ADCIFA_SHG_1                     // Gain of the conversion
+	},
+	{
+		.channel_p = AVR32_ADCIFA_INP_ADCIN4,             // Positive Channel
+		.channel_n = AVR32_ADCIFA_INN_GNDANA,             // Negative Channel
+		.gain      = ADCIFA_SHG_1                     // Gain of the conversion
+	},
+	{
+		.channel_p = AVR32_ADCIFA_INP_ADCIN5,             // Positive Channel
+		.channel_n = AVR32_ADCIFA_INN_GNDANA,             // Negative Channel
+		.gain      = ADCIFA_SHG_1                     // Gain of the conversion
+	},
+	{
+		.channel_p = AVR32_ADCIFA_INP_ADCIN6,             // Positive Channel
+		.channel_n = AVR32_ADCIFA_INN_GNDANA,             // Negative Channel
+		.gain      = ADCIFA_SHG_1                     // Gain of the conversion
+	},
+	{
+		.channel_p = AVR32_ADCIFA_INP_ADCIN7,             // Positive Channel
+		.channel_n = AVR32_ADCIFA_INN_GNDANA,             // Negative Channel
+		.gain      = ADCIFA_SHG_1                     // Gain of the conversion
+	},
+};
+
+
+
+
+
+
 //digital Inputs
 #define START AVR32_PIN_PB03
 #define SYSOK AVR32_PIN_PB02
@@ -77,8 +184,6 @@ static const gpio_map_t ADCIFA_GPIO_MAP =
 #define OP_8 AVR32_PIN_PD10
 #define OP_9 AVR32_PIN_PD09
 #define OP_10 AVR32_PIN_PD08
-
-
 
 
 #endif /* INCFILE1_H_ */
