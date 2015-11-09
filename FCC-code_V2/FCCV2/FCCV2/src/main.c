@@ -39,6 +39,7 @@ uint32_t a;
 char b;
 unsigned int g;
 unsigned long counta;
+unsigned int val;
 
 void PWM() {
 	
@@ -47,9 +48,6 @@ void PWM() {
 }
 
 
-//create arrays that adc conversion results will be stored in
-int16_t adcvals_0[7];
-int16_t adcvals_1[6];
 
 int main (void)
 {
@@ -68,11 +66,13 @@ int main (void)
 	counta=0;
 	b=ast_init_counter(&AVR32_AST,AST_OSC_RC,AST_PSEL_32KHZ_1HZ,counta);
 	ast_enable(&AVR32_AST);
+	
 	while(1){
 		START_SEQUENCER_0
 		START_SEQUENCER_1
 		while((READ_SEQUENCER_0!=ADCIFA_STATUS_COMPLETED)|(READ_SEQUENCER_0!=ADCIFA_STATUS_COMPLETED));
-		DLED_OVRT |= LED0;
+		gpio_tgl_gpio_pin(LED0);
+		val = FCVOLTValue;
 	}
 	
 	/*while(1){
