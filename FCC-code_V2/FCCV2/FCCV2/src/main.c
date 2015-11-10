@@ -48,7 +48,7 @@ static void local_start_highfreq_clock(void)
 		.osc = SCIF_GCCTRL_RC8M,     //"The PLLs can take either Oscillator 0, Oscillator 1 or 8MHz RC Oscillator (RC8M) as reference clock"
 		.lockcount = 16,      // lockcount in main clock for the PLL wait lock
 		.div = 0,             // PLLDIV=0 in the formula
-		.mul = 6,             // PLLMUL=4
+		.mul = 4,             // PLLMUL=4
 		.pll_div2 = 1,        // pll_div2 Divide the PLL output frequency by 2 (this settings does not change the FVCO value)
 		.pll_wbwdisable = 0,  // pll_wbwdisable 1 Disable the Wide-Bandith Mode (Wide-Bandwith mode allow a faster startup time and out-of-lock time). 0 to enable the Wide-Bandith Mode.
 		.pll_freq = 1,        // Set to 1 for VCO frequency range 80-180MHz, set to 0 for VCO frequency range 160-240Mhz. (VCO = 80 MHz in this case)
@@ -150,8 +150,8 @@ int main(void)
 			fan_pwm_channel.CMR.calg  = PWM_MODE_LEFT_ALIGNED;       // Channel mode.
 			fan_pwm_channel.CMR.cpol  = PWM_POLARITY_LOW;            // Channel polarity.
 			fan_pwm_channel.CMR.cpre  = 2;           // Channel prescaler divide by 4. = 25KHz? see page 1036 of datasheet
-			fan_pwm_channel.cdty      = 5;       // Channel duty cycle, should be < CPRD.
-			fan_pwm_channel.cprd      = 20;       // Channel period.
+			fan_pwm_channel.cdty      = 200;       // Channel duty cycle, should be < CPRD.
+			fan_pwm_channel.cprd      = 400;       // Channel period.
 
 
 
