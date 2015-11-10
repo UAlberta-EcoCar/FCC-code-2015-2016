@@ -36,9 +36,10 @@
 uint32_t a;
 char b;
 unsigned int g;
-unsigned long counta;
-unsigned int val;
 
+unsigned int val;
+unsigned long time1 = 0;
+unsigned long time2 = 0;
 
 
 int main (void)
@@ -49,18 +50,16 @@ int main (void)
 	g=0;
 	a=0;
 	/* Insert system clock initialization code here (sysclk_init()). */
-	
-	
-	
-	counta=0;
-	b=ast_init_counter(&AVR32_AST,AST_OSC_RC,AST_PSEL_32KHZ_1HZ,counta);
-	ast_enable(&AVR32_AST);
-	
-	while(1){
+
+	while(1)
+	{
 		StartADC_Sequencers();
 		ReadADC_Sequencers();
 		gpio_tgl_gpio_pin(LED0);
 		val = FCVOLTValue;
+		if(millis() - time1 > 1000)
+		{
+			gpio_tgl_gpio_pin(LED1);
+		}
 	}
-	
 }
