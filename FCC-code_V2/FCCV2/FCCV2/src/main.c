@@ -29,11 +29,9 @@
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 #include <asf.h>
-#include "FuelCell_IO.h"
 #include "FuelCell_Functions.h"
-
-#define FALSE 0
-#define TRUE 1
+#include "digital_IO_defs.h"
+#include "FuelCell_ADC.h"
 
 uint32_t a;
 char b;
@@ -41,21 +39,12 @@ unsigned int g;
 unsigned long counta;
 unsigned int val;
 
-void PWM() {
-	
-	
-	
-}
-
 
 
 int main (void)
 {
 	FuelCellInit();
 	
-	
-	DLED_GPERS=(LED0 | LED1 | LED2 | LED3);
-	DLED_ODERS=(LED0 | LED1 | LED2 | LED3);
 	
 	g=0;
 	a=0;
@@ -68,21 +57,10 @@ int main (void)
 	ast_enable(&AVR32_AST);
 	
 	while(1){
-		START_SEQUENCER_0
-		START_SEQUENCER_1
-		while((READ_SEQUENCER_0!=ADCIFA_STATUS_COMPLETED)|(READ_SEQUENCER_0!=ADCIFA_STATUS_COMPLETED));
+		StartADC_Sequencers();
+		ReadADC_Sequencers();
 		gpio_tgl_gpio_pin(LED0);
 		val = FCVOLTValue;
 	}
 	
-	/*while(1){
-		a=ast_get_counter_value(&AVR32_AST);
-		if((ast_get_counter_value(&AVR32_AST)%7)==0){
-			DLED_OVRS |= LED0;
-		}
-		if((ast_get_counter_value(&AVR32_AST)%13)==0){
-			DLED_OVRC |= LED0;
-		}
-	}*/
-
 }

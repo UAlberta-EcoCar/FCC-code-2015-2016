@@ -16,6 +16,8 @@ src\ASF\avr32\drivers\pm\pm_uc3c.c
 
 src\ASF\avr32\drivers\pm\power_clocks_lib.c
 
+src\ASF\avr32\drivers\pwm\pwm4.c
+
 src\ASF\avr32\drivers\scif\scif_uc3c.c
 
 src\ASF\common\services\clock\uc3c\osc.c
@@ -35,6 +37,10 @@ src\ASF\avr32\utils\startup\startup_uc3.S
 src\ASF\avr32\utils\startup\trampoline_uc3.S
 
 src\ASF\common\boards\user_board\init.c
+
+src\FuelCell_ADC.c
+
+src\FuelCell_Functions.c
 
 src\main.c
 

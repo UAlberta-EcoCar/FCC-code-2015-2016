@@ -34,10 +34,11 @@
           <option id="avr32.drivers.ast" value="Add" config="" content-id="Atmel.ASF" />
           <option id="avr32.drivers.canif" value="Add" config="" content-id="Atmel.ASF" />
           <option id="avr32.drivers.gpio" value="Add" config="" content-id="Atmel.ASF" />
+          <option id="avr32.drivers.pm" value="Add" config="" content-id="Atmel.ASF" />
           <option id="avr32.drivers.scif" value="Add" config="" content-id="Atmel.ASF" />
           <option id="avr32.services.network.can" value="Add" config="" content-id="Atmel.ASF" />
           <option id="common.boards" value="Add" config="" content-id="Atmel.ASF" />
-          <option id="avr32.drivers.pm" value="Add" config="" content-id="Atmel.ASF" />
+          <option id="avr32.drivers.pwm" value="Add" config="" content-id="Atmel.ASF" />
         </options>
         <configurations>
           <configuration key="config.avr32.utils.trampoline" value="yes" default="yes" content-id="Atmel.ASF" />
@@ -105,6 +106,8 @@
           <file path="src/ASF/avr32/drivers/pm/power_clocks_lib.h" framework="" version="3.27.3" source="avr32\drivers\pm\power_clocks_lib.h" changed="False" content-id="Atmel.ASF" />
           <file path="src/ASF/avr32/drivers/pm/pm_uc3c.h" framework="" version="3.27.3" source="avr32\drivers\pm\pm_uc3c.h" changed="False" content-id="Atmel.ASF" />
           <file path="src/ASF/avr32/drivers/pm/sleep.h" framework="" version="3.27.3" source="avr32\drivers\pm\sleep.h" changed="False" content-id="Atmel.ASF" />
+          <file path="src/ASF/avr32/drivers/pwm/pwm4.c" framework="" version="3.27.3" source="avr32\drivers\pwm\pwm4.c" changed="False" content-id="Atmel.ASF" />
+          <file path="src/ASF/avr32/drivers/pwm/pwm4.h" framework="" version="3.27.3" source="avr32\drivers\pwm\pwm4.h" changed="False" content-id="Atmel.ASF" />
         </files>
         <documentation help="http://asf.atmel.com/docs/3.27.3/common.applications.user_application.user_board.uc3c/html/index.html" />
         <offline-documentation help="" />
@@ -166,6 +169,7 @@
             <Value>../src/ASF/common/services/clock</Value>
             <Value>../src/ASF/common/services/delay</Value>
             <Value>../src/ASF/avr32/drivers/pm</Value>
+            <Value>../src/ASF/avr32/drivers/pwm</Value>
           </ListValues>
         </avr32gcc.compiler.directories.IncludePaths>
         <avr32gcc.compiler.optimization.level>Optimize for size (-Os)</avr32gcc.compiler.optimization.level>
@@ -207,6 +211,7 @@
             <Value>../src/ASF/common/services/clock</Value>
             <Value>../src/ASF/common/services/delay</Value>
             <Value>../src/ASF/avr32/drivers/pm</Value>
+            <Value>../src/ASF/avr32/drivers/pwm</Value>
           </ListValues>
         </avr32gcc.assembler.general.IncludePaths>
         <avr32gcc.preprocessingassembler.general.AssemblerFlags>-mrelax -DBOARD=USER_BOARD</avr32gcc.preprocessingassembler.general.AssemblerFlags>
@@ -233,6 +238,7 @@
             <Value>../src/ASF/common/services/clock</Value>
             <Value>../src/ASF/common/services/delay</Value>
             <Value>../src/ASF/avr32/drivers/pm</Value>
+            <Value>../src/ASF/avr32/drivers/pwm</Value>
           </ListValues>
         </avr32gcc.preprocessingassembler.general.IncludePaths>
       </Avr32Gcc>
@@ -274,6 +280,7 @@
             <Value>../src/ASF/common/services/clock</Value>
             <Value>../src/ASF/common/services/delay</Value>
             <Value>../src/ASF/avr32/drivers/pm</Value>
+            <Value>../src/ASF/avr32/drivers/pwm</Value>
           </ListValues>
         </avr32gcc.compiler.directories.IncludePaths>
         <avr32gcc.compiler.optimization.level>Optimize (-O1)</avr32gcc.compiler.optimization.level>
@@ -316,6 +323,7 @@
             <Value>../src/ASF/common/services/clock</Value>
             <Value>../src/ASF/common/services/delay</Value>
             <Value>../src/ASF/avr32/drivers/pm</Value>
+            <Value>../src/ASF/avr32/drivers/pwm</Value>
           </ListValues>
         </avr32gcc.assembler.general.IncludePaths>
         <avr32gcc.assembler.debugging.DebugLevel>Default (-g)</avr32gcc.assembler.debugging.DebugLevel>
@@ -343,6 +351,7 @@
             <Value>../src/ASF/common/services/clock</Value>
             <Value>../src/ASF/common/services/delay</Value>
             <Value>../src/ASF/avr32/drivers/pm</Value>
+            <Value>../src/ASF/avr32/drivers/pwm</Value>
           </ListValues>
         </avr32gcc.preprocessingassembler.general.IncludePaths>
         <avr32gcc.preprocessingassembler.debugging.DebugLevel>Default (-Wa,-g)</avr32gcc.preprocessingassembler.debugging.DebugLevel>
@@ -350,6 +359,9 @@
     </ToolchainSettings>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="src\analog_defs.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="src\ASF\avr32\drivers\adcifa\adcifa.c">
       <SubType>compile</SubType>
     </Compile>
@@ -378,6 +390,12 @@
       <SubType>compile</SubType>
     </Compile>
     <None Include="src\ASF\avr32\drivers\pm\power_clocks_lib.h">
+      <SubType>compile</SubType>
+    </None>
+    <Compile Include="src\ASF\avr32\drivers\pwm\pwm4.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <None Include="src\ASF\avr32\drivers\pwm\pwm4.h">
       <SubType>compile</SubType>
     </None>
     <Compile Include="src\ASF\avr32\drivers\scif\scif_uc3c.c">
@@ -527,13 +545,19 @@
     <Compile Include="src\ASF\common\boards\user_board\init.c">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="src\FuelCell_ADC.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\FuelCell_ADC.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="src\FuelCell_Functions.c">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="src\FuelCell_Functions.h">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="src\FuelCell_IO.h">
+    <Compile Include="src\digital_IO_defs.h">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="src\main.c">
@@ -554,6 +578,7 @@
     <Folder Include="src\ASF\avr32\drivers\gpio\" />
     <Folder Include="src\ASF\avr32\drivers\intc\" />
     <Folder Include="src\ASF\avr32\drivers\pm\" />
+    <Folder Include="src\ASF\avr32\drivers\pwm\" />
     <Folder Include="src\ASF\avr32\drivers\scif\" />
     <Folder Include="src\ASF\avr32\services\" />
     <Folder Include="src\ASF\avr32\services\network\" />
