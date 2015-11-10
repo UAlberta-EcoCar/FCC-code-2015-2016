@@ -21,6 +21,8 @@ void board_init(void)
 	 * for, e.g., the I/O pins. The initialization can rely on application-
 	 * specific board configuration, found in conf_board.h.
 	 */
+	scif_start_rc120M();
+	scif_start_rc8M();
 	//setup adc
 	ADCInit();
 	

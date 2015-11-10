@@ -14,6 +14,7 @@ unsigned long counta;
 void millis_init(void)
 {
 	//set up timer for millis
+	scif_start_rc120M();
 	ast_init_counter(&AVR32_AST,AST_OSC_RC,0,counta);
 	ast_enable(&AVR32_AST);
 }

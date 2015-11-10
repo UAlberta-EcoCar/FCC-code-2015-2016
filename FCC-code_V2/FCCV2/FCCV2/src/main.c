@@ -36,6 +36,7 @@
 
 unsigned long time1 = 0;
 int val;
+unsigned long timeref=0;
 
 int main (void)
 {
@@ -48,6 +49,8 @@ int main (void)
 	
 	gpio_get_pin_value(FCCON);
 	
+	while(1){
+	timeref=millis();
 	if(time1 - millis() > 1000)
 	{
 		gpio_tgl_gpio_pin(LED0);
@@ -55,4 +58,6 @@ int main (void)
 		FANUpdate(500); //Note it would be really cool if this function set the actual rpm but it doesn't
 	}
 	
+	
+	}
 }

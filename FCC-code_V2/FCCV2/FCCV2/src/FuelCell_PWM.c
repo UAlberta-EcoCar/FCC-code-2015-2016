@@ -121,7 +121,6 @@ void PWMInit(void)
 
 	pwm_channel_init(FAN_PWM_CHANNEL_ID, &fan_pwm_channel); // Set channel configuration to channel 2
 	pwm_start_channels((1 << FAN_PWM_CHANNEL_ID));  // Start channel 2.
-	while(1);
 }
 
 
