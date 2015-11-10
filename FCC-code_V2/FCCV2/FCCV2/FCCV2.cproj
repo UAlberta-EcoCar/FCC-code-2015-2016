@@ -563,9 +563,6 @@
     <Compile Include="src\digital_IO_defs.h">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="src\FuelCell_PWM.c">
-      <SubType>compile</SubType>
-    </Compile>
     <Compile Include="src\FuelCell_PWM.h">
       <SubType>compile</SubType>
     </Compile>
