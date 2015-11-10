@@ -11,6 +11,9 @@
 #include <asf.h>
 #include <board.h>
 #include <conf_board.h>
+#include "FuelCell_ADC.h"
+#include "FuelCell_PWM.h"
+#include "FuelCell_Functions.h"
 
 void board_init(void)
 {
@@ -18,4 +21,11 @@ void board_init(void)
 	 * for, e.g., the I/O pins. The initialization can rely on application-
 	 * specific board configuration, found in conf_board.h.
 	 */
+	//setup adc
+	ADCInit();
+	
+	millis_init();
+	
+	//set up pwm (this will be fun)
+	PWMInit();
 }

@@ -76,6 +76,7 @@ C_SRCS +=  \
 ../src/ASF/avr32/drivers/flashc/flashc.c \
 ../src/ASF/avr32/drivers/gpio/gpio.c \
 ../src/ASF/avr32/drivers/pm/pm_uc3c.c \
+../src/FuelCell_PWM.c \
 ../src/ASF/avr32/drivers/pm/power_clocks_lib.c \
 ../src/ASF/avr32/drivers/pwm/pwm4.c \
 ../src/ASF/avr32/drivers/scif/scif_uc3c.c \
@@ -106,6 +107,7 @@ src/ASF/avr32/drivers/canif/canif.o \
 src/ASF/avr32/drivers/flashc/flashc.o \
 src/ASF/avr32/drivers/gpio/gpio.o \
 src/ASF/avr32/drivers/pm/pm_uc3c.o \
+src/FuelCell_PWM.o \
 src/ASF/avr32/drivers/pm/power_clocks_lib.o \
 src/ASF/avr32/drivers/pwm/pwm4.o \
 src/ASF/avr32/drivers/scif/scif_uc3c.o \
@@ -129,6 +131,7 @@ src/ASF/avr32/drivers/canif/canif.o \
 src/ASF/avr32/drivers/flashc/flashc.o \
 src/ASF/avr32/drivers/gpio/gpio.o \
 src/ASF/avr32/drivers/pm/pm_uc3c.o \
+src/FuelCell_PWM.o \
 src/ASF/avr32/drivers/pm/power_clocks_lib.o \
 src/ASF/avr32/drivers/pwm/pwm4.o \
 src/ASF/avr32/drivers/scif/scif_uc3c.o \
@@ -152,6 +155,7 @@ src/ASF/avr32/drivers/canif/canif.d \
 src/ASF/avr32/drivers/flashc/flashc.d \
 src/ASF/avr32/drivers/gpio/gpio.d \
 src/ASF/avr32/drivers/pm/pm_uc3c.d \
+src/FuelCell_PWM.d \
 src/ASF/avr32/drivers/pm/power_clocks_lib.d \
 src/ASF/avr32/drivers/pwm/pwm4.d \
 src/ASF/avr32/drivers/scif/scif_uc3c.d \
@@ -175,6 +179,7 @@ src/ASF/avr32/drivers/canif/canif.d \
 src/ASF/avr32/drivers/flashc/flashc.d \
 src/ASF/avr32/drivers/gpio/gpio.d \
 src/ASF/avr32/drivers/pm/pm_uc3c.d \
+src/FuelCell_PWM.d \
 src/ASF/avr32/drivers/pm/power_clocks_lib.d \
 src/ASF/avr32/drivers/pwm/pwm4.d \
 src/ASF/avr32/drivers/scif/scif_uc3c.d \
@@ -205,6 +210,8 @@ LINKER_SCRIPT_DEP+=
 
 
 # AVR32/GNU C Compiler
+
+
 
 
 
@@ -284,6 +291,13 @@ src/ASF/avr32/drivers/pm/%.o: ../src/ASF/avr32/drivers/pm/%.c
 	@echo Finished building: $<
 	
 
+src/%.o: ../src/%.c
+	@echo Building file: $<
+	@echo Invoking: AVR32/GNU C Compiler : 4.4.7
+	$(QUOTE)C:\Program Files (x86)\Atmel\Studio\7.0\toolchain\avr32\avr32-gnu-toolchain\bin\avr32-gcc.exe$(QUOTE)  -x c -DDEBUG -DBOARD=USER_BOARD  -I"C:\Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\UC3C_DFP\1.0.42\include" -I"../common/applications/user_application/user_board/config" -I"../src/ASF/avr32/utils" -I"../src/config" -I"../src/ASF/common/boards" -I"../src/ASF/avr32/utils/preprocessor" -I"../src/ASF/avr32/drivers/intc" -I"../src/ASF/common/utils" -I"../src" -I"../src/ASF/common/boards/user_board" -I"../src/ASF/avr32/drivers/adcifa" -I"../src/ASF/avr32/drivers/ast" -I"../src/ASF/avr32/drivers/canif" -I"../src/ASF/avr32/drivers/cpu/cycle_counter" -I"../src/ASF/avr32/drivers/flashc" -I"../src/ASF/avr32/drivers/gpio" -I"../src/ASF/avr32/services/network/can" -I"../src/ASF/avr32/drivers/scif" -I"../src/ASF/common/services/clock" -I"../src/ASF/common/services/delay" -I"../src/ASF/avr32/drivers/pm" -I"../src/ASF/avr32/drivers/pwm"  -O1 -fdata-sections -ffunction-sections -masm-addr-pseudos -g3 -Wall -mpart=uc3c164c -c -std=gnu99 -fno-strict-aliasing -Wstrict-prototypes -Wmissing-prototypes -Werror-implicit-function-declaration -Wpointer-arith -mrelax -mno-cond-exec-before-reload -MD -MP -MF "$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -MT"$(@:%.o=%.o)"   -o "$@" "$<" 
+	@echo Finished building: $<
+	
+
 src/ASF/avr32/drivers/pwm/%.o: ../src/ASF/avr32/drivers/pwm/%.c
 	@echo Building file: $<
 	@echo Invoking: AVR32/GNU C Compiler : 4.4.7
@@ -320,13 +334,6 @@ src/ASF/avr32/drivers/intc/%.o: ../src/ASF/avr32/drivers/intc/%.c
 	
 
 src/ASF/common/boards/user_board/%.o: ../src/ASF/common/boards/user_board/%.c
-	@echo Building file: $<
-	@echo Invoking: AVR32/GNU C Compiler : 4.4.7
-	$(QUOTE)C:\Program Files (x86)\Atmel\Studio\7.0\toolchain\avr32\avr32-gnu-toolchain\bin\avr32-gcc.exe$(QUOTE)  -x c -DDEBUG -DBOARD=USER_BOARD  -I"C:\Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\UC3C_DFP\1.0.42\include" -I"../common/applications/user_application/user_board/config" -I"../src/ASF/avr32/utils" -I"../src/config" -I"../src/ASF/common/boards" -I"../src/ASF/avr32/utils/preprocessor" -I"../src/ASF/avr32/drivers/intc" -I"../src/ASF/common/utils" -I"../src" -I"../src/ASF/common/boards/user_board" -I"../src/ASF/avr32/drivers/adcifa" -I"../src/ASF/avr32/drivers/ast" -I"../src/ASF/avr32/drivers/canif" -I"../src/ASF/avr32/drivers/cpu/cycle_counter" -I"../src/ASF/avr32/drivers/flashc" -I"../src/ASF/avr32/drivers/gpio" -I"../src/ASF/avr32/services/network/can" -I"../src/ASF/avr32/drivers/scif" -I"../src/ASF/common/services/clock" -I"../src/ASF/common/services/delay" -I"../src/ASF/avr32/drivers/pm" -I"../src/ASF/avr32/drivers/pwm"  -O1 -fdata-sections -ffunction-sections -masm-addr-pseudos -g3 -Wall -mpart=uc3c164c -c -std=gnu99 -fno-strict-aliasing -Wstrict-prototypes -Wmissing-prototypes -Werror-implicit-function-declaration -Wpointer-arith -mrelax -mno-cond-exec-before-reload -MD -MP -MF "$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -MT"$(@:%.o=%.o)"   -o "$@" "$<" 
-	@echo Finished building: $<
-	
-
-src/%.o: ../src/%.c
 	@echo Building file: $<
 	@echo Invoking: AVR32/GNU C Compiler : 4.4.7
 	$(QUOTE)C:\Program Files (x86)\Atmel\Studio\7.0\toolchain\avr32\avr32-gnu-toolchain\bin\avr32-gcc.exe$(QUOTE)  -x c -DDEBUG -DBOARD=USER_BOARD  -I"C:\Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\UC3C_DFP\1.0.42\include" -I"../common/applications/user_application/user_board/config" -I"../src/ASF/avr32/utils" -I"../src/config" -I"../src/ASF/common/boards" -I"../src/ASF/avr32/utils/preprocessor" -I"../src/ASF/avr32/drivers/intc" -I"../src/ASF/common/utils" -I"../src" -I"../src/ASF/common/boards/user_board" -I"../src/ASF/avr32/drivers/adcifa" -I"../src/ASF/avr32/drivers/ast" -I"../src/ASF/avr32/drivers/canif" -I"../src/ASF/avr32/drivers/cpu/cycle_counter" -I"../src/ASF/avr32/drivers/flashc" -I"../src/ASF/avr32/drivers/gpio" -I"../src/ASF/avr32/services/network/can" -I"../src/ASF/avr32/drivers/scif" -I"../src/ASF/common/services/clock" -I"../src/ASF/common/services/delay" -I"../src/ASF/avr32/drivers/pm" -I"../src/ASF/avr32/drivers/pwm"  -O1 -fdata-sections -ffunction-sections -masm-addr-pseudos -g3 -Wall -mpart=uc3c164c -c -std=gnu99 -fno-strict-aliasing -Wstrict-prototypes -Wmissing-prototypes -Werror-implicit-function-declaration -Wpointer-arith -mrelax -mno-cond-exec-before-reload -MD -MP -MF "$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -MT"$(@:%.o=%.o)"   -o "$@" "$<" 

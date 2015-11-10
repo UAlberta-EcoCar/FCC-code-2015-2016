@@ -380,7 +380,7 @@
     <Compile Include="src\ASF\avr32\drivers\pm\pm_uc3c.c">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="src\pwm_defs.h">
+    <Compile Include="src\FuelCell_PWM.c">
       <SubType>compile</SubType>
     </Compile>
     <None Include="src\ASF\avr32\drivers\pm\sleep.h">

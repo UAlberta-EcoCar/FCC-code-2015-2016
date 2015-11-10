@@ -8,7 +8,7 @@
 #ifndef FUELCELL_FUNCTIONS_H_
 #define FUELCELL_FUNCTIONS_H_
 
-void FuelCellInit(void);
+void millis_init(void);
 unsigned long millis(void);
 
 
