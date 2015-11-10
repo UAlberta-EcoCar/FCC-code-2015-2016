@@ -46,6 +46,8 @@ int main (void)
 	
 	val = FCVOLTValue;
 	
+	gpio_get_pin_value(FCCON);
+	
 	if(time1 - millis() > 1000)
 	{
 		gpio_tgl_gpio_pin(LED0);
