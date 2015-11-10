@@ -125,10 +125,10 @@ int main(void)
 
 			pwm_opt.fault_detection_activated = false;
 			pwm_opt.sync_channel_activated    = true;
-			pwm_opt.sync_update_channel_mode  = PWM_SYNC_UPDATE_MANUAL_WRITE_MANUAL_UPDATE;
+			pwm_opt.sync_update_channel_mode  = PWM_SYNC_CHANNEL_OFF;
 			pwm_opt.sync_channel_select[0]    = false;
 			pwm_opt.sync_channel_select[1]    = false;
-			pwm_opt.sync_channel_select[2]    = true;
+			pwm_opt.sync_channel_select[2]    = false;
 			pwm_opt.sync_channel_select[3]    = false;
 			pwm_opt.cksel                     = PWM_CKSEL_GCLK;
 			pwm_init(&pwm_opt);
@@ -157,10 +157,7 @@ int main(void)
 
 
 			pwm_channel_init(FAN_PWM_CHANNEL_ID, &fan_pwm_channel); // Set channel configuration to channel 2
-			pwm_channel_init(0, &fan_pwm_channel); // Set channel configuration to channel 2
-			//pwm_channel_init(1, &fan_pwm_channel); // Set channel configuration to channel 2
-			//pwm_channel_init(3, &fan_pwm_channel); // Set channel configuration to channel 2
-			pwm_start_channels((1 << FAN_PWM_CHANNEL_ID)|(1));  // Start channel 2 & 3.
+			pwm_start_channels((1 << FAN_PWM_CHANNEL_ID));  // Start channel 2.
 			while(1);
 		}
 
