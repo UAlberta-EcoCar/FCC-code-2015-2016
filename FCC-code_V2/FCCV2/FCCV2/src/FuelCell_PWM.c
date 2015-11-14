@@ -14,7 +14,6 @@
 
 
 
-
 // Start oscillator and enable PLL0, sourced by RC8M
 static void local_start_highfreq_clock(void)
 {
@@ -124,8 +123,28 @@ void PWMInit(void)
 }
 
 
-void FANUpdate(unsigned int duty_cycle)
+
+//I modified pwm_update_channel(unsigned int channel_id, const avr32_pwm_channel_t *pwm_channel) to make this
+//not sure what the lines i commented out do
+int pwm_update_duty_cycle(unsigned int channel_id, const avr32_pwm_channel_t *pwm_channel)
+{
+	volatile avr32_pwm_t *pwm = &AVR32_PWM;
+
+	if (channel_id > AVR32_PWM_LINES_MSB)
+	return PWM_INVALID_INPUT;
+
+	AVR32_PWM.isr1;                                    // Acknowledgement and clear previous register state.
+	//while (!(AVR32_PWM.isr1 & (1 << channel_id)));     // Wait until the last write has been taken into account.
+	pwm->channel[channel_id].cdtyupd= pwm_channel->cdtyupd; // Channel update Duty Cycle
+	//pwm->channel[channel_id].cprdupd= pwm_channel->cprdupd; // Channel update Period
+	//pwm->channel[channel_id].dtupd= pwm_channel->dtupd;     // Channel update Dead Time
+
+	return PWM_SUCCESS;
+}
+
+
+int FANUpdate(unsigned int duty_cycle)
 {
 	fan_pwm_channel.cdty = duty_cycle;
-	pwm_update_channel(FAN_PWM_CHANNEL_ID,&fan_pwm_channel);
+	return(pwm_update_duty_cycle(FAN_PWM_CHANNEL_ID,&fan_pwm_channel));
 }

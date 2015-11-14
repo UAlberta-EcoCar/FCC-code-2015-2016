@@ -37,6 +37,10 @@
 unsigned long time1 = 0;
 int val;
 unsigned long timeref=0;
+unsigned long countb;
+
+
+
 
 int main (void)
 {
@@ -45,13 +49,15 @@ int main (void)
 	StartADC_Sequencers();
 	ReadADC_Sequencers();
 	
+
+	
 	val = FCVOLTValue;
 	
 	gpio_get_pin_value(FCCON);
 	
 	while(1){
-	timeref=millis();
-	if(time1 - millis() > 1000)
+
+	if((millis() - time1) > 1000)
 	{
 		gpio_tgl_gpio_pin(LED0);
 		time1 = millis();
