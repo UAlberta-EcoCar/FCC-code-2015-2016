@@ -38,6 +38,7 @@ unsigned long time1 = 0;
 unsigned long time2 = 0;
 unsigned long time3 = 0;
 unsigned long time4 = 0;
+unsigned long time5 = 0;
 int val = 0;
 unsigned long timeref=0;
 unsigned long countb;
@@ -83,17 +84,22 @@ int main (void)
 	{
 		gpio_tgl_gpio_pin(LED3);
 		time4 = millis();
-		val ^= 1;
+	}
+	
+	if((millis()-time5) > 5000)
+	{
+		time5 = millis();
 		if(val)
 		{
-			//FANUpdate(3000);
+			FANUpdate(25);
+			val = 0;
 		}
 		else
 		{
-			//FANUpdate(500);
+			FANUpdate(75);
+			val = 1;
 		}
 	}
 	
-		
 	}
 }
