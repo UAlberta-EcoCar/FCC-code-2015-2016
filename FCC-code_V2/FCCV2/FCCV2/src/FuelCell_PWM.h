@@ -13,7 +13,7 @@
 #define MAXSPEED 
 
 void PWMInit(void);
-int FANUpdate(unsigned int duty_cycle);
+int FANUpdate(unsigned int duty_cycle); // X / 4000
 
 
 #endif /* FUELCELL_PWM_H_ */

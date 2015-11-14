@@ -38,7 +38,7 @@ unsigned long time1 = 0;
 unsigned long time2 = 0;
 unsigned long time3 = 0;
 unsigned long time4 = 0;
-int val;
+int val = 0;
 unsigned long timeref=0;
 unsigned long countb;
 
@@ -64,7 +64,6 @@ int main (void)
 	{
 		gpio_tgl_gpio_pin(LED0);
 		time1 = millis();
-		FANUpdate(500); //Note it would be really cool if this function set the actual rpm but it doesn't
 	}
 	
 	
@@ -84,9 +83,17 @@ int main (void)
 	{
 		gpio_tgl_gpio_pin(LED3);
 		time4 = millis();
+		val ^= 1;
+		if(val)
+		{
+			//FANUpdate(3000);
+		}
+		else
+		{
+			//FANUpdate(500);
+		}
 	}
 	
-	
-	
+		
 	}
 }
