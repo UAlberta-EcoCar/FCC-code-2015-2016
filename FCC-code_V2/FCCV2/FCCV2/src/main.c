@@ -91,12 +91,12 @@ int main (void)
 		time5 = millis();
 		if(val)
 		{
-			FANUpdate(25);
+			FANUpdate(5);
 			val = 0;
 		}
 		else
 		{
-			FANUpdate(75);
+			FANUpdate(15);
 			val = 1;
 		}
 	}

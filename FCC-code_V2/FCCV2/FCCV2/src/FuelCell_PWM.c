@@ -24,16 +24,16 @@ static void local_start_highfreq_clock(void)
 		.osc = SCIF_GCCTRL_RC8M,     //"The PLLs can take either Oscillator 0, Oscillator 1 or 8MHz RC Oscillator (RC8M) as reference clock"
 		.lockcount = 16,      // lockcount in main clock for the PLL wait lock
 		.div = 0,             // PLLDIV=0 in the formula
-		.mul = 6,             // PLLMUL=6
+		.mul = 13,             // PLLMUL=6
 		.pll_div2 = 1,        // pll_div2 Divide the PLL output frequency by 2 (this settings does not change the FVCO value)
 		.pll_wbwdisable = 0,  // pll_wbwdisable 1 Disable the Wide-Bandith Mode (Wide-Bandwith mode allow a faster startup time and out-of-lock time). 0 to enable the Wide-Bandith Mode.
-		.pll_freq = 1,        // Set to 1 for VCO frequency range 80-180MHz, set to 0 for VCO frequency range 160-240Mhz. (VCO = 80 MHz in this case)
+		.pll_freq = 0,        // Set to 1 for VCO frequency range 80-180MHz, set to 0 for VCO frequency range 160-240Mhz. (VCO = 80 MHz in this case)
 	};
 	
 	//already started
 	//scif_start_rc8M();
 
-	/* Setup PLL0 on RC8M, mul=12 ,no divisor, lockcount=16, ie. (8Mhzx(PLLMUL+1)*2 / 2 = 104 MHz output see page 100 of datasheet */
+	/* Setup PLL0 on RC8M, mul=12 ,no divisor, lockcount=16, ie. (8Mhzx(PLLMUL+1)*2 / 2 = 112 MHz output see page 100 of datasheet */
 	scif_pll_setup(SCIF_PLL0, &opt); // lockcount in main clock for the PLL wait lock
 
 	/* Enable PLL0 */
@@ -48,8 +48,8 @@ static void local_start_highfreq_clock(void)
 // Start PWM generic clock input
 static void pwm_start_gc(void)
 {
-	//PWM GENERIC CLOCK: source:PLL0 56MHz   divided to 140kHz
-	scif_gc_setup(AVR32_SCIF_GCLK_PWM,SCIF_GCCTRL_PLL0,AVR32_SCIF_GC_DIV_CLOCK,22);
+	//PWM GENERIC CLOCK: source:PLL0 56MHz   divided to 280kHz
+	scif_gc_setup(AVR32_SCIF_GCLK_PWM,SCIF_GCCTRL_PLL0,AVR32_SCIF_GC_DIV_CLOCK,223);
 	// Now enable the generic clock
 	scif_gc_enable(AVR32_SCIF_GCLK_PWM);
 }
@@ -80,7 +80,7 @@ void PWMInit(void)
 	// Start Enable Generic Clock with PLL as source clock
 	pwm_start_gc();
 	//no divider
-	//Fgc = MCK = 140kHz
+	//Fgc = MCK = 280kHz
 		
 	//set pins to pwm function
 	gpio_enable_module_pin(FAN_PWM_PIN, FAN_PWM_FUNCTION);
@@ -113,8 +113,8 @@ void PWMInit(void)
 	fan_pwm_channel.CMR.calg  = PWM_MODE_LEFT_ALIGNED;       // Channel mode.
 	fan_pwm_channel.CMR.cpol  = PWM_POLARITY_LOW;            // Channel polarity.
 	fan_pwm_channel.CMR.cpre  = 0;           // Channel prescaler: no prescaler see page 1036 of datasheet
-	fan_pwm_channel.cdty      = 50;       // Channel duty cycle, should be < CPRD.
-	fan_pwm_channel.cprd      = 100;       // Channel period.
+	fan_pwm_channel.cdty      = 10;       // Channel duty cycle, should be < CPRD.
+	fan_pwm_channel.cprd      = 20;       // Channel period.
 
 	//Fpwm = (MCK/prescaler)/period
 	//MCK  == 104MHz
