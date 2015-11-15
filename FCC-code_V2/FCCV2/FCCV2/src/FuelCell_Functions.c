@@ -138,33 +138,33 @@ unsigned int FC_startup_h2(void)
 	return(fc_state);
 }
 
-unsigned int purge_time = 0;
+unsigned int purge_timer = 0;
 unsigned int FC_startup_purge(void)
 {
 	//Purge step isn't skipped on !Rescon to get air out of lines on startup
 	unsigned int fc_state;
 	
 	//close startup relay
-	gpio_clr_gpio_pin(START_RELAY);
+	gpio_set_gpio_pin(START_RELAY);
 	
 	//open purge valve and start timer
 	if(gpio_get_gpio_pin_output_value(PURGE_VALVE) == 0)
 	{
-		purge_time = millis();
+		purge_timer = millis();
 	}
 	gpio_set_gpio_pin(PURGE_VALVE);
 	//hardware timing mechanism should be worked out
 	//balazs has pseudo code purge for 3 seconds
-	if(millis() - purge_time < 3000)
+	if(millis() - purge_timer < 3000)
 	{
 		fc_state = FC_STATE_STARTUP_PURGE;
 	}
 	else
 	{
 		//close purge valve
-		gpio_clr_gpio_pin(PURGE_VALVE);
+		gpio_set_gpio_pin(PURGE_VALVE);
 		//open startup relay
-		gpio_set_gpio_pin(START_RELAY);
+		gpio_clr_gpio_pin(START_RELAY);
 		fc_state = FC_STATE_STARTUP_CHARGE;
 	}
 	return(fc_state);
@@ -209,19 +209,55 @@ unsigned int FC_startup_charge(void)
 }
 
 unsigned int delta_purge_time;
-unsigned int purge_counter;
+unsigned int purge_sum;
+unsigned int purge_state = 0;
 unsigned int FC_run(void)
 {
 	unsigned int fc_state;
 	//pid fan control for temp regulation
 	pid_temp_control();
 	//purge control: //purge based on amount of charge extracted from hydrogen
-	
+	if(purge_state == 0)//just completed last purge
+	{
+		//start integrating current with respect to time
+		purge_timer = millis();
+		purge_state = 1;
+	}
+	delta_purge_time = millis() - purge_timer;
+	if(delta_purge_time > PURGE_INTEGRATION_INTERVAL)
+	{
+		purge_sum += delta_purge_time * FCCURR / ONE_AMP;
+		purge_timer = millis();
+	}
+	if (purge_sum < PURGE_THRESHOLD)
+	{
+		fc_state = FC_STATE_RUN;
+	}
+	else
+	{
+		fc_state = FC_STATE_RUN_PURGE;
+	}
+	return(fc_state);
 }
 
 unsigned int FC_run_purge(void)
 {
 	unsigned int fc_state;
+	//start timing purge
+	purge_timer = millis();
+	//open purge valve
+	gpio_set_gpio_pin(PURGE_VALVE);
+	//close H2 valve? i guess not
+	if(millis()-purge_timer > PURGE_TIME)
+	{
+		fc_state = FC_STATE_RUN;
+		purge_state = 0;
+	}
+	else
+	{
+		fc_state = FC_STATE_RUN_PURGE;
+	}
+	return(fc_state);
 }
 
 

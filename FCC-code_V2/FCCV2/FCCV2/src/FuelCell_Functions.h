@@ -24,6 +24,10 @@ unsigned int FC_check_alarms(void);
 
 #define ONE_VOLT 1 //define what ADC thinks one volt is
 #define ONE_AMP 1 //define what ADC thinks one amp is
+#define PURGE_INTEGRATION_INTERVAL 10
+#define PURGE_THRESHOLD 0 * 1000 //get this value from documentation. units AMP * mSEC
+#define PURGE_TIME 0 //get this value from datasheet
+
 
 unsigned int FC_standby(void);
 unsigned int FC_startup_h2(void);
