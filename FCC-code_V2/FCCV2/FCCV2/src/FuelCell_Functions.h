@@ -11,5 +11,6 @@
 void millis_init(void);
 unsigned long millis(void);
 
+unsigned int FC_check_alarms(void);
 
 #endif /* FUELCELL_FUNCTIONS_H_ */

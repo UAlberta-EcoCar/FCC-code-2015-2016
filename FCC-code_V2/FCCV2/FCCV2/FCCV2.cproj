@@ -380,6 +380,9 @@
     <Compile Include="src\ASF\avr32\drivers\pm\pm_uc3c.c">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="src\FC_error_codes.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="src\FuelCell_PWM.c">
       <SubType>compile</SubType>
     </Compile>

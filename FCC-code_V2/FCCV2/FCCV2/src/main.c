@@ -33,73 +33,24 @@
 #include "FuelCell_Functions.h"
 #include "FuelCell_PWM.h"
 #include "digital_IO_defs.h"
+#include "FC_error_codes.h"
 
-unsigned long time1 = 0;
-unsigned long time2 = 0;
-unsigned long time3 = 0;
-unsigned long time4 = 0;
-unsigned long time5 = 0;
-int val = 0;
-unsigned long timeref=0;
-unsigned long countb;
-
-
-
+unsigned int error_msg;
 
 int main (void)
 {
 	board_init();
 	
-	StartADC_Sequencers();
-	ReadADC_Sequencers();
 	
-
-	
-	val = FCVOLTValue;
-	
-	gpio_get_pin_value(FCCON);
-	
-	while(1){
-
-	if((millis() - time1) > 500)
+	//Start of main loop
+	while(1)
 	{
-		gpio_tgl_gpio_pin(LED0);
-		time1 = millis();
+		//read analog inputs
+		StartADC_Sequencers();
+		ReadADC_Sequencers();
+		
+		error_msg = FC_check_alarms();
+		
 	}
-	
-	
-	if((millis() - time2) > 1000)
-	{
-		gpio_tgl_gpio_pin(LED1);
-		time2 = millis();
-	}
-	
-	if((millis() - time3) > 2000)
-	{
-		gpio_tgl_gpio_pin(LED2);
-		time3 = millis();
-	}
-	
-	if((millis() - time4) > 4000)
-	{
-		gpio_tgl_gpio_pin(LED3);
-		time4 = millis();
-	}
-	
-	if((millis()-time5) > 5000)
-	{
-		time5 = millis();
-		if(val)
-		{
-			FANUpdate(5);
-			val = 0;
-		}
-		else
-		{
-			FANUpdate(15);
-			val = 1;
-		}
-	}
-	
-	}
+		
 }
