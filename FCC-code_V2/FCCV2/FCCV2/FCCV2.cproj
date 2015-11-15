@@ -383,6 +383,9 @@
     <Compile Include="src\FC_error_codes.h">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="src\FC_STATES.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="src\FuelCell_PWM.c">
       <SubType>compile</SubType>
     </Compile>

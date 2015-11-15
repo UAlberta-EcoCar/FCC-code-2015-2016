@@ -23,7 +23,7 @@ unsigned int FC_check_alarms(void);
 #define FC_STATE_RUN_PURGE 6
 
 #define ONE_VOLT 1 //define what ADC thinks one volt is
-
+#define ONE_AMP 1 //define what ADC thinks one amp is
 
 unsigned int FC_standby(void);
 unsigned int FC_startup_h2(void);

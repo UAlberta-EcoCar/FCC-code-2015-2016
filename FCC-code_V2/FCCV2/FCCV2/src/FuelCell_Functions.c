@@ -11,19 +11,10 @@
 #include "digital_IO_defs.h"
 #include "FuelCell_ADC.h"
 #include "FuelCell_PWM.h"
+#include <math.h>
 
 //create value for timer
 unsigned long counta;
-
-// Start AST generic clock input
-static void ast_start_gc(void)
-{
-	//AST generic clock 8MHz / (2*(249+1) = 16kHz
-	scif_gc_setup(AVR32_SCIF_GCLK_AST,SCIF_GCCTRL_RC8M,AVR32_SCIF_GC_DIV_CLOCK,249);
-	// Now enable the generic clock
-	scif_gc_enable(AVR32_SCIF_GCLK_AST);
-}
-
 void millis_init(void)
 {
 	//AST generic clock 8MHz / (2*(249+1) = 16kHz
@@ -38,6 +29,33 @@ void millis_init(void)
 unsigned long millis(void)
 {
 	return(ast_get_counter_value(&AVR32_AST)); 
+}
+
+unsigned int TEMP_OPT;
+float TEMP; //I hate floating point but it is probably necessary here
+float temp_error;
+//float accumulated_temp_error = 0;
+//unsigned int PIDP; //speed proportional to temp error
+//unsigned int PIDI; //integral -> accumulated error
+//unsigned int PIDD; //Derivative -> change in temp
+//I'm only going to make speed depend on temp error
+unsigned int pid_temp_control(void)
+{
+	TEMP_OPT = (53*FCCURRValue/ONE_AMP + 2601) / 100; //from fuel cell documentation/adnan
+	TEMP = (float)((FCTEMP1Value + FCTEMP2Value)/2); //take average reading
+	TEMP = pow(TEMP,5)*0.000006+pow(TEMP,3)*0.0001-pow(TEMP,2)*0.1238+75.492*TEMP-18188.0; //see thermistor excell curve fit in google drive.
+	//the coefficient for 4 power is really smal so I left it out
+	//the curve actually goes linear to quadratic to exponential. Should probably do a different curve fit for different ranges.
+	//could have a series of linear or quadratic aproximations.
+	//should actually obtain experimental graph.
+	
+	temp_error = TEMP_OPT - TEMP;
+	//accumulated_temp_error = accumulated_temp_error + temp_error;
+	
+	//fan speed = 0 to 20 //should really increase this value
+	//max is 20. min is 5. diff is 15
+	//run fan at 1% per degree C it is above T_OPT
+	FANUpdate((unsigned int)temp_error*20/100);
 }
 
 unsigned int FC_check_alarms(void)
@@ -195,7 +213,8 @@ unsigned int purge_counter;
 unsigned int FC_run(void)
 {
 	unsigned int fc_state;
-	//pid control for temp
+	//pid fan control for temp regulation
+	pid_temp_control();
 	//purge control: //purge based on amount of charge extracted from hydrogen
 	
 }
