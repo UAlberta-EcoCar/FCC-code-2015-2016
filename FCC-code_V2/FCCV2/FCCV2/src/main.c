@@ -36,6 +36,7 @@
 #include "FC_error_codes.h"
 
 unsigned int error_msg;
+unsigned int fc_state;
 
 int main (void)
 {
@@ -50,7 +51,31 @@ int main (void)
 		ReadADC_Sequencers();
 		
 		error_msg = FC_check_alarms();
+		if(error_msg)
+		{
+			fc_state = FC_STATE_SHUTDOWN;
+		}
 		
+		switch (fc_state)
+		{
+		case FC_STATE_STANDBY:
+			fc_state = FC_standby();
+			
+		case FC_STATE_SHUTDOWN:
+		
+		case FC_STATE_STARTUP_H2:
+			fc_state = FC_startup_h2();
+			
+		case FC_STATE_STARTUP_PURGE:
+			fc_state = FC_startup_purge();
+		
+		case FC_STATE_STARTUP_CHARGE:
+			fc_state = FC_startup_charge();	
+		
+		case FC_STATE_RUN:
+			fc_state;
+		}
+	
 	}
 		
 }

@@ -26,12 +26,12 @@
 //define thresholds for over current etc
 //these values will be strange because of how fc reads voltages
 //through voltage dividers etc.
-#define LOW_TEMP_THRES //-10C
-#define HIGH_TEMP_THRES // 75C
-#define HIGH_PRES_THRES //9.81 PSI
-#define LOW_PRES_THRES //0.8 PSI
-#define OVER_CUR_THRES //78A
-#define UNDER_CUR_THRES //-3A
-#define OVER_VOLT_THRES //50.6V
+#define LOW_TEMP_THRES 0 //-10C
+#define HIGH_TEMP_THRES 0 // 75C
+#define HIGH_PRES_THRES 0 //9.81 PSI
+#define LOW_PRES_THRES 0 //0.8 PSI
+#define OVER_CUR_THRES 0 //78A
+#define UNDER_CUR_THRES 0 //-3A
+#define OVER_VOLT_THRES 0 //50.6V
 
 #endif /* FC_ERROR_CODES_H_ */

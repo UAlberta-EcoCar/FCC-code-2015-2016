@@ -41,5 +41,14 @@
 #define OP_9 AVR32_PIN_PD09
 #define OP_10 AVR32_PIN_PD08
 
+//digital outputs
+#define H2_VALVE OP_10
+#define START_RELAY OP_1
+#define PURGE_VALVE OP_9
+#define RES_RELAY OP_2
+#define CAP_RELAY OP_3
+#define MOTOR_RELAY OP_4
+
+
 
 #endif /* INCFILE1_H_ */
