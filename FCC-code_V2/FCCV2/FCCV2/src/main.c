@@ -62,6 +62,7 @@ int main (void)
 			fc_state = FC_standby();
 			
 		case FC_STATE_SHUTDOWN:
+			fc_state = FC_shutdown();
 		
 		case FC_STATE_STARTUP_H2:
 			fc_state = FC_startup_h2();
@@ -73,9 +74,10 @@ int main (void)
 			fc_state = FC_startup_charge();	
 		
 		case FC_STATE_RUN:
-			fc_state;
-		}
-	
-	}
+			fc_state = FC_run();
 		
+		case FC_STATE_RUN_PURGE:
+			fc_state = FC_run_purge();
+		}
+	}
 }

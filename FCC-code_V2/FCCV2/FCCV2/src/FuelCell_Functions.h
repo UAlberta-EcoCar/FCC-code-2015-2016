@@ -20,6 +20,7 @@ unsigned int FC_check_alarms(void);
 #define FC_STATE_STARTUP_PURGE 3
 #define FC_STATE_STARTUP_CHARGE 4
 #define FC_STATE_RUN 5
+#define FC_STATE_RUN_PURGE 6
 
 #define ONE_VOLT 1 //define what ADC thinks one volt is
 
@@ -28,6 +29,12 @@ unsigned int FC_standby(void);
 unsigned int FC_startup_h2(void);
 unsigned int FC_startup_purge(void);
 unsigned int FC_startup_charge(void);
+
+unsigned int FC_run(void);
+unsigned int FC_run_purge(void);
+
+unsigned int FC_shutdown(void);
+//is there a difference between emergency shutdown and normal shutdown?
 
 
 #endif /* FUELCELL_FUNCTIONS_H_ */

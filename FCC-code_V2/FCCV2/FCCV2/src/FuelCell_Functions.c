@@ -120,7 +120,7 @@ unsigned int FC_startup_h2(void)
 	return(fc_state);
 }
 
-unsigned int last_purge_time = 0;
+unsigned int purge_time = 0;
 unsigned int FC_startup_purge(void)
 {
 	//Purge step isn't skipped on !Rescon to get air out of lines on startup
@@ -132,12 +132,12 @@ unsigned int FC_startup_purge(void)
 	//open purge valve and start timer
 	if(gpio_get_gpio_pin_output_value(PURGE_VALVE) == 0)
 	{
-		last_purge_time = millis();
+		purge_time = millis();
 	}
 	gpio_set_gpio_pin(PURGE_VALVE);
 	//hardware timing mechanism should be worked out
 	//balazs has pseudo code purge for 3 seconds
-	if(millis() - last_purge_time < 3000)
+	if(millis() - purge_time < 3000)
 	{
 		fc_state = FC_STATE_STARTUP_PURGE;
 	}
@@ -188,4 +188,25 @@ unsigned int FC_startup_charge(void)
 		}
 	}
 	return(fc_state);
+}
+
+unsigned int delta_purge_time;
+unsigned int purge_counter;
+unsigned int FC_run(void)
+{
+	unsigned int fc_state;
+	//pid control for temp
+	//purge control: //purge based on amount of charge extracted from hydrogen
+	
+}
+
+unsigned int FC_run_purge(void)
+{
+	unsigned int fc_state;
+}
+
+
+unsigned int FC_shutdown(void)
+{
+	unsigned int fc_state;
 }
