@@ -112,6 +112,8 @@ unsigned int FC_standby(void)
 	if (gpio_get_pin_value(START))
 	{
 		fc_state = FC_STATE_STARTUP_H2;
+		gpio_clr_gpio_pin(LED_STOP);
+		gpio_set_gpio_pin(LED_START);
 	}
 	else
 	{
@@ -203,6 +205,8 @@ unsigned int FC_startup_charge(void)
 			
 			//pseudo code is strange I think we set state to run
 			fc_state = FC_STATE_RUN;
+			gpio_clr_gpio_pin(LED_START);
+			gpio_set_gpio_pin(LED_RUN);
 		}
 	}
 	return(fc_state);

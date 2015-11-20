@@ -36,7 +36,7 @@
 #include "FC_error_codes.h"
 
 unsigned int error_msg;
-unsigned int fc_state;
+unsigned int fc_state = FC_STATE_STANDBY;
 
 int main (void)
 {
@@ -54,6 +54,9 @@ int main (void)
 		if(error_msg)
 		{
 			fc_state = FC_STATE_SHUTDOWN;
+			gpio_clr_gpio_pin(LED_RUN);
+			gpio_set_gpio_pin(LED_ERROR);
+			gpio_set_gpio_pin(LED_STOP);
 		}
 		
 		switch (fc_state)
