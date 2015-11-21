@@ -5,9 +5,8 @@
 /*
 to do list:
 get good temperature conversion
-current conversion
-voltage conversions
-
+can bus
+serial
 */
 
 #include "asf.h"
@@ -20,6 +19,12 @@ voltage conversions
 unsigned int error_msg;
 unsigned int fc_state = FC_STATE_STANDBY;
 
+unsigned int read_timer = 0;
+#define READ_TIME_INTERVAL 10
+
+unsigned int data_log_timer = 0;
+#define DATA_LOG_INTERVAL 200
+
 int main (void)
 {
 	board_init();
@@ -27,10 +32,13 @@ int main (void)
 	//Start of main loop
 	while(1)
 	{
-		//read analog inputs
-		StartADC_Sequencers();
-		ReadADC_Sequencers();
-		
+		if((millis()-read_timer) > READ_TIME_INTERVAL)
+		{
+			//read analog inputs
+			StartADC_Sequencers();
+			ReadADC_Sequencers();
+			read_timer = millis();
+		}
 		error_msg = FC_check_alarms(fc_state);
 		if(error_msg)
 		{
@@ -39,7 +47,12 @@ int main (void)
 			gpio_set_gpio_pin(LED_ERROR);
 			gpio_set_gpio_pin(LED_STOP);
 		}
+		if(millis() - data_log_timer > DATA_LOG_INTERVAL)
+		{
+			//send data over CAN-BUS
+		}
 		
+		//main state machine
 		switch (fc_state)
 		{
 		case FC_STATE_STANDBY:

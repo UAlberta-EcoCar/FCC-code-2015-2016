@@ -32,8 +32,8 @@ unsigned long millis(void)
 }
 
 unsigned int TEMP_OPT;
-float TEMP; //I hate floating point but it is probably necessary here
-float temp_error;
+unsigned int AVE_TEMP; 
+unsigned int temp_error;
 //float accumulated_temp_error = 0;
 //unsigned int PIDP; //speed proportional to temp error
 //unsigned int PIDI; //integral -> accumulated error
@@ -41,20 +41,37 @@ float temp_error;
 //I'm only going to make speed depend on temp error
 unsigned int pid_temp_control(void)
 {
-	TEMP_OPT = (53*FCCURRValue/ONE_AMP + 2601) / 100; //from fuel cell documentation/adnan
-	TEMP = (float)((FCTEMP1Value + FCTEMP2Value)/2); //take average reading
-	TEMP = pow(TEMP,5)*0.000006+pow(TEMP,3)*0.0001-pow(TEMP,2)*0.1238+75.492*TEMP-18188.0; //see thermistor excell curve fit in google drive.
-	//the coefficient for 4th power is really small so I left it out
-	//the curve actually goes linear to quadratic to exponential. Should probably do a different curve fit for different ranges.
-	//could have a series of linear or quadratic approximations.
-	//should actually obtain experimental graph.
+	//Topt = 0.53I + 26.01 in C and Amps
+	//= (53 * I) / 100 + 299160 in mK and mA
+	TEMP_OPT = (53*FCCURRValue) / 100 + 299160;
+	AVE_TEMP = (FCTEMP1Reading + FCTEMP2Reading)/2;
 	
-	temp_error = TEMP_OPT - TEMP;
+	//thermistor curve has a linear range and non linear range
+	//see excel thermistor curve fit
+	if (AVE_TEMP < 1400) //reading is in the linear range
+	{
+		//temp in mK is
+		//44.767 * ADC_reading + 221732
+		AVE_TEMP = ( 4475 * AVE_TEMP ) / 100 + 221732;
+	}
+	else
+	{
+		//not linear range -> use cubic approximation
+		//temp in mK
+		//= 0.0088 x^3 - 40.24 x^2 + 61144 x - 30000000
+		//mess around with order of multiplication to avoid round off errors and over flow errors (ie: 1700^3 > mx 32bit value)
+		//AVE_TEMP = ((88 * (AVE_TEMP * AVE_TEMP / 10000) * AVE_TEMP) - ((4024 * AVE_TEMP / 100) * AVE_TEMP));
+		//how fast is this processor at math?
+		//this might take a while. I'm going to simplify
+		AVE_TEMP = ((9 * (AVE_TEMP * AVE_TEMP / 1000) * AVE_TEMP) - ((402 * AVE_TEMP / 10) * AVE_TEMP));
+	}
+	
+	temp_error = (TEMP_OPT - AVE_TEMP) / 1000; //in Kalvin
 	//accumulated_temp_error = accumulated_temp_error + temp_error;
 	
 	//fan speed = 0 to 20 //should really increase this value
 	//max is 20. min is 5. diff is 15
-	//run fan at 1% above min per degree C it is above T_OPT
+	//run fan at 1% above min per degree K it is above T_OPT
 	FANUpdate(5+(unsigned int)temp_error*20/100);
 }
 
@@ -73,20 +90,20 @@ unsigned int FC_check_alarms(unsigned int fc_state)
 	{
 		error_msg |= FC_ERR_H2OK_LOW;
 	}
-	if((FCTEMP1Value <= LOW_TEMP_THRES)|(FCTEMP2Value <= LOW_TEMP_THRES))
+	if((FCTEMP1Reading <= LOW_TEMP_THRES)|(FCTEMP2Reading <= LOW_TEMP_THRES))
 	{
 		error_msg |= FC_ERR_TEMP_L;
 	}
-	if((FCTEMP1Value >= HIGH_TEMP_THRES)|(FCTEMP2Value >= HIGH_TEMP_THRES))
+	if((FCTEMP1Reading >= HIGH_TEMP_THRES)|(FCTEMP2Reading >= HIGH_TEMP_THRES))
 	{
 		error_msg |= FC_ERR_TEMP_H;
 	}
 	//only check pressure in purge, charge and run
-	if((FCPRESValue >= HIGH_PRES_THRES)&(fc_state!=FC_STATE_STANDBY))
+	if((FCPRESReading >= HIGH_PRES_THRES)&(fc_state!=FC_STATE_STANDBY))
 	{
 		error_msg |= FC_ERR_PRES_H;
 	}
-	if((FCPRESValue <= LOW_PRES_THRES)&(fc_state!=FC_STATE_STANDBY))
+	if((FCPRESReading <= LOW_PRES_THRES)&(fc_state!=FC_STATE_STANDBY))
 	{
 		error_msg |= FC_ERR_PRES_L;
 	}
@@ -130,7 +147,7 @@ unsigned int FC_startup_h2(void)
 	FANUpdate(0);
 	//open h2 valve
 	gpio_set_gpio_pin(H2_VALVE);
-	if (FCVOLTValue < (30*ONE_VOLT))
+	if (FCVOLTValue < (30000)) //if voltage is less than 30V
 	{
 		fc_state = FC_STATE_STARTUP_H2;
 	}
@@ -185,7 +202,7 @@ unsigned int FC_startup_charge(void)
 	}
 	else
 	{
-		if (CAPVOLTValue < (40 * ONE_VOLT))
+		if (CAPVOLTValue < (40000)) //if voltage is less than 40V
 		{
 			//close resistor relay
 			gpio_set_gpio_pin(RES_RELAY);
@@ -232,7 +249,7 @@ unsigned int FC_run(void)
 	delta_purge_time = millis() - purge_timer;
 	if(delta_purge_time > PURGE_INTEGRATION_INTERVAL)
 	{
-		purge_sum += delta_purge_time * FCCURRValue / ONE_AMP;
+		purge_sum += delta_purge_time * FCCURRValue;
 		purge_timer = millis();
 	}
 	if (purge_sum < PURGE_THRESHOLD)
