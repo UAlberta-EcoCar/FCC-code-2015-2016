@@ -44,9 +44,9 @@ unsigned int pid_temp_control(void)
 	TEMP_OPT = (53*FCCURRValue/ONE_AMP + 2601) / 100; //from fuel cell documentation/adnan
 	TEMP = (float)((FCTEMP1Value + FCTEMP2Value)/2); //take average reading
 	TEMP = pow(TEMP,5)*0.000006+pow(TEMP,3)*0.0001-pow(TEMP,2)*0.1238+75.492*TEMP-18188.0; //see thermistor excell curve fit in google drive.
-	//the coefficient for 4 power is really smal so I left it out
+	//the coefficient for 4th power is really small so I left it out
 	//the curve actually goes linear to quadratic to exponential. Should probably do a different curve fit for different ranges.
-	//could have a series of linear or quadratic aproximations.
+	//could have a series of linear or quadratic approximations.
 	//should actually obtain experimental graph.
 	
 	temp_error = TEMP_OPT - TEMP;
@@ -54,11 +54,11 @@ unsigned int pid_temp_control(void)
 	
 	//fan speed = 0 to 20 //should really increase this value
 	//max is 20. min is 5. diff is 15
-	//run fan at 1% per degree C it is above T_OPT
-	FANUpdate((unsigned int)temp_error*20/100);
+	//run fan at 1% above min per degree C it is above T_OPT
+	FANUpdate(5+(unsigned int)temp_error*20/100);
 }
 
-unsigned int FC_check_alarms(void)
+unsigned int FC_check_alarms(unsigned int fc_state)
 {
 	unsigned int error_msg;
 	if(gpio_get_pin_value(CAPCON) == 0)
@@ -81,15 +81,16 @@ unsigned int FC_check_alarms(void)
 	{
 		error_msg |= FC_ERR_TEMP_H;
 	}
-	//might want to change this depending on run mode
-	if(FCPRESValue >= HIGH_PRES_THRES)
+	//only check pressure in purge, charge and run
+	if((FCPRESValue >= HIGH_PRES_THRES)&(fc_state!=FC_STATE_STANDBY))
 	{
 		error_msg |= FC_ERR_PRES_H;
 	}
-	if(FCPRESValue <= LOW_PRES_THRES)
+	if((FCPRESValue <= LOW_PRES_THRES)&(fc_state!=FC_STATE_STANDBY))
 	{
 		error_msg |= FC_ERR_PRES_L;
 	}
+	
 	if(FCCURRValue >= OVER_CUR_THRES)
 	{
 		error_msg |= FC_ERR_OVER_CUR;
@@ -155,7 +156,7 @@ unsigned int FC_startup_purge(void)
 		purge_timer = millis();
 	}
 	gpio_set_gpio_pin(PURGE_VALVE);
-	//hardware timing mechanism should be worked out
+	
 	//balazs has pseudo code purge for 3 seconds
 	if(millis() - purge_timer < 3000)
 	{
@@ -212,6 +213,7 @@ unsigned int FC_startup_charge(void)
 	return(fc_state);
 }
 
+unsigned int purge_time;
 unsigned int delta_purge_time;
 unsigned int purge_sum;
 unsigned int purge_state = 0;
@@ -230,7 +232,7 @@ unsigned int FC_run(void)
 	delta_purge_time = millis() - purge_timer;
 	if(delta_purge_time > PURGE_INTEGRATION_INTERVAL)
 	{
-		purge_sum += delta_purge_time * FCCURR / ONE_AMP;
+		purge_sum += delta_purge_time * FCCURRValue / ONE_AMP;
 		purge_timer = millis();
 	}
 	if (purge_sum < PURGE_THRESHOLD)
@@ -241,6 +243,8 @@ unsigned int FC_run(void)
 	{
 		fc_state = FC_STATE_RUN_PURGE;
 	}
+	//as a per-caution set a maximum time between purges (in case current readings are wacky..)
+	if (millis() - purge_timer > MAX_PURGE_INTERVAL) 
 	return(fc_state);
 }
 
@@ -263,7 +267,6 @@ unsigned int FC_run_purge(void)
 	}
 	return(fc_state);
 }
-
 
 unsigned int FC_shutdown(void)
 {
