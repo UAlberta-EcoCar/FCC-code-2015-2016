@@ -31,7 +31,7 @@ unsigned int FC_check_alarms(unsigned int fc_state);
 
 #define CAPVOLTValue (CAPVOLTReading *  (47 + 3) / 3 * 3000 / (2^12 - 1)) //in mV
 
-#define FCCURRValue ((FCCURRReading * (31.6 + 47) / 47 * 3000 / (2^12 - 1) - 2500) * 1000 / 40) //in mA 
+#define FCCURRValue ((FCCURRReading * (316 + 470) / 470 * 3000 / (2^12 - 1) - 2500) * 1000 / 40) //in mA 
 //from ACS756 datasheet
 //is this the X50 or X100?
 //if its X50:
@@ -40,9 +40,24 @@ unsigned int FC_check_alarms(unsigned int fc_state);
 //because of 31.6k 47k voltage dividers / 12 bit reading
 //Vout = FCCURRReading * 3000/(2^12 - 1) * (31.6 + 47) / 47 mV
 
+#define FCPRESValue ((FCPRESReading * 3000 / (2^12-1) * (470+316) / 470) * 50 - 39700) //in mPSI
+//pressure transducer is connected in radiometric mode
+//voltage is read through a 47k 31.6k voltage divider
+//Vsens = FCPRESReading * 3000 / (2^12 - 1) * (470 + 316) / 470 in mV
+//http://www.flowcontrolnetwork.com/how-to-calculate-readings-for-compound-pressure-transducers/
+//going off example p range is -14.7 to 185 psi  
+//0.5-4.5V radiometric output signal
+//psi range is 14.7 +185 = 199.7
+//4.5 -0.5 = 4V span
+//4/199.7 = 0.020V / PSI
+//0.5V = -14.7PSI --> 14.7 psi * 0.020V = 0.294
+//v = 0.294 + 0.5 when p = -14.7 + 14.7 = 0 psi
+//p = 50(v - 0.5) - 14.7 = 50v - 39.7
 
-#define PURGE_INTEGRATION_INTERVAL 10
-#define PURGE_THRESHOLD 0 * 1000 //get this value from fuel cell documentation. units AMP * mSEC
+#define TANKPRESValue ((TANKPRESReading * 3000 / (2^12-1) * (470+316) / 470) * 50 - 39700) //in mPSI //same sensor???
+
+#define PURGE_INTEGRATION_INTERVAL 10 //10 ms
+#define PURGE_THRESHOLD 0 //get this value from fuel cell documentation. units mA * ms
 #define PURGE_TIME 0 //get this value from datasheet
 #define MAX_PURGE_INTERVAL 0 //max time between purges regardless of current output
 
