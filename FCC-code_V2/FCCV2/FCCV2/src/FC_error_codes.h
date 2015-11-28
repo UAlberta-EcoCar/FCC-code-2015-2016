@@ -17,7 +17,7 @@
 #define FC_ERR_H2OK_LOW (1 << 3)
 #define FC_ERR_TEMP_L  (1 << 4) //(-10C)
 #define FC_ERR_TEMP_H (1 << 5) //(75C)
-#define FC_ERR_PRES_H (1 << 6) // only checked in purge, charge, run (9.81 PSI)
+#define FC_ERR_PRES_H (1 << 6) //(9.81 PSI)
 #define FC_ERR_PRES_L (1 << 7) //only checked in purge, charge run (0.8 PSI)
 #define FC_ERR_OVER_CUR (1 << 8) //(78A)
 #define FC_ERR_UND_CUR (1 << 9) //(-3A)

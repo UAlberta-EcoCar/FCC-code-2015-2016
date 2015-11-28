@@ -39,13 +39,15 @@ int main (void)
 			ReadADC_Sequencers();
 			read_timer = millis();
 		}
-		error_msg = FC_check_alarms(fc_state);
+		
+		if(1)
+		{
+			error_msg = FC_check_alarms(fc_state);
+		}
+		
 		if(error_msg)
 		{
-			fc_state = FC_STATE_SHUTDOWN;
-			gpio_clr_gpio_pin(LED_RUN);
-			gpio_set_gpio_pin(LED_ERROR);
-			gpio_set_gpio_pin(LED_STOP);
+			fc_state = FC_STATE_ALARM;
 		}
 		if(millis() - data_log_timer > DATA_LOG_INTERVAL)
 		{
@@ -61,6 +63,9 @@ int main (void)
 		case FC_STATE_SHUTDOWN:
 			fc_state = FC_shutdown();
 		
+		case FC_STATE_STARTUP_FANS:
+			fc_state = FC_startup_fans();
+		
 		case FC_STATE_STARTUP_H2:
 			fc_state = FC_startup_h2();
 			
@@ -75,6 +80,9 @@ int main (void)
 		
 		case FC_STATE_RUN_PURGE:
 			fc_state = FC_run_purge();
+			
+		case FC_STATE_ALARM:
+			fc_state = FC_alarm();
 		}
 	}
 }
