@@ -47,7 +47,7 @@ static const gpio_map_t ADCIFA_GPIO_MAP = {
 //ADC settings
 adcifa_opt_t adcifa_opt = {
 	.frequency                = 10000,  // ADC frequency (Hz) //can probably turn this up
-	.reference_source         = ADCIFA_REF1V, // Reference Source
+	.reference_source         = ADCIFA_REF06VDD, // Reference Source
 	.sample_and_hold_disable  = 0,    // Disable Sample and Hold Time
 	.single_sequencer_mode    = 0,    // Single Sequencer Mode
 	.free_running_mode_enable = 0,    // Free Running Mode
@@ -136,6 +136,23 @@ adcifa_sequencer_conversion_opt_t adcifa_sequence_conversion_option_1[6] =
 	},
 };
 
+
+//these are based off of the sequencer order in analog_defs.h
+#define MFLOWReading adcvals_0[0] //sequencer 0 adcin8
+#define FCTEMP1Reading adcvals_0[1] //seq 0 adcin9
+#define FCTEMP2Reading adcvals_0[2] //seq 0 adcin10
+#define AMBTEMP1Reading adcvals_0[3] //seq 0 adcin11
+#define AMBTEMP2Reading adcvals_0[4] //seq 0 adcin12
+#define AMBTEMP3Reading adcvals_0[5] //seq 0 adcin13
+#define AMBTEMP0Reading adcvals_0[6] //seq 0 adcin14
+
+//these are based off the sequencer order in analog_defs.h
+#define TANKPRESReading adcvals_1[0] //seq 1 adcin1
+#define FCPRESReading adcvals_1[1] //seq 1 adcin3
+#define CAPCURRReading adcvals_1[2] //seq 1 adcin4
+#define FCCURRReading adcvals_1[3]
+#define CAPVOLTReading adcvals_1[4]
+#define FCVOLTReading adcvals_1[5]
 
 
 

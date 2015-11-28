@@ -35,23 +35,63 @@ void ReadADC_Sequencers(void)
 	while((adcifa_get_values_from_sequencer(&AVR32_ADCIFA,0,&adcifa_sequence_opt,adcvals_0)!=ADCIFA_STATUS_COMPLETED)|(adcifa_get_values_from_sequencer(&AVR32_ADCIFA,1,&adcifa_sequence_opt,adcvals_1)!=ADCIFA_STATUS_COMPLETED));
 }
 
-int * ReadADC_Sequencer0(void)
-{
-	while((adcifa_get_values_from_sequencer(&AVR32_ADCIFA,0,&adcifa_sequence_opt,adcvals_0)!=ADCIFA_STATUS_COMPLETED));
-	return(adcvals_0);
-}
 
-int get_CAPVOLT(void)
-{
-	return(adcvals_1[4]);
-}
+//functions for retrieving values from adcvals array
 
-int get_FCVOLT(void)
+int get_FCTEMP1(void)
 {
-	return(adcvals_1[5]);// * (47 + 3) / 3 * 3000 / (2^12 - 1));
+	//put the temperature conversion here??
+	return(0);
 }
-
+int get_FCTEMP2(void)
+{
+	//put temperature conversion here??
+	return(0);
+}
+int get_TANKPRES(void)
+{
+	return(((TANKPRESReading * 3000 / (2048-1) * (470+316) / 470) * 50 - 39700));
+}
+int get_FCPRES(void)
+{
+	return(((FCPRESReading * 3000 / (2048-1) * (470+316) / 470) * 9578 - 23670));
+}
+int get_CAPCURR(void)
+{
+	//from ACS756 datasheet
+	//is this the X50 or X100?
+	//if its X50:
+	//Vout = 2500mV + 40mV/A * I
+	//I = (Vout - 2500mV)/40mV
+	//because of 31.6k 47k voltage dividers / 12 bit reading
+	//Vout = CAPCURRReading * 3000/(2^11 - 1) * (31.6 + 47) / 47 mV
+	return(((CAPCURRReading * (316 + 470) / 470 * 3000 / (2048 - 1) - 2500) * 1000 / 40));
+}
 int get_FCCURR(void)
 {
-	return(adcvals_1[3]);
+	//from ACS756 datasheet
+	//is this the X50 or X100?
+	//if its X50:
+	//Vout = 2500mV + 40mV/A * I
+	//I = (Vout - 2500mV)/40mV
+	//because of 31.6k 47k voltage dividers / 12 bit reading
+	//Vout = adcreading * 3000/(2^11 - 1) * (31.6 + 47) / 47 mV
+	return(((FCCURRReading * (316 + 470) / 470 * 3000 / (2048 - 1) - 2500) * 1000 / 40));
 }
+int get_CAPVOLT(void)
+{
+	return(CAPVOLTReading * 3000 * 50 / 3 / (2048-1));
+	//47k and 3k voltage divider
+	//3V reference
+	//CAPVOLT = ADCreading * 3000mV/(2^11-1) * (47 + 3) / 3
+	//should result in a voltage in mV
+}
+int get_FCVOLT(void)
+{
+	return(FCVOLTReading * 3000 * 50 / 3 / (2048-1));
+	//47k and 3k voltage divider
+	//3V reference
+	//FCVolt = ADCreading * 3000mV/(2^11-1) * (47 + 3) / 3
+	//should result in a voltage in mV
+}
+

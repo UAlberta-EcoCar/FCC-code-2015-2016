@@ -77,9 +77,6 @@ int main (void)
 		
 		case FC_STATE_RUN:
 			fc_state = FC_run();
-		
-		case FC_STATE_RUN_PURGE:
-			fc_state = FC_run_purge();
 			
 		case FC_STATE_ALARM:
 			fc_state = FC_alarm();

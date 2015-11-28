@@ -47,7 +47,7 @@ unsigned int pid_temp_control(void)
 	//Topt = 0.53I + 26.01 in C and Amps
 	//= (53 * I) / 100 + 299160 in mK and mA
 	TEMP_OPT = (53*get_CAPVOLT()) / 100 + 299160;
-	AVE_TEMP = (FCTEMP1Reading + FCTEMP2Reading)/2;
+	AVE_TEMP = (get_FCTEMP1() + get_FCTEMP2())/2;
 	
 	//thermistor curve has a linear range and non linear range
 	//see excel thermistor curve fit
@@ -94,20 +94,20 @@ unsigned int FC_check_alarms(unsigned int fc_state)
 	{
 		error_msg |= FC_ERR_H2OK_LOW;
 	}
-	if((FCTEMP1Reading <= LOW_TEMP_THRES)|(FCTEMP2Reading <= LOW_TEMP_THRES))
+	if((get_FCTEMP1() <= LOW_TEMP_THRES)|(get_FCTEMP2() <= LOW_TEMP_THRES))
 	{
 		error_msg |= FC_ERR_TEMP_L;
 	}
-	if((FCTEMP1Reading >= HIGH_TEMP_THRES)|(FCTEMP2Reading >= HIGH_TEMP_THRES))
+	if((get_FCTEMP1 >= HIGH_TEMP_THRES)|(get_FCTEMP2 >= HIGH_TEMP_THRES))
 	{
 		error_msg |= FC_ERR_TEMP_H;
 	}
 	//only check pressure in purge, charge and run
-	if((FCPRESReading >= HIGH_PRES_THRES))
+	if((get_FCPRES() >= HIGH_PRES_THRES))
 	{
 		error_msg |= FC_ERR_PRES_H;
 	}
-	if((FCPRESReading <= LOW_PRES_THRES))
+	if((get_FCPRES() <= LOW_PRES_THRES))
 	{
 		error_msg |= FC_ERR_PRES_L;
 	}
@@ -270,7 +270,7 @@ unsigned int FC_startup_charge(void)
 	//however, RESCON == 0 will trigger and alarm anyway so I won't check
 	
 	//charging capacitors through resistor to avoid temporary short circuit
-	if (CAPVOLTValue < 40000) //if voltage is less than 40V
+	if (get_CAPVOLT() < 40000) //if voltage is less than 40V
 	{
 		//close resistor relay
 		gpio_set_gpio_pin(RES_RELAY);
