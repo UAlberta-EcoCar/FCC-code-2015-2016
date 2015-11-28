@@ -13,6 +13,9 @@
 #include "FuelCell_PWM.h"
 #include <math.h>
 
+int adcvals_0[7];
+int adcvals_1[8];
+
 //create value for timer
 unsigned long counta;
 void millis_init(void)
@@ -43,7 +46,7 @@ unsigned int pid_temp_control(void)
 {
 	//Topt = 0.53I + 26.01 in C and Amps
 	//= (53 * I) / 100 + 299160 in mK and mA
-	TEMP_OPT = (53*FCCURRValue) / 100 + 299160;
+	TEMP_OPT = (53*get_CAPVOLT()) / 100 + 299160;
 	AVE_TEMP = (FCTEMP1Reading + FCTEMP2Reading)/2;
 	
 	//thermistor curve has a linear range and non linear range
@@ -108,15 +111,15 @@ unsigned int FC_check_alarms(unsigned int fc_state)
 	{
 		error_msg |= FC_ERR_PRES_L;
 	}
-	if(FCCURRValue >= OVER_CUR_THRES)
+	if(get_FCCURR() >= OVER_CUR_THRES)
 	{
 		error_msg |= FC_ERR_OVER_CUR;
 	}
-	if(FCCURRValue <= UNDER_CUR_THRES)
+	if(get_FCCURR() <= UNDER_CUR_THRES)
 	{
 		error_msg |= FC_ERR_UND_CUR;
 	}
-	if(FCVOLTValue >= OVER_VOLT_THRES)
+	if(get_FCVOLT() >= OVER_VOLT_THRES)
 	{
 		error_msg |= FC_ERR_OVER_VOLT;
 	}
@@ -205,7 +208,7 @@ unsigned int FC_startup_h2(void)
 	gpio_clr_gpio_pin(MOTOR_RELAY);
 	
 	//input h2 until voltage reaches 30
-	if (FCVOLTValue < (30000)) //if voltage is less than 30V
+	if (get_FCVOLT() < (30000)) //if voltage is less than 30V
 	{
 		//keep the hydrogen coming
 		fc_state = FC_STATE_STARTUP_H2;
@@ -333,7 +336,7 @@ unsigned int FC_run(void)
 	delta_purge_time = millis() - purge_timer1;
 	if(delta_purge_time > PURGE_INTEGRATION_INTERVAL)
 	{
-		mAms_since_last_purge.u64 += delta_purge_time * FCCURRValue;
+		mAms_since_last_purge.u64 += delta_purge_time * get_FCCURR();
 		purge_timer1 = millis();
 	}
 	
@@ -344,7 +347,7 @@ unsigned int FC_run(void)
 		
 		//we restart counting mAms as soon as valve opens
 		//reset mAms sum
-		mAms_since_last_purge = 0;
+		mAms_since_last_purge.u64 = 0;
 		//reset timer1
 		purge_timer1 = millis();
 		
@@ -396,7 +399,7 @@ unsigned int FC_shutdown(void)
 	return(fc_state);
 }
 
-unsigned int FC_alarm(void);
+unsigned int FC_alarm(void)
 {
 	unsigned int fc_state;
 	gpio_clr_gpio_pin(LED_RUN);

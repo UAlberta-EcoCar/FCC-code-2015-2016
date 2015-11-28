@@ -34,7 +34,7 @@ unsigned int FC_check_alarms(unsigned int fc_state);
 //FCVoltReading = FCVOLTValue * 3000mV/(2^12-1) * (47 + 3) / 3
 //should result in a voltage in mV
 
-#define CAPVOLTValue (CAPVOLTReading *  (47 + 3) / 3 * 3000 / (2^12 - 1)) //in mV
+#define CAPVOLTValue (adcvals_1[4] *  (47 + 3) / 3 * 3000 / (2^12 - 1)) //in mV
 
 #define FCCURRValue ((FCCURRReading * (316 + 470) / 470 * 3000 / (2^12 - 1) - 2500) * 1000 / 40) //in mA 
 //from ACS756 datasheet

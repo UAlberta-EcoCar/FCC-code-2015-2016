@@ -34,3 +34,24 @@ void ReadADC_Sequencers(void)
 {
 	while((adcifa_get_values_from_sequencer(&AVR32_ADCIFA,0,&adcifa_sequence_opt,adcvals_0)!=ADCIFA_STATUS_COMPLETED)|(adcifa_get_values_from_sequencer(&AVR32_ADCIFA,1,&adcifa_sequence_opt,adcvals_1)!=ADCIFA_STATUS_COMPLETED));
 }
+
+int * ReadADC_Sequencer0(void)
+{
+	while((adcifa_get_values_from_sequencer(&AVR32_ADCIFA,0,&adcifa_sequence_opt,adcvals_0)!=ADCIFA_STATUS_COMPLETED));
+	return(adcvals_0);
+}
+
+int get_CAPVOLT(void)
+{
+	return(adcvals_1[4]);
+}
+
+int get_FCVOLT(void)
+{
+	return(adcvals_1[5]);// * (47 + 3) / 3 * 3000 / (2^12 - 1));
+}
+
+int get_FCCURR(void)
+{
+	return(adcvals_1[3]);
+}
