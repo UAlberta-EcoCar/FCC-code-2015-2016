@@ -16,8 +16,12 @@ void ADCInit(void)
 {	
 	//Set ADC pins to ADC Function
 	gpio_enable_module(ADCIFA_GPIO_MAP, sizeof(ADCIFA_GPIO_MAP) / sizeof(ADCIFA_GPIO_MAP[0]));
+	//adc pb clock settings
+	
 	//Set up ADC
-	adcifa_configure(&AVR32_ADCIFA, &adcifa_opt, 120000);
+	//adcifa_configure(&AVR32_ADCIFA, &adcifa_opt, 120000); 
+	adcifa_configure(&AVR32_ADCIFA, &adcifa_opt, sysclk_get_pbc_hz()); //try this instead 
+	
 	//configure ADC sequencer 0
 	adcifa_configure_sequencer(&AVR32_ADCIFA, 0, &adcifa_sequence_opt, adcifa_sequence_conversion_option_0);
 	//sequencer 1

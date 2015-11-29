@@ -98,7 +98,7 @@ unsigned int FC_check_alarms(unsigned int fc_state)
 	{
 		error_msg |= FC_ERR_TEMP_L;
 	}
-	if((get_FCTEMP1 >= HIGH_TEMP_THRES)|(get_FCTEMP2 >= HIGH_TEMP_THRES))
+	if((get_FCTEMP1() >= HIGH_TEMP_THRES)|(get_FCTEMP2() >= HIGH_TEMP_THRES))
 	{
 		error_msg |= FC_ERR_TEMP_H;
 	}
@@ -179,11 +179,12 @@ unsigned int FC_startup_fans(void)
 		if(gpio_get_pin_value(FAN_TACH)==1)
 		{
 			tachometer_test = 1;
-			fc_state = FC_STATE_STARTUP_FANS;
 		}
 	}
+	fc_state = FC_STATE_STARTUP_FANS; //keep looping in this function
+	
 	//then wait for it to go low again (then the fan is spinning)
-	else if(tachometer_test == 1)
+	if(tachometer_test == 1)
 	{
 		if(gpio_get_pin_value(FAN_TACH) == 0)
 		{
@@ -221,7 +222,8 @@ unsigned int FC_startup_h2(void)
 	return(fc_state);
 }
 
-unsigned int purge_timer = 0;
+
+unsigned int purge_timer2 = 0; //used for timing how long purge valve is open
 unsigned int FC_startup_purge(void)
 {
 	//Purge step isn't skipped on !Rescon to get air out of lines on startup. what???
@@ -237,13 +239,13 @@ unsigned int FC_startup_purge(void)
 	//open purge valve and start timer
 	if(gpio_get_gpio_pin_output_value(PURGE_VALVE) == 0)
 	{
-		purge_timer = millis();
+		purge_timer1 = millis();
 	}
 	gpio_set_gpio_pin(PURGE_VALVE);
 	gpio_set_gpio_pin(LED0);
 	
 	//balazs has pseudo code purge for 3 seconds
-	if(millis() - purge_timer < 3000)
+	if(millis() - purge_timer1 < 3000)
 	{
 		fc_state = FC_STATE_STARTUP_PURGE;
 	}
@@ -261,13 +263,32 @@ unsigned int FC_startup_purge(void)
 	return(fc_state);
 }
 
-//I'm not sure why we do this step the way we do
+
+unsigned int purge_timer1; //using for keeping track of time between purges 
+unsigned int delta_purge_time;
+U64 mAms_since_last_purge;
+unsigned int purge_state = FIRST_PURGE_CYCLE;
 unsigned int FC_startup_charge(void)
 {
 	unsigned int fc_state;
 	//Skip charge step if resistors aren't connected
 	//pseudo code checked RESCON here
 	//however, RESCON == 0 will trigger and alarm anyway so I won't check
+
+	if(purge_state == FIRST_PURGE_CYCLE)
+	{
+		purge_timer1 = millis();
+		purge_state = PURGE_VALVE_CLOSED; //fuel cell running purge valve closed //prevents timer from being reset
+	}
+	//keep track of columbs of charge produced since last purge
+	delta_purge_time = millis() - purge_timer1;
+	if(delta_purge_time > PURGE_INTEGRATION_INTERVAL)
+	{
+		mAms_since_last_purge += delta_purge_time * get_FCCURR();
+		purge_timer1 = millis();
+	}
+	//we shouldn't need to purge in this state because 2300C/40V = 57.5F of capacitance we can fill
+	//but it still impacts time till next purge
 	
 	//charging capacitors through resistor to avoid temporary short circuit
 	if (get_CAPVOLT() < 40000) //if voltage is less than 40V
@@ -279,12 +300,12 @@ unsigned int FC_startup_charge(void)
 		//H2_valve open
 		//purge valve still closed
 		fc_state = FC_STATE_STARTUP_CHARGE;
-		//will we have to purge here?
-		//2300C * 40V = will have to purge if capacitor is huge ?? is that math correct?
-		//don't have to purge
 	}
 	else //caps are charged
 	{
+		//turn off led1
+		gpio_clr_gpio_pin(LED1);
+		
 		//open resistor relay
 		gpio_clr_gpio_pin(RES_RELAY);
 		//delay how long?
@@ -296,7 +317,7 @@ unsigned int FC_startup_charge(void)
 		//close motor relay
 		gpio_set_gpio_pin(MOTOR_RELAY);
 		
-		//pseudo code is strange here I think we set state to run ??
+		//go to main run state
 		fc_state = FC_STATE_RUN;
 		gpio_clr_gpio_pin(LED_START);
 		gpio_set_gpio_pin(LED_RUN);
@@ -304,16 +325,10 @@ unsigned int FC_startup_charge(void)
 	return(fc_state);
 }
 
-unsigned int purge_timer1; //used for integrating Amp seconds
-unsigned int purge_timer2; //used for timing how long purge valve is open
-unsigned int delta_purge_time;
-Union64 mAms_since_last_purge;
-unsigned int purge_state = FIRST_PURGE_CYCLE;
+
 unsigned int fan_update_timer;
 unsigned int FC_run(void)
 {
-	//this could almost be recoded to use a switch for purge_state
-	
 	unsigned int fc_state;
 	
 	if(millis() - fan_update_timer > FANUPDATE_INTERVAL)
@@ -325,29 +340,21 @@ unsigned int FC_run(void)
 	
 	//purge control: //purge based on amount of charge extracted from hydrogen (1 C = amp * sec)
 	
-	//if this is the first ever purge, set purge timer
-	//this is probably incorrect
-	//don't we want to purge after charging caps?
-	if(purge_state == FIRST_PURGE_CYCLE)
-	{
-		purge_timer1 = millis();
-		purge_state = PURGE_VALVE_CLOSED; //fuel cell running purge valve closed //prevents timer from being reset
-	}
 	delta_purge_time = millis() - purge_timer1;
 	if(delta_purge_time > PURGE_INTEGRATION_INTERVAL)
 	{
-		mAms_since_last_purge.u64 += delta_purge_time * get_FCCURR();
+		mAms_since_last_purge += delta_purge_time * get_FCCURR();
 		purge_timer1 = millis();
 	}
 	
-	if (mAms_since_last_purge.u64 > PURGE_THRESHOLD) //time to purge
+	if (mAms_since_last_purge > PURGE_THRESHOLD) //time to purge
 	{
 		//open purge valve
 		gpio_set_gpio_pin(PURGE_VALVE);
 		
 		//we restart counting mAms as soon as valve opens
 		//reset mAms sum
-		mAms_since_last_purge.u64 = 0;
+		mAms_since_last_purge = 0;
 		//reset timer1
 		purge_timer1 = millis();
 		

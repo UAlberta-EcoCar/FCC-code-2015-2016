@@ -31,7 +31,7 @@ unsigned int FC_check_alarms(unsigned int fc_state);
 #define FANUPDATE_INTERVAL 50
 
 #define PURGE_INTEGRATION_INTERVAL 10 //10 ms
-#define PURGE_THRESHOLD 2300*1000*1000 //from fuel cell documentation. units mA * ms
+#define PURGE_THRESHOLD 2300000000 //2300 C from fuel cell documentation. units mA * ms
 //this is larger than max 32 bit value
 #define PURGE_TIME 200 //get this value from datasheet
 #define MAX_PURGE_INTERVAL 0 //max time between purges regardless of current output
