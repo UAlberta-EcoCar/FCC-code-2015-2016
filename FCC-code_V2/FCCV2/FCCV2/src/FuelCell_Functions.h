@@ -48,4 +48,6 @@ unsigned int FC_run(void);
 unsigned int FC_shutdown(void);
 unsigned int FC_alarm(void);
 
+unsigned int pid_temp_control(void);
+
 #endif /* FUELCELL_FUNCTIONS_H_ */

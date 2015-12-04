@@ -49,26 +49,6 @@ unsigned int pid_temp_control(void)
 	TEMP_OPT = (53*get_CAPVOLT()) / 100 + 299160;
 	AVE_TEMP = (get_FCTEMP1() + get_FCTEMP2())/2;
 	
-	//thermistor curve has a linear range and non linear range
-	//see excel thermistor curve fit
-	if (AVE_TEMP < 1400) //reading is in the linear range
-	{
-		//temp in mK is
-		//44.767 * ADC_reading + 221732
-		AVE_TEMP = ( 4475 * AVE_TEMP ) / 100 + 221732;
-	}
-	else
-	{
-		//not linear range -> use cubic approximation
-		//temp in mK
-		//= 0.0088 x^3 - 40.24 x^2 + 61144 x - 30000000
-		//mess around with order of multiplication to avoid round off errors and over flow errors (ie: 1700^3 > mx 32bit value)
-		//AVE_TEMP = ((88 * (AVE_TEMP * AVE_TEMP / 10000) * AVE_TEMP) - ((4024 * AVE_TEMP / 100) * AVE_TEMP));
-		//how fast is this processor at math?
-		//this might take a while. I'm going to simplify
-		AVE_TEMP = ((9 * (AVE_TEMP * AVE_TEMP / 1000) * AVE_TEMP) - ((402 * AVE_TEMP / 10) * AVE_TEMP));
-	}
-	
 	temp_error = (TEMP_OPT - AVE_TEMP) / 1000; //in Kalvin
 	//accumulated_temp_error = accumulated_temp_error + temp_error;
 	
@@ -76,12 +56,13 @@ unsigned int pid_temp_control(void)
 	//max is 20. min is 5. diff is 15
 	//run fan at 1% above min per degree K it is above T_OPT
 	FANUpdate(5+(unsigned int)temp_error*20/100);
+	return(1);
 }
 
 unsigned int FC_check_alarms(unsigned int fc_state)
 {
 	//to do: make alarms smarter based on fc_state.
-	unsigned int error_msg;
+	unsigned int error_msg = 0;
 	if(gpio_get_pin_value(CAPCON) == 0)
 	{
 		error_msg |= FC_ERR_CAP_DISC;
@@ -117,9 +98,7 @@ unsigned int FC_check_alarms(unsigned int fc_state)
 	}
 	if(get_FCCURR() <= UNDER_CUR_THRES)
 	{
-		error_msg |= FC_ERR_UND_CUR;
-	}
-	if(get_FCVOLT() >= OVER_VOLT_THRES)
+		error_msg |= FC_ERR_UND_CUR;	}	if(get_FCVOLT() >= OVER_VOLT_THRES)
 	{
 		error_msg |= FC_ERR_OVER_VOLT;
 	}
@@ -239,13 +218,13 @@ unsigned int FC_startup_purge(void)
 	//open purge valve and start timer
 	if(gpio_get_gpio_pin_output_value(PURGE_VALVE) == 0)
 	{
-		purge_timer1 = millis();
+		purge_timer2 = millis();
 	}
 	gpio_set_gpio_pin(PURGE_VALVE);
 	gpio_set_gpio_pin(LED0);
 	
 	//balazs has pseudo code purge for 3 seconds
-	if(millis() - purge_timer1 < 3000)
+	if(millis() - purge_timer2 < 3000)
 	{
 		fc_state = FC_STATE_STARTUP_PURGE;
 	}
@@ -270,7 +249,7 @@ U64 mAms_since_last_purge;
 unsigned int purge_state = FIRST_PURGE_CYCLE;
 unsigned int FC_startup_charge(void)
 {
-	unsigned int fc_state;
+	unsigned int fc_state = FC_STATE_STARTUP_CHARGE; //will keep charging untill state exits
 	//Skip charge step if resistors aren't connected
 	//pseudo code checked RESCON here
 	//however, RESCON == 0 will trigger and alarm anyway so I won't check
@@ -299,7 +278,7 @@ unsigned int FC_startup_charge(void)
 		//other relays open still
 		//H2_valve open
 		//purge valve still closed
-		fc_state = FC_STATE_STARTUP_CHARGE;
+		//fc_State still charge
 	}
 	else //caps are charged
 	{
@@ -307,12 +286,22 @@ unsigned int FC_startup_charge(void)
 		gpio_clr_gpio_pin(LED1);
 		
 		//open resistor relay
-		gpio_clr_gpio_pin(RES_RELAY);
+		
 		//delay how long?
+		//why not one adc cycle?
+		if(gpio_get_gpio_pin_output_value(RES_RELAY) == 1)
+		{
+			gpio_clr_gpio_pin(RES_RELAY);	
+			return(fc_state); //state will run again
+		}
 		
 		//close cap relay
-		gpio_set_gpio_pin(CAP_RELAY);
-		//delay
+		//another delay
+		if(gpio_get_gpio_pin_output_value(CAP_RELAY == 0))
+		{
+			gpio_set_gpio_pin(CAP_RELAY);
+			return(fc_state);
+		}
 		
 		//close motor relay
 		gpio_set_gpio_pin(MOTOR_RELAY);

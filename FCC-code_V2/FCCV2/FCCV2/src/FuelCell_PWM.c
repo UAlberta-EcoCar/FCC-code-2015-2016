@@ -128,6 +128,7 @@ void PWMInit(void)
 }
 
 
+int pwm_update_duty_cycle(unsigned int channel_id, const avr32_pwm_channel_t *pwm_channel);
 
 //I modified pwm_update_channel(unsigned int channel_id, const avr32_pwm_channel_t *pwm_channel) to make this
 //not sure what the lines i commented out do
@@ -138,7 +139,7 @@ int pwm_update_duty_cycle(unsigned int channel_id, const avr32_pwm_channel_t *pw
 	if (channel_id > AVR32_PWM_LINES_MSB)
 	return PWM_INVALID_INPUT;
 
-	AVR32_PWM.isr1;                                    // Acknowledgement and clear previous register state.
+	AVR32_PWM.isr1;                                    // Aknowledgement and clear previous register state.
 	while (!(AVR32_PWM.isr1 & (1 << channel_id)));     // Wait until the last write has been taken into account.
 	pwm->channel[channel_id].cdtyupd= pwm_channel->cdtyupd; // Channel update Duty Cycle
 	//pwm->channel[channel_id].cprdupd= pwm_channel->cprdupd; // Channel update Period

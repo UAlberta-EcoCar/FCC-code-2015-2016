@@ -1,12 +1,14 @@
 /*
- * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
+ * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a> //this site is useless
  */
 
 /*
 to do list:
-get good temperature conversion
+get good temperature conversion (actually test readings)
 can bus
 serial
+fan pid control code
+test
 */
 
 #include "asf.h"
@@ -32,13 +34,11 @@ int main (void)
 	//Start of main loop
 	while(1)
 	{
-		if((millis()-read_timer) > READ_TIME_INTERVAL)
-		{
-			//read analog inputs
-			StartADC_Sequencers();
-			ReadADC_Sequencers();
-			read_timer = millis();
-		}
+		//read analog inputs
+		StartADC_Sequencers();
+		ReadADC_Sequencers();
+		read_timer = millis();
+
 		
 		if(1)
 		{
@@ -79,7 +79,7 @@ int main (void)
 			fc_state = FC_run();
 			
 		case FC_STATE_ALARM:
-			fc_state = FC_alarm();
+			fc_state = FC_alarm();			
 		}
 	}
 }
