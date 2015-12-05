@@ -45,22 +45,18 @@ int convert_temp(int temp_reading)
 {
 		//thermistor curve has a linear range and non linear range
 		//see excel thermistor curve fit
-		if (temp_reading < 1400) //reading is in the linear range
+		if ((temp_reading <= 251)&(temp_reading > 88)) //reading is in the linear range (293 to 363K)
 		{
 			//temp in mK is
-			//44.767 * ADC_reading + 221732
-			temp_reading = ( 4475 * temp_reading ) / 100 + 221732;
+			temp_reading = ( -4088 * temp_reading ) / 100 + 399090;
 		}
-		else
+		else if (temp_reading > 251) //lower non linear range (253 to 293K)
 		{
-			//not linear range -> use cubic approximation
-			//temp in mK
-			//= 0.0088 x^3 - 40.24 x^2 + 61144 x - 30000000
-			//mess around with order of multiplication to avoid round off errors and over flow errors (ie: 1700^3 > mx 32bit value)
-			//AVE_TEMP = ((88 * (AVE_TEMP * AVE_TEMP / 10000) * AVE_TEMP) - ((4024 * AVE_TEMP / 100) * AVE_TEMP));
-			//how fast is this processor at math?
-			//this might take a while. I'm going to simplify
-			temp_reading = ((9 * (temp_reading * temp_reading / 1000) * temp_reading) - ((402 * temp_reading / 10) * temp_reading));
+			temp_reading = -494*temp_reading*temp_reading/10 + 25109*temp_reading-2900700;
+		}
+		else //temp is in upper linearish range (363K +)
+		{
+			temp_reading = -1361*temp_reading + 577290;
 		}
 		return(temp_reading);
 }
@@ -113,7 +109,7 @@ int get_CAPVOLT(void)
 }
 int get_FCVOLT(void)
 {
-	return(FCVOLTReading * 3000 * 50 / 3 / (2048-1));
+	return((FCVOLTReading-210) * 3000 * 50 / 3 / (2048-1));
 	//47k and 3k voltage divider
 	//3V reference
 	//FCVolt = ADCreading * 3000mV/(2^11-1) * (47 + 3) / 3
