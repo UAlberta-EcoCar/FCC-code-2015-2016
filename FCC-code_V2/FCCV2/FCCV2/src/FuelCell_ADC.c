@@ -43,9 +43,10 @@ void ReadADC_Sequencers(void)
 //functions for retrieving values from adcvals array
 int convert_temp(int temp_reading)
 {
+		temp_reading = temp_reading * (-1);
 		//thermistor curve has a linear range and non linear range
 		//see excel thermistor curve fit
-		if ((temp_reading <= 251)&(temp_reading > 88)) //reading is in the linear range (293 to 363K)
+		/*if ((temp_reading <= 251)&(temp_reading > 88)) //reading is in the linear range (293 to 363K)
 		{
 			//temp in mK is
 			temp_reading = ( -4088 * temp_reading ) / 100 + 399090;
@@ -57,8 +58,10 @@ int convert_temp(int temp_reading)
 		else //temp is in upper linearish range (363K +)
 		{
 			temp_reading = -1361*temp_reading + 577290;
-		}
-		return(temp_reading);
+		}*/
+		temp_reading = -428 * temp_reading + 404830;
+		
+		return(temp_reading / 1000 - 273);
 }
 int get_FCTEMP1(void)
 {

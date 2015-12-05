@@ -389,6 +389,12 @@
     <Compile Include="src\FuelCell_PWM.c">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="src\pid.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\pid.h">
+      <SubType>compile</SubType>
+    </Compile>
     <None Include="src\ASF\avr32\drivers\pm\sleep.h">
       <SubType>compile</SubType>
     </None>

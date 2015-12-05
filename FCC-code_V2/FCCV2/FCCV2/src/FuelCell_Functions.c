@@ -63,6 +63,7 @@ unsigned int FC_check_alarms(unsigned int fc_state)
 {
 	//to do: make alarms smarter based on fc_state.
 	unsigned int error_msg = 0;
+	switch 
 	if(gpio_get_pin_value(CAPCON) == 0)
 	{
 		error_msg |= FC_ERR_CAP_DISC;

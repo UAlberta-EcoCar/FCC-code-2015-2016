@@ -113,7 +113,7 @@ void PWMInit(void)
 	fan_pwm_channel.CMR.calg  = PWM_MODE_LEFT_ALIGNED;       // Channel mode.
 	fan_pwm_channel.CMR.cpol  = PWM_POLARITY_LOW;            // Channel polarity.
 	fan_pwm_channel.CMR.cpre  = 0;           // Channel prescaler: no prescaler see page 1036 of datasheet
-	fan_pwm_channel.cdty      = 10;       // Channel duty cycle, should be < CPRD.
+	fan_pwm_channel.cdty      = 0;       // Channel duty cycle, should be < CPRD.
 	fan_pwm_channel.cprd      = 20;       // Channel period.
 
 	//Fpwm = (MCK/prescaler)/period

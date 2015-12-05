@@ -77,6 +77,7 @@ C_SRCS +=  \
 ../src/ASF/avr32/drivers/gpio/gpio.c \
 ../src/ASF/avr32/drivers/pm/pm_uc3c.c \
 ../src/FuelCell_PWM.c \
+../src/pid.c \
 ../src/ASF/avr32/drivers/pm/power_clocks_lib.c \
 ../src/ASF/avr32/drivers/pwm/pwm4.c \
 ../src/ASF/avr32/drivers/scif/scif_uc3c.c \
@@ -108,6 +109,7 @@ src/ASF/avr32/drivers/flashc/flashc.o \
 src/ASF/avr32/drivers/gpio/gpio.o \
 src/ASF/avr32/drivers/pm/pm_uc3c.o \
 src/FuelCell_PWM.o \
+src/pid.o \
 src/ASF/avr32/drivers/pm/power_clocks_lib.o \
 src/ASF/avr32/drivers/pwm/pwm4.o \
 src/ASF/avr32/drivers/scif/scif_uc3c.o \
@@ -132,6 +134,7 @@ src/ASF/avr32/drivers/flashc/flashc.o \
 src/ASF/avr32/drivers/gpio/gpio.o \
 src/ASF/avr32/drivers/pm/pm_uc3c.o \
 src/FuelCell_PWM.o \
+src/pid.o \
 src/ASF/avr32/drivers/pm/power_clocks_lib.o \
 src/ASF/avr32/drivers/pwm/pwm4.o \
 src/ASF/avr32/drivers/scif/scif_uc3c.o \
@@ -156,6 +159,7 @@ src/ASF/avr32/drivers/flashc/flashc.d \
 src/ASF/avr32/drivers/gpio/gpio.d \
 src/ASF/avr32/drivers/pm/pm_uc3c.d \
 src/FuelCell_PWM.d \
+src/pid.d \
 src/ASF/avr32/drivers/pm/power_clocks_lib.d \
 src/ASF/avr32/drivers/pwm/pwm4.d \
 src/ASF/avr32/drivers/scif/scif_uc3c.d \
@@ -180,6 +184,7 @@ src/ASF/avr32/drivers/flashc/flashc.d \
 src/ASF/avr32/drivers/gpio/gpio.d \
 src/ASF/avr32/drivers/pm/pm_uc3c.d \
 src/FuelCell_PWM.d \
+src/pid.d \
 src/ASF/avr32/drivers/pm/power_clocks_lib.d \
 src/ASF/avr32/drivers/pwm/pwm4.d \
 src/ASF/avr32/drivers/scif/scif_uc3c.d \
@@ -210,6 +215,8 @@ LINKER_SCRIPT_DEP+=
 
 
 # AVR32/GNU C Compiler
+
+
 
 
 
