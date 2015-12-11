@@ -26,8 +26,8 @@
 //define thresholds for over current etc
 #define LOW_TEMP_THRES 950 //-10C. 950 is closer to -5C I thought we'd be safe
 #define HIGH_TEMP_THRES 1680 // 75C
-#define HIGH_PRES_THRES 9810 //9.81 PSI
-#define LOW_PRES_THRES 800 //0.8 PSI
+#define FC_HIGH_PRES_THRES 9810 //9.81 PSI
+#define FC_LOW_PRES_THRES 800 //0.8 PSI
 #define OVER_CUR_THRES 78000 //78A
 #define UNDER_CUR_THRES -3000 //-3A 
 #define OVER_VOLT_THRES 50600 //50.6V

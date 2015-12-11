@@ -3,12 +3,12 @@
  *
  * Created: 2015-11-09 11:08:25 AM
  *  Author: Reegan
- */ 
-
+ *
+*/
 #ifndef FUELCELL_FUNCTIONS_H_
-#define FUELCELL_FUNCTIONS_H_
 
 void millis_init(void);
+
 unsigned long millis(void);
 
 unsigned int FC_check_alarms(unsigned int fc_state);
@@ -35,6 +35,8 @@ unsigned int FC_check_alarms(unsigned int fc_state);
 //this is larger than max 32 bit value
 #define PURGE_TIME 200 //get this value from datasheet
 #define MAX_PURGE_INTERVAL 0 //max time between purges regardless of current output
+
+unsigned int get_time_between_last_purges(void);
 
 //state functions
 unsigned int FC_standby(void);

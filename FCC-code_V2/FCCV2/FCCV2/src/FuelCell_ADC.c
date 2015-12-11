@@ -61,7 +61,7 @@ int convert_temp(int temp_reading)
 		}*/
 		temp_reading = -428 * temp_reading + 404830;
 		
-		return(temp_reading / 1000 - 273);
+		return(temp_reading);
 }
 int get_FCTEMP1(void)
 {

@@ -17,6 +17,10 @@ U32 time_passed = 0;
 
 float PID(float currentTemp, float setPoint) {
   seconds = millis() / 1000;
+  
+  //convert to degree Celsius
+  currentTemp = currentTemp / 1000 - 273.15; 
+  setPoint = setPoint / 1000 - 273.15;
 
   // proportional part
   float p_value = 0;
