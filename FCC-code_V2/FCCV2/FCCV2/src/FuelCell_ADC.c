@@ -19,7 +19,7 @@ void ADCInit(void)
 	//adc pb clock settings
 	
 	//Set up ADC
-	//adcifa_configure(&AVR32_ADCIFA, &adcifa_opt, 120000); 
+	//adcifa_configure(&AVR32_ADCIFA, &adcifa_opt, 120000); this worked before
 	adcifa_configure(&AVR32_ADCIFA, &adcifa_opt, sysclk_get_pbc_hz()); //try this instead 
 	
 	//configure ADC sequencer 0
@@ -40,7 +40,7 @@ void ReadADC_Sequencers(void)
 }
 
 
-//functions for retrieving values from adcvals array
+//functions for retrieving values from adcvals array based off of conversion sequence order in analog_defs.h
 int convert_temp(int temp_reading)
 {
 		temp_reading = temp_reading * (-1);
@@ -112,7 +112,7 @@ int get_CAPVOLT(void)
 }
 int get_FCVOLT(void)
 {
-	return((FCVOLTReading-210) * 3000 * 50 / 3 / (2048-1));
+	return((FCVOLTReading) * 3000 * 50 / 3 / (2048-1));
 	//47k and 3k voltage divider
 	//3V reference
 	//FCVolt = ADCreading * 3000mV/(2^11-1) * (47 + 3) / 3

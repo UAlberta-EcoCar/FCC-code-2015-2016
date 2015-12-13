@@ -108,4 +108,7 @@
 // From module: System Clock Control - UC3 C implementation
 #include <sysclk.h>
 
+// From module: USART - Universal Synchronous/Asynchronous Receiver/Transmitter
+#include <usart.h>
+
 #endif // ASF_H

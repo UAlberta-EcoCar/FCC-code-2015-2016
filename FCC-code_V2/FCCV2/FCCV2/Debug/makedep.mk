@@ -14,7 +14,11 @@ src\ASF\avr32\drivers\gpio\gpio.c
 
 src\ASF\avr32\drivers\pm\pm_uc3c.c
 
+src\ASF\avr32\drivers\usart\usart.c
+
 src\FuelCell_PWM.c
+
+src\FuelCell_USART.c
 
 src\pid.c
 

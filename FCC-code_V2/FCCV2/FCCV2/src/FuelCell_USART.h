@@ -1,0 +1,28 @@
+/*
+ * FuelCell_USART.h
+ *
+ * Created: 2015-12-05 6:00:22 PM
+ *  Author: Reegan
+ */ 
+
+
+#ifndef FUELCELL_USART_H_
+#define FUELCELL_USART_H_
+
+void USARTInit(void);
+
+
+#  define EXAMPLE_TARGET_PBCCLK_FREQ_HZ 7500000  // PBA clock target frequency, in Hz
+
+#  define EXAMPLE_USART                 (&AVR32_USART3)
+#  define EXAMPLE_USART_RX_PIN          AVR32_USART3_RXD_2_PIN
+#  define EXAMPLE_USART_RX_FUNCTION     AVR32_USART3_RXD_2_FUNCTION
+#  define EXAMPLE_USART_TX_PIN          AVR32_USART3_TXD_2_PIN
+#  define EXAMPLE_USART_TX_FUNCTION     AVR32_USART3_TXD_2_FUNCTION
+#  define EXAMPLE_USART_CLOCK_MASK      AVR32_USART3_CLK_PBA
+#  define EXAMPLE_PDCA_CLOCK_HSB        AVR32_PDCA_CLK_HSB
+#  define EXAMPLE_PDCA_CLOCK_PB         AVR32_PDCA_CLK_PBC
+
+
+
+#endif /* FUELCELL_USART_H_ */

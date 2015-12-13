@@ -46,7 +46,7 @@ static const gpio_map_t ADCIFA_GPIO_MAP = {
 
 //ADC settings
 adcifa_opt_t adcifa_opt = {
-	.frequency                = 250000,  // ADC frequency (Hz) //was set to 10000
+	.frequency                = 500000,  // ADC frequency (Hz) //worked at 10000 and 250000
 	.reference_source         = ADCIFA_REF06VDD, // Reference Source
 	.sample_and_hold_disable  = 0,    // Disable Sample and Hold Time
 	.single_sequencer_mode    = 0,    // Single Sequencer Mode
@@ -56,7 +56,7 @@ adcifa_opt_t adcifa_opt = {
 
 adcifa_sequencer_opt_t adcifa_sequence_opt = {
 	.convnb               = 7, // Number of sequence
-	.resolution           = ADCIFA_SRES_12B,         // Resolution selection
+	.resolution           = ADCIFA_SRES_12B,         // Resolution selection //12bits = 11bits plus sign bit
 	.trigger_selection    = ADCIFA_TRGSEL_SOFT,      // Trigger selection
 	.start_of_conversion  = ADCIFA_SOCB_ALLSEQ,      // Conversion Management
 	.half_word_adjustment = ADCIFA_HWLA_NOADJ,       // Half word Adjustment

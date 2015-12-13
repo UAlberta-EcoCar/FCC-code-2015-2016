@@ -23,6 +23,21 @@ void board_init(void)
 	 */
 	scif_start_rc120M();
 	scif_start_rc8M();
+	
+	
+	//set cpu divide by 2^(1+1) = 4
+	pm_set_clk_domain_div(AVR32_PM_CLK_GRP_CPU,1);
+	//switch main clock source
+	pm_set_mclk_source(PM_CLK_SRC_RC120M);
+	//cpu frequency is now 30 MHz
+
+	//set up pba, pbb, pbc. must be less than fcpu/4
+	//cpu is divide by 4 --> need divide by 16.   2^(3+1) = 16
+	pm_set_clk_domain_div(AVR32_PM_CLK_GRP_PBA,3);
+	pm_set_clk_domain_div(AVR32_PM_CLK_GRP_PBB,3);
+	pm_set_clk_domain_div(AVR32_PM_CLK_GRP_PBB,3);
+	//120MHz / 16 = 7.5MHz
+
 	//setup adc
 	ADCInit();
 	
@@ -30,4 +45,5 @@ void board_init(void)
 	
 	//set up pwm (this will be fun)
 	PWMInit();
+	
 }
