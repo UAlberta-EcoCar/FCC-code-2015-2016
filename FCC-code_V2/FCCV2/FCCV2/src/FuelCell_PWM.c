@@ -24,16 +24,16 @@ static void local_start_highfreq_clock(void)
 		.osc = SCIF_GCCTRL_RC8M,     //"The PLLs can take either Oscillator 0, Oscillator 1 or 8MHz RC Oscillator (RC8M) as reference clock"
 		.lockcount = 16,      // lockcount in main clock for the PLL wait lock
 		.div = 0,             // PLLDIV=0 in the formula
-		.mul = 13,             // PLLMUL=6
+		.mul = 6,             // PLLMUL=6
 		.pll_div2 = 1,        // pll_div2 Divide the PLL output frequency by 2 (this settings does not change the FVCO value)
 		.pll_wbwdisable = 0,  // pll_wbwdisable 1 Disable the Wide-Bandith Mode (Wide-Bandwith mode allow a faster startup time and out-of-lock time). 0 to enable the Wide-Bandith Mode.
-		.pll_freq = 0,        // Set to 1 for VCO frequency range 80-180MHz, set to 0 for VCO frequency range 160-240Mhz. (VCO = 80 MHz in this case)
+		.pll_freq = 1,        // Set to 1 for VCO frequency range 80-180MHz, set to 0 for VCO frequency range 160-240Mhz. (VCO = 80 MHz in this case)
 	};
 	
 	//already started
 	//scif_start_rc8M();
 
-	/* Setup PLL0 on RC8M, mul=12 ,no divisor, lockcount=16, ie. (8Mhzx(PLLMUL+1)*2 / 2 = 112 MHz output see page 100 of datasheet */
+	/* Setup PLL0 on RC8M, mul=13 ,no divisor, lockcount=16, ie. (8Mhzx(PLLMUL+1)*2 / 2 = 56 MHz output see page 100 of datasheet */
 	scif_pll_setup(SCIF_PLL0, &opt); // lockcount in main clock for the PLL wait lock
 
 	/* Enable PLL0 */
@@ -48,7 +48,7 @@ static void local_start_highfreq_clock(void)
 // Start PWM generic clock input
 static void pwm_start_gc(void)
 {
-	//PWM GENERIC CLOCK: source:PLL0 56MHz   divided to 280kHz
+	//PWM GENERIC CLOCK: source:PLL0 56MHz
 	scif_gc_setup(AVR32_SCIF_GCLK_PWM,SCIF_GCCTRL_PLL0,AVR32_SCIF_GC_NO_DIV_CLOCK,0);
 	// Now enable the generic clock
 	scif_gc_enable(AVR32_SCIF_GCLK_PWM);
