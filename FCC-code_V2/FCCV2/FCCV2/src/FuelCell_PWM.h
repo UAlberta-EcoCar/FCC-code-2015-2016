@@ -12,6 +12,6 @@
 
 void PWMInit(void);
 int FANUpdate(unsigned int duty_cycle); 
-
+unsigned int get_FANSpeed(void);
 
 #endif /* FUELCELL_PWM_H_ */

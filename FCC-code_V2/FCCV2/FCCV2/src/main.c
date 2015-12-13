@@ -21,8 +21,10 @@ test test test
 #include "FuelCell_USART.h"
 #include "FuelCell_CAN.h"
 #include "pid.h"
+#include "millis_function.h"
+#include "FuelCell_check_alarms.h"
 
-char str [20]; //buffer for storing strings
+char str [20]; //buffer for storing strings set to length of longest string
 
 unsigned int error_msg;
 unsigned int fc_state = FC_STATE_STANDBY;
@@ -77,12 +79,11 @@ int main (void)
 			fc_state = FC_alarm();			
 		}
 		
-		//all data logging occurs after state machine
-		//that way if alarm is triggered it is delt with before
-			
+		//all data logging occurs after state machine executes
+		//that way if alarm is triggered it is dealt with before
 		//send data over serial
 		//stagger messages to be able to continue checking levels
-		//with out a huge serial delay (every few messages is a couple milliseconds)
+		//without a huge serial delay (every message is about a millisecond)
 		switch (data_log_stagger)
 		{
 			case 0:
@@ -97,7 +98,10 @@ int main (void)
 				}
 				sprintf(str,"LASTPURGE %d",get_time_between_last_purges());
 				usart_write_line(EXAMPLE_USART,str);
+				sprintf(str,"STATE %d\n",fc_state);
+				usart_write_line(EXAMPLE_USART,str);
 			}
+			
 			case 1:
 			sprintf(str,"FCVOLT %d\n",get_FCVOLT());
 			usart_write_line(EXAMPLE_USART,str);
@@ -106,12 +110,16 @@ int main (void)
 			sprintf(str,"FCPRES %d\n",get_FCPRES());
 			usart_write_line(EXAMPLE_USART,str);
 			data_log_stagger = 2;
+			
 			case 2:
 			sprintf(str,"FCTEMP1 %d\n",get_FCTEMP1());
 			usart_write_line(EXAMPLE_USART,str);
 			sprintf(str,"FCTEMP2 %d\n",get_FCTEMP2());
 			usart_write_line(EXAMPLE_USART,str);
+			sprintf(str,"FANSpeed %d\n",get_FANSpeed());
+			usart_write_line(EXAMPLE_USART,str);
 			data_log_stagger = 3;
+			
 			case 3:
 			sprintf(str,"AMBTEMP0 %d\n",get_AMBTEMP0());
 			usart_write_line(EXAMPLE_USART,str);
@@ -122,6 +130,7 @@ int main (void)
 			sprintf(str,"AMBTEMP3 %d\n",get_AMBTEMP3());
 			usart_write_line(EXAMPLE_USART,str);
 			data_log_stagger = 4;
+			
 			case 4:
 			sprintf(str,"CAPVOLT %d\n",get_CAPVOLT());
 			usart_write_line(EXAMPLE_USART,str);

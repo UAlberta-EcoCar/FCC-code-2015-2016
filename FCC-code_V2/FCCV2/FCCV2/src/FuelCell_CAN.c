@@ -80,7 +80,7 @@ void CANInit(void)
 	Disable_global_interrupt();
 
 	/* Initialize interrupt vectors. */
-	INTC_init_interrupts();
+	//INTC_init_interrupts();
 
 	/* Initialize channel 0 */
 	can_init(0, ((uint32_t)&mob_ram_ch0[0]), CANIF_CHANNEL_MODE_NORMAL,can_out_callback_channel0);

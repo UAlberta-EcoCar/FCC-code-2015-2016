@@ -3,6 +3,7 @@
 #include "pid.h"
 #include "asf.h"
 #include "FuelCell_Functions.h"
+#include "millis_function.h"
 
 #define P 1
 #define I 0.1

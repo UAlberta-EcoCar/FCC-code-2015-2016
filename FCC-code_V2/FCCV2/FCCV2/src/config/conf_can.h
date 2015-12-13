@@ -53,24 +53,40 @@
 
 //! Define the number of MOB per channel. It is a fixed value: 16.
 #define NB_MOB_CHANNEL     16
+
 //! Setup the usage of CAN Under interruption
-#define CAN_LIB_UNDER_INTERRUPT
+//#define CAN_LIB_UNDER_INTERRUPT
+//I don't want interrupts
 
-#define CAN_BAUDRATE_1MHZ_CANCLOCK_16MHz
-#define CAN_BAUDRATE_1MHZ_CANCLOCK_16MHz_SJW         1
-#define CAN_BAUDRATE_1MHZ_CANCLOCK_16MHz_PRES        1
-#define CAN_BAUDRATE_1MHZ_CANCLOCK_16MHz_PRS         2
-#define CAN_BAUDRATE_1MHZ_CANCLOCK_16MHz_PHS1        1
-#define CAN_BAUDRATE_1MHZ_CANCLOCK_16MHz_PHS2        1
+#define BAUDRATE_HZ 250000
 
-#define BAUDRATE        CAN_BAUDRATE_1MHZ_CANCLOCK_16MHz
-#define BAUDRATE_HZ     1000000
-#define BAUDRATE_SJW    CAN_BAUDRATE_1MHZ_CANCLOCK_16MHz_SJW
-#define BAUDRATE_PRES   CAN_BAUDRATE_1MHZ_CANCLOCK_16MHz_PRES
-#define BAUDRATE_PRS    CAN_BAUDRATE_1MHZ_CANCLOCK_16MHz_PRS
-#define BAUDRATE_PHS1   CAN_BAUDRATE_1MHZ_CANCLOCK_16MHz_PHS1
-#define BAUDRATE_PHS2   CAN_BAUDRATE_1MHZ_CANCLOCK_16MHz_PHS2
+#if BAUDRATE_HZ == 125000
+#define CAN_BAUDRATE_125KHZ_CANCLOCK_16MHZ
+#define BAUDRATE        CAN_BAUDRATE_125KHZ_CANCLOCK_16MHZ
+#define BAUDRATE_SJW    1
+#define BAUDRATE_PRES   7 //prescaler
+//TQ = (PRES+1)*Pgclk
+#define BAUDRATE_PRS    1 //propagation segment
+#define BAUDRATE_PHS1   6 //phase segment
+#define BAUDRATE_PHS2   5
+//Tbit = (PRS+PHS1+PHS2+4) * TQ
+#endif
 
+#if BAUDRATE_HZ == 250000
+#define CAN_BAUDRATE_125KHZ_CANCLOCK_16MHZ
+#define BAUDRATE        CAN_BAUDRATE_125KHZ_CANCLOCK_16MHZ
+#define BAUDRATE_SJW    1
+#define BAUDRATE_PRES   3 //prescaler
+//TQ = (PRES+1)*Pgclk
+#define BAUDRATE_PRS    1 //propagation segment
+#define BAUDRATE_PHS1   6 //phase segment
+#define BAUDRATE_PHS2   5
+//Tbit = (PRS+PHS1+PHS2+4) * TQ
+#endif
+
+
+
+// don't want interrupts these need to be defined anyway
 #define CAN0_INT_TX_LEVEL           AVR32_INTC_INT0
 #define CAN0_INT_RX_LEVEL           AVR32_INTC_INT0
 #define CAN0_INT_ERR_LEVEL          AVR32_INTC_INT0
@@ -82,5 +98,6 @@
 #define CAN1_INT_ERR_LEVEL          AVR32_INTC_INT0
 #define CAN1_INT_BOFF_LEVEL         AVR32_INTC_INT0
 #define CAN1_INT_WAKE_UP_LEVEL      AVR32_INTC_INT0
+
 
 #endif // _CONF_CAN_H

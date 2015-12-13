@@ -15,6 +15,7 @@
 #include "FuelCell_PWM.h"
 #include "FuelCell_Functions.h"
 #include "FuelCell_USART.h"
+#include "millis_function.h"
 
 void board_init(void)
 {
@@ -45,7 +46,7 @@ void board_init(void)
 	//setup millis()
 	millis_init();
 	
-	//set up pwm (this will be fun)
+	//set up pwm 
 	PWMInit();
 	
 	//setup usart

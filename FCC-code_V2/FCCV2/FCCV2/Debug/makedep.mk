@@ -16,9 +16,15 @@ src\ASF\avr32\drivers\pm\pm_uc3c.c
 
 src\ASF\avr32\drivers\usart\usart.c
 
+src\FuelCell_CAN.c
+
+src\FuelCell_check_alarms.c
+
 src\FuelCell_PWM.c
 
 src\FuelCell_USART.c
+
+src\millis_function.c
 
 src\pid.c
 

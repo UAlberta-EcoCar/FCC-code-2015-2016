@@ -401,6 +401,18 @@
     <Compile Include="src\FC_error_codes.h">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="src\FuelCell_CAN.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\FuelCell_CAN.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\FuelCell_check_alarms.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\FuelCell_check_alarms.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="src\FuelCell_PWM.c">
       <SubType>compile</SubType>
     </Compile>
@@ -408,6 +420,12 @@
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="src\FuelCell_USART.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\millis_function.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\millis_function.h">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="src\pid.c">

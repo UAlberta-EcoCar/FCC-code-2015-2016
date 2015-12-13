@@ -148,9 +148,15 @@ int pwm_update_duty_cycle(unsigned int channel_id, const avr32_pwm_channel_t *pw
 	return PWM_SUCCESS;
 }
 
-
+unsigned int FANSpeed;
 int FANUpdate(unsigned int duty_cycle)
 {
+	FANSpeed = duty_cycle;
 	fan_pwm_channel.cdtyupd = duty_cycle;
 	return(pwm_update_duty_cycle(FAN_PWM_CHANNEL_ID,&fan_pwm_channel));
+}
+
+unsigned int get_FANSpeed(void)
+{
+	return(FANSpeed);
 }

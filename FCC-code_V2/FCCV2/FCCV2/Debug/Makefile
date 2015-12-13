@@ -78,8 +78,11 @@ C_SRCS +=  \
 ../src/ASF/avr32/drivers/gpio/gpio.c \
 ../src/ASF/avr32/drivers/pm/pm_uc3c.c \
 ../src/ASF/avr32/drivers/usart/usart.c \
+../src/FuelCell_CAN.c \
+../src/FuelCell_check_alarms.c \
 ../src/FuelCell_PWM.c \
 ../src/FuelCell_USART.c \
+../src/millis_function.c \
 ../src/pid.c \
 ../src/ASF/avr32/drivers/pm/power_clocks_lib.c \
 ../src/ASF/avr32/drivers/pwm/pwm4.c \
@@ -112,8 +115,11 @@ src/ASF/avr32/drivers/flashc/flashc.o \
 src/ASF/avr32/drivers/gpio/gpio.o \
 src/ASF/avr32/drivers/pm/pm_uc3c.o \
 src/ASF/avr32/drivers/usart/usart.o \
+src/FuelCell_CAN.o \
+src/FuelCell_check_alarms.o \
 src/FuelCell_PWM.o \
 src/FuelCell_USART.o \
+src/millis_function.o \
 src/pid.o \
 src/ASF/avr32/drivers/pm/power_clocks_lib.o \
 src/ASF/avr32/drivers/pwm/pwm4.o \
@@ -139,8 +145,11 @@ src/ASF/avr32/drivers/flashc/flashc.o \
 src/ASF/avr32/drivers/gpio/gpio.o \
 src/ASF/avr32/drivers/pm/pm_uc3c.o \
 src/ASF/avr32/drivers/usart/usart.o \
+src/FuelCell_CAN.o \
+src/FuelCell_check_alarms.o \
 src/FuelCell_PWM.o \
 src/FuelCell_USART.o \
+src/millis_function.o \
 src/pid.o \
 src/ASF/avr32/drivers/pm/power_clocks_lib.o \
 src/ASF/avr32/drivers/pwm/pwm4.o \
@@ -166,8 +175,11 @@ src/ASF/avr32/drivers/flashc/flashc.d \
 src/ASF/avr32/drivers/gpio/gpio.d \
 src/ASF/avr32/drivers/pm/pm_uc3c.d \
 src/ASF/avr32/drivers/usart/usart.d \
+src/FuelCell_CAN.d \
+src/FuelCell_check_alarms.d \
 src/FuelCell_PWM.d \
 src/FuelCell_USART.d \
+src/millis_function.d \
 src/pid.d \
 src/ASF/avr32/drivers/pm/power_clocks_lib.d \
 src/ASF/avr32/drivers/pwm/pwm4.d \
@@ -193,8 +205,11 @@ src/ASF/avr32/drivers/flashc/flashc.d \
 src/ASF/avr32/drivers/gpio/gpio.d \
 src/ASF/avr32/drivers/pm/pm_uc3c.d \
 src/ASF/avr32/drivers/usart/usart.d \
+src/FuelCell_CAN.d \
+src/FuelCell_check_alarms.d \
 src/FuelCell_PWM.d \
 src/FuelCell_USART.d \
+src/millis_function.d \
 src/pid.d \
 src/ASF/avr32/drivers/pm/power_clocks_lib.d \
 src/ASF/avr32/drivers/pwm/pwm4.d \
@@ -226,6 +241,12 @@ LINKER_SCRIPT_DEP+=
 
 
 # AVR32/GNU C Compiler
+
+
+
+
+
+
 
 
 

@@ -7,11 +7,6 @@
 */
 #ifndef FUELCELL_FUNCTIONS_H_
 
-void millis_init(void);
-
-unsigned long millis(void);
-
-unsigned int FC_check_alarms(unsigned int fc_state);
 
 //different fuel cell states
 #define FC_STATE_STANDBY 0

@@ -13,25 +13,9 @@
 #include "FuelCell_PWM.h"
 #include <math.h>
 #include "pid.h"
+#include "millis_function.h"
 
-//create value for timer
-unsigned long counta;
-void millis_init(void)
-{
-	//AST generic clock 8MHz / (2*(249+1) = 16kHz
-	scif_gc_setup(AVR32_SCIF_GCLK_AST,SCIF_GCCTRL_RC8M,AVR32_SCIF_GC_DIV_CLOCK,249);
-	// Now enable the generic clock
-	scif_gc_enable(AVR32_SCIF_GCLK_AST);
-	//set up timer
-	ast_init_counter(&AVR32_AST,AST_OSC_GCLK,4,counta);  //16kHz / (2^(4+1)) = 1kHz
-	ast_enable(&AVR32_AST);
-}
-
-unsigned long millis(void)
-{
-	return(ast_get_counter_value(&AVR32_AST)); 
-}
-
+/*
 unsigned int TEMP_OPT;
 unsigned int AVE_TEMP; 
 unsigned int temp_error;
@@ -54,110 +38,7 @@ unsigned int pid_temp_control(void)
 	//run fan at 1% above min per degree K it is above T_OPT
 	FANUpdate(temp_error*20/100);
 	return(1);
-}
-
-unsigned int FC_check_alarms(unsigned int fc_state)
-{
-	unsigned int error_msg = 0;
-	//check fccon sysok capcon always
-	if(gpio_get_pin_value(FCCON) == 0)
-	{
-		error_msg |= FC_ERR_FC_DISC;
-	}
-	if(gpio_get_pin_value(CAPCON) == 0)
-	{
-		error_msg |= FC_ERR_CAP_DISC;
-	}
-	if(gpio_get_pin_value(SYSOK) == 0)
-	{
-		error_msg |= FC_ERR_H2OK_LOW;
-	}
-	//check temp H L and pressure H always
-	if((get_FCTEMP1() > HIGH_TEMP_THRES) | (get_FCTEMP2() > HIGH_TEMP_THRES))
-	{
-		error_msg |= FC_ERR_TEMP_H;
-	}
-	if((get_FCTEMP1() < LOW_TEMP_THRES) | (get_FCTEMP2() < LOW_TEMP_THRES))
-	{
-		error_msg |= FC_ERR_TEMP_L;
-	}
-	if(get_FCPRES() > FC_HIGH_PRES_THRES)
-	{
-		error_msg |= FC_ERR_PRES_H;
-	}
-	switch (fc_state)
-	{
-		//case FC_STATE_STANDBY:
-		//case FC_STATE_SHUTDOWN:
-		
-		case FC_STATE_STARTUP_FANS:
-			if(gpio_get_pin_value(RESCON) == 0)
-			{
-				error_msg |= FC_ERR_RES_DISC;
-			}
-		
-		case FC_STATE_STARTUP_H2:
-			if(gpio_get_pin_value(RESCON) == 0)
-			{
-				error_msg |= FC_ERR_RES_DISC;
-			}	
-		
-		case FC_STATE_STARTUP_PURGE:
-			if(gpio_get_pin_value(RESCON) == 0)
-			{
-				error_msg |= FC_ERR_RES_DISC;
-			}
-			if(get_FCPRES() < FC_LOW_PRES_THRES)
-			{
-				error_msg |= FC_ERR_PRES_L;
-			}	
-			if(get_FCCURR() < UNDER_CUR_THRES)
-			{
-				error_msg |= FC_ERR_UND_CUR;
-			}
-			if(get_FCCURR() > OVER_CUR_THRES)
-			{
-				error_msg |= FC_ERR_OVER_CUR;
-			}
-			
-		
-		case FC_STATE_STARTUP_CHARGE:
-			if(gpio_get_pin_value(RESCON) == 0)
-			{
-				error_msg |= FC_ERR_RES_DISC;
-			}
-			
-		case FC_STATE_RUN:
-			if(get_FCPRES() < FC_LOW_PRES_THRES)
-			{
-				error_msg |= FC_ERR_PRES_L;
-			}
-			if(get_FCCURR() < UNDER_CUR_THRES)
-			{
-				error_msg |= FC_ERR_UND_CUR;
-			}
-			if(get_FCCURR() > OVER_CUR_THRES)
-			{
-				error_msg |= FC_ERR_OVER_CUR;
-			}
-			
-		case FC_STATE_ALARM:
-			if(get_FCPRES() < FC_LOW_PRES_THRES)
-			{
-				error_msg |= FC_ERR_PRES_L;
-			}
-			if(get_FCCURR() < UNDER_CUR_THRES)
-			{
-				error_msg |= FC_ERR_UND_CUR;
-			}
-			if(get_FCCURR() > OVER_CUR_THRES)
-			{
-				error_msg |= FC_ERR_OVER_CUR;
-			}
-	}
-
-	return(error_msg);
-}
+}*/
 
 unsigned int FC_standby(void)
 {
