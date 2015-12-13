@@ -12,7 +12,7 @@
 void USARTInit(void);
 
 
-#  define EXAMPLE_TARGET_PBCCLK_FREQ_HZ 7500000  // PBA clock target frequency, in Hz
+#  define EXAMPLE_TARGET_PBCCLK_FREQ_HZ 7500000  // PBA clock target frequency, in Hz see init.c
 
 #  define EXAMPLE_USART                 (&AVR32_USART3)
 #  define EXAMPLE_USART_RX_PIN          AVR32_USART3_RXD_2_PIN
