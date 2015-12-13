@@ -14,6 +14,7 @@
 #include "FuelCell_ADC.h"
 #include "FuelCell_PWM.h"
 #include "FuelCell_Functions.h"
+#include "FuelCell_USART.h"
 
 void board_init(void)
 {
@@ -41,9 +42,12 @@ void board_init(void)
 	//setup adc
 	ADCInit();
 	
+	//setup millis()
 	millis_init();
 	
 	//set up pwm (this will be fun)
 	PWMInit();
 	
+	//setup usart
+	USARTInit();
 }

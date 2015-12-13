@@ -49,7 +49,7 @@ static void local_start_highfreq_clock(void)
 static void pwm_start_gc(void)
 {
 	//PWM GENERIC CLOCK: source:PLL0 56MHz   divided to 280kHz
-	scif_gc_setup(AVR32_SCIF_GCLK_PWM,SCIF_GCCTRL_PLL0,AVR32_SCIF_GC_DIV_CLOCK,223);
+	scif_gc_setup(AVR32_SCIF_GCLK_PWM,SCIF_GCCTRL_PLL0,AVR32_SCIF_GC_NO_DIV_CLOCK,0);
 	// Now enable the generic clock
 	scif_gc_enable(AVR32_SCIF_GCLK_PWM);
 }
@@ -80,7 +80,7 @@ void PWMInit(void)
 	// Start Enable Generic Clock with PLL as source clock
 	pwm_start_gc();
 	//no divider
-	//Fgc = MCK = 280kHz
+	//Fgc = MCK = 56MHz
 		
 	//set pins to pwm function
 	gpio_enable_module_pin(FAN_PWM_PIN, FAN_PWM_FUNCTION);
@@ -112,15 +112,15 @@ void PWMInit(void)
 	fan_pwm_channel.CMR.ces   = 0;        // 0/1 Channel Event at the End of PWM Period
 	fan_pwm_channel.CMR.calg  = PWM_MODE_LEFT_ALIGNED;       // Channel mode.
 	fan_pwm_channel.CMR.cpol  = PWM_POLARITY_LOW;            // Channel polarity.
-	fan_pwm_channel.CMR.cpre  = 0;           // Channel prescaler: no prescaler see page 1036 of datasheet
+	fan_pwm_channel.CMR.cpre  = 2;           // Channel prescaler: no prescaler see page 1036 of datasheet
 	fan_pwm_channel.cdty      = 0;       // Channel duty cycle, should be < CPRD.
-	fan_pwm_channel.cprd      = 20;       // Channel period.
+	fan_pwm_channel.cprd      = 1024;       // Channel period.
 
 	//Fpwm = (MCK/prescaler)/period
-	//MCK  == 104MHz
-	//prescaler == 1
-	//period == 4000
-	//Fpwm == 26KHz
+	//MCK  == 56MHz
+	//prescaler == 2
+	//period == 1024
+	//Fpwm == 27.34KHz
 
 
 	pwm_channel_init(FAN_PWM_CHANNEL_ID, &fan_pwm_channel); // Set channel configuration to channel 2

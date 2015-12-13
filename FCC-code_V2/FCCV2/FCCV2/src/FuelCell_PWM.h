@@ -9,11 +9,9 @@
 #ifndef FUELCELL_PWM_H_
 #define FUELCELL_PWM_H_
 
-#define STARTSPEED 100
-#define MAXSPEED 
 
 void PWMInit(void);
-int FANUpdate(unsigned int duty_cycle); // X / 4000
+int FANUpdate(unsigned int duty_cycle); 
 
 
 #endif /* FUELCELL_PWM_H_ */
