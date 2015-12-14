@@ -111,4 +111,7 @@
 // From module: USART - Universal Synchronous/Asynchronous Receiver/Transmitter
 #include <usart.h>
 
+// From module: WDT Watchdog Timer - UC3 C/L implementation
+#include <wdt.h>
+
 #endif // ASF_H

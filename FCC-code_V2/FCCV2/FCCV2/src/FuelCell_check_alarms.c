@@ -14,7 +14,7 @@
 #include <math.h>
 #include "pid.h"
 #include "millis_function.h"
-
+#include "FuelCell_check_alarms.h"
 
 unsigned int FC_check_alarms(unsigned int fc_state)
 {

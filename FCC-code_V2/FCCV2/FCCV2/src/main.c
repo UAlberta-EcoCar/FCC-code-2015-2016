@@ -6,7 +6,7 @@
 to do list:
 get good adc conversions (test readings)
 can bus
-fan pid control code
+test fan pid control code
 test test test
 */
 
@@ -23,6 +23,7 @@ test test test
 #include "pid.h"
 #include "millis_function.h"
 #include "FuelCell_check_alarms.h"
+#include "wdt_scheduler.h"
 
 char str [20]; //buffer for storing strings set to length of longest string
 
@@ -36,6 +37,7 @@ unsigned int data_log_timer;
 int main (void)
 {
 	board_init();
+	wdt_scheduler();
 	
 	//Start of main loop
 	while(1)
@@ -43,7 +45,11 @@ int main (void)
 		//read analog inputs
 		StartADC_Sequencers();
 		ReadADC_Sequencers();
-
+		
+		//clear wdt value
+		//if code gets hung up wdt won't clear and a reset will occur
+		wdt_clear();
+		
 		error_msg = FC_check_alarms(fc_state);
 		if(error_msg)
 		{
