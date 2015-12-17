@@ -15,30 +15,6 @@
 #include "pid.h"
 #include "millis_function.h"
 
-/*
-unsigned int TEMP_OPT;
-unsigned int AVE_TEMP; 
-unsigned int temp_error;
-//float accumulated_temp_error = 0;
-//unsigned int PIDP; //speed proportional to temp error
-//unsigned int PIDI; //integral -> accumulated error
-//unsigned int PIDD; //Derivative -> change in temp
-//I'm only going to make speed depend on temp error
-unsigned int pid_temp_control(void)
-{
-	//Topt = 0.53I + 26.01 in C and Amps
-	//= (53 * I) / 100 + 299160 in mK and mA
-	TEMP_OPT = (53*get_FCCURR()) / 100 + 299160;
-	AVE_TEMP = (get_FCTEMP1() + get_FCTEMP2())/2;
-	
-	temp_error = (TEMP_OPT - AVE_TEMP) / 1000; //in Kalvin
-	//accumulated_temp_error = accumulated_temp_error + temp_error;
-	
-	//fan speed = 0 to 20 //should really increase this value
-	//run fan at 1% above min per degree K it is above T_OPT
-	FANUpdate(temp_error*20/100);
-	return(1);
-}*/
 
 unsigned int FC_standby(void)
 {
@@ -70,6 +46,7 @@ unsigned int FC_standby(void)
 	}
 	return(fc_state);
 }
+
 
 unsigned int tachometer_test = 0;
 unsigned int FC_startup_fans(void)
@@ -329,6 +306,7 @@ unsigned int FC_run(void)
 	return(fc_state);
 }
 
+
 unsigned int FC_shutdown(void)
 {
 	unsigned int fc_state;
@@ -352,6 +330,7 @@ unsigned int FC_shutdown(void)
 	}
 	return(fc_state);
 }
+
 
 unsigned int FC_alarm(void)
 {
