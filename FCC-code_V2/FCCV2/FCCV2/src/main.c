@@ -39,14 +39,13 @@ int main (void)
 	board_init();
 	wdt_scheduler(); //start watchdog timer
 	
-	StartADC_Sequencers(); //start an analog conversion sequence
-	
+		
 	//Start of main loop
 	while(1)
 	{
 		//read analog inputs
-		ReadADC_Sequencers(); //read last conversion
 		StartADC_Sequencers(); //start another conversion
+		ReadADC_Sequencers(); //read conversion
 		
 		//clear wdt value
 		//if code gets hung up wdt won't clear and a reset will occur
