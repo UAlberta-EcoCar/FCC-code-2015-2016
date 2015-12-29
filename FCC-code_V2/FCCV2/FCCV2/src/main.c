@@ -91,55 +91,67 @@ int main (void)
 		//send data over serial
 		//stagger messages to be able to continue checking levels
 		//without a huge serial delay (every message is about a millisecond)
+		
 		switch (data_log_stagger)
 		{
 			case 0:
 			if(millis()- data_log_timer > DATA_LOG_INTERVAL)
 			{
+				usart_write_line(EXAMPLE_USART,str);
 				data_log_stagger = 1;
 				data_log_timer = millis();
 				if(error_msg)
 				{
-					sprintf(str,"ERROR %d\n",error_msg);
+					sprintf(str,"ERROR %d\n\r",error_msg);
 					usart_write_line(EXAMPLE_USART,str);
 				}
 				sprintf(str,"LASTPURGE %d",get_time_between_last_purges());
 				usart_write_line(EXAMPLE_USART,str);
-				sprintf(str,"STATE %d\n",fc_state);
+				sprintf(str,"STATE %d\n\r",fc_state);
+				usart_write_line(EXAMPLE_USART,str);
+				sprintf(str,"\n\r\n\r\n\r");
 				usart_write_line(EXAMPLE_USART,str);
 			}
 			
 			case 1:
-			sprintf(str,"FCVOLT %d\n",get_FCVOLT());
+			sprintf(str,"FCVOLT %d\n\r",get_FCVOLT());
 			usart_write_line(EXAMPLE_USART,str);
-			sprintf(str,"FCCURR %d\n",get_FCCURR());
+			sprintf(str,"FCCURR %d\n\r",get_FCCURR());
 			usart_write_line(EXAMPLE_USART,str);
-			sprintf(str,"FCPRES %d\n",get_FCPRES());
+			sprintf(str,"FCPRES %d\n\r",get_FCPRES());
+			usart_write_line(EXAMPLE_USART,str);
+			sprintf(str,"\n\r\n\r\n\r");
 			usart_write_line(EXAMPLE_USART,str);
 			data_log_stagger = 2;
 			
 			case 2:
-			sprintf(str,"FCTEMP1 %d\n",get_FCTEMP1());
+			sprintf(str,"FCTEMP1 %d\n\r",get_FCTEMP1());
 			usart_write_line(EXAMPLE_USART,str);
-			sprintf(str,"FCTEMP2 %d\n",get_FCTEMP2());
+			sprintf(str,"FCTEMP2 %d\n\r",get_FCTEMP2());
 			usart_write_line(EXAMPLE_USART,str);
-			sprintf(str,"FANSpeed %d\n",get_FANSpeed());
+			sprintf(str,"FANSpeed %d\n\r",get_FANSpeed());
+			usart_write_line(EXAMPLE_USART,str);
+			sprintf(str,"\n\r\n\r\n\r");
 			usart_write_line(EXAMPLE_USART,str);
 			data_log_stagger = 3;
 			
 			case 3:
-			sprintf(str,"AMBTEMP0 %d\n",get_AMBTEMP0());
+			sprintf(str,"AMBTEMP0 %d\n\r",get_AMBTEMP0());
 			usart_write_line(EXAMPLE_USART,str);
-			sprintf(str,"AMBTEMP1 %d\n",get_AMBTEMP1());
+			sprintf(str,"AMBTEMP1 %d\n\r",get_AMBTEMP1());
 			usart_write_line(EXAMPLE_USART,str);
-			sprintf(str,"AMBTEMP2 %d\n",get_AMBTEMP2());
+			sprintf(str,"AMBTEMP2 %d\n\r",get_AMBTEMP2());
 			usart_write_line(EXAMPLE_USART,str);
-			sprintf(str,"AMBTEMP3 %d\n",get_AMBTEMP3());
+			sprintf(str,"AMBTEMP3 %d\n\r",get_AMBTEMP3());
+			usart_write_line(EXAMPLE_USART,str);
+			sprintf(str,"\n\r\n\r\n\r");
 			usart_write_line(EXAMPLE_USART,str);
 			data_log_stagger = 4;
 			
 			case 4:
-			sprintf(str,"CAPVOLT %d\n",get_CAPVOLT());
+			sprintf(str,"CAPVOLT %d\n\r",get_CAPVOLT());
+			usart_write_line(EXAMPLE_USART,str);
+			sprintf(str,"\n\r\n\r\n\r");
 			usart_write_line(EXAMPLE_USART,str);
 			data_log_stagger = 0;
 		}
