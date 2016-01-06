@@ -5,6 +5,7 @@
 /*
 to do list:
 get good adc conversions (test readings)
+temp conversion
 can bus
 test fan pid control code
 test test test
@@ -34,11 +35,20 @@ unsigned int data_log_stagger = 0;
 unsigned int data_log_timer;
 #define DATA_LOG_INTERVAL 250
 
+
 int main (void)
 {
 	board_init();
-	wdt_scheduler(); //start watchdog timer
 	
+	//zero readings
+	StartADC_Sequencers(); //start another conversion
+	ReadADC_Sequencers(); //read conversion	
+	zero_CAPVOLT();
+	zero_FCCURR();
+	zero_FCVOLT();
+	
+	error_msg |= wdt_scheduler(); //start watchdog timer
+	//comment out for debugging
 		
 	//Start of main loop
 	while(1)
@@ -63,32 +73,41 @@ int main (void)
 		{
 		case FC_STATE_STANDBY:
 			fc_state = FC_standby();
+			break;
 			
 		case FC_STATE_SHUTDOWN:
 			fc_state = FC_shutdown();
+			break;
 		
 		case FC_STATE_STARTUP_FANS:
 			fc_state = FC_startup_fans();
+			break;
 		
 		case FC_STATE_STARTUP_H2:
 			fc_state = FC_startup_h2();
+			break;
 			
 		case FC_STATE_STARTUP_PURGE:
 			fc_state = FC_startup_purge();
+			break;
 		
 		case FC_STATE_STARTUP_CHARGE:
 			fc_state = FC_startup_charge();	
+			break;
 		
 		case FC_STATE_RUN:
 			fc_state = FC_run();
+			break;
 			
 		case FC_STATE_ALARM:
 			fc_state = FC_alarm();			
+			break;
 		}
+		
 		
 		//all data logging occurs after state machine executes
 		//that way if alarm is triggered it is dealt with before
-		//send data over serial
+		//sending data over serial
 		//stagger messages to be able to continue checking levels
 		//without a huge serial delay (every message is about a millisecond)
 		
@@ -97,21 +116,23 @@ int main (void)
 			case 0:
 			if(millis()- data_log_timer > DATA_LOG_INTERVAL)
 			{
-				usart_write_line(EXAMPLE_USART,str);
 				data_log_stagger = 1;
 				data_log_timer = millis();
+				sprintf(str,"\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r");
+				usart_write_line(EXAMPLE_USART,str);
 				if(error_msg)
 				{
 					sprintf(str,"ERROR %d\n\r",error_msg);
 					usart_write_line(EXAMPLE_USART,str);
 				}
-				sprintf(str,"LASTPURGE %d",get_time_between_last_purges());
+				sprintf(str,"LASTPURGE %d\n\r",get_time_between_last_purges());
 				usart_write_line(EXAMPLE_USART,str);
 				sprintf(str,"STATE %d\n\r",fc_state);
 				usart_write_line(EXAMPLE_USART,str);
-				sprintf(str,"\n\r\n\r\n\r");
+				sprintf(str,"\n\r");
 				usart_write_line(EXAMPLE_USART,str);
 			}
+			break;
 			
 			case 1:
 			sprintf(str,"FCVOLT %d\n\r",get_FCVOLT());
@@ -120,9 +141,10 @@ int main (void)
 			usart_write_line(EXAMPLE_USART,str);
 			sprintf(str,"FCPRES %d\n\r",get_FCPRES());
 			usart_write_line(EXAMPLE_USART,str);
-			sprintf(str,"\n\r\n\r\n\r");
+			sprintf(str,"\n\r");
 			usart_write_line(EXAMPLE_USART,str);
 			data_log_stagger = 2;
+			break;
 			
 			case 2:
 			sprintf(str,"FCTEMP1 %d\n\r",get_FCTEMP1());
@@ -131,11 +153,13 @@ int main (void)
 			usart_write_line(EXAMPLE_USART,str);
 			sprintf(str,"FANSpeed %d\n\r",get_FANSpeed());
 			usart_write_line(EXAMPLE_USART,str);
-			sprintf(str,"\n\r\n\r\n\r");
+			sprintf(str,"\n\r");
 			usart_write_line(EXAMPLE_USART,str);
 			data_log_stagger = 3;
+			break;
 			
 			case 3:
+			/* AMBTEMP not connected
 			sprintf(str,"AMBTEMP0 %d\n\r",get_AMBTEMP0());
 			usart_write_line(EXAMPLE_USART,str);
 			sprintf(str,"AMBTEMP1 %d\n\r",get_AMBTEMP1());
@@ -146,14 +170,17 @@ int main (void)
 			usart_write_line(EXAMPLE_USART,str);
 			sprintf(str,"\n\r\n\r\n\r");
 			usart_write_line(EXAMPLE_USART,str);
+			*/
 			data_log_stagger = 4;
+			break;
 			
 			case 4:
 			sprintf(str,"CAPVOLT %d\n\r",get_CAPVOLT());
 			usart_write_line(EXAMPLE_USART,str);
-			sprintf(str,"\n\r\n\r\n\r");
+			sprintf(str,"\n\r");
 			usart_write_line(EXAMPLE_USART,str);
 			data_log_stagger = 0;
+			break;
 		}
 	}
 }
