@@ -14,14 +14,21 @@
 #define FC_ERR_FC_DISC (1 << 1)
 #define FC_ERR_RES_DISC (1 << 2)
 //note "DISC" == disconnected
-#define FC_ERR_H2OK_LOW (1 << 3)
+#define FC_ERR_H2OK_LOW (1 << 3) //emergency stop
+//temperatures
 #define FC_ERR_TEMP_L  (1 << 4) //(-10C)
 #define FC_ERR_TEMP_H (1 << 5) //(75C)
+//pressure
 #define FC_ERR_PRES_H (1 << 6) //(9.81 PSI)
 #define FC_ERR_PRES_L (1 << 7) //only checked in purge, charge run (0.8 PSI)
+//current
 #define FC_ERR_OVER_CUR (1 << 8) //(78A)
 #define FC_ERR_UND_CUR (1 << 9) //(-3A)
+//voltage
 #define FC_ERR_OVER_VOLT (1 << 10) // (50.6V)
+#define FC_ERR_CAP_VOLT_LOW (1 << 11) //capacitor low
+#define FC_ERR_WDT (1 << 12) //watch dog timer
+#define FC_ERR_BOD (1 << 13) //brown out detection
 
 //define thresholds for over current etc
 #define LOW_TEMP_THRES 950 //-10C. 950 is closer to -5C I thought we'd be safe
@@ -31,5 +38,6 @@
 #define OVER_CUR_THRES 78000 //78A
 #define UNDER_CUR_THRES -3000 //-3A 
 #define OVER_VOLT_THRES 50600 //50.6V
+#define CAP_VOLT_LOW 20000 //capacitors are drained too much
 
 #endif /* FC_ERROR_CODES_H_ */

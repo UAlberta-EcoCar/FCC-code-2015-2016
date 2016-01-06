@@ -1,6 +1,5 @@
 /*
  * FuelCell_check_alarms.c
- *
  * Created: 2015-12-13 4:16:34 PM
  *  Author: Reegan
  */ 
@@ -19,6 +18,11 @@
 unsigned int FC_check_alarms(unsigned int fc_state)
 {
 	unsigned int error_msg = 0;
+	//brownout detection
+	if(scif_bod50_get_irq_status())
+	{
+		error_msg |= FC_ERR_BOD;
+	}
 	//check fccon sysok capcon always
 	if(gpio_get_pin_value(FCCON) == 0)
 	{
@@ -55,12 +59,14 @@ unsigned int FC_check_alarms(unsigned int fc_state)
 		{
 			error_msg |= FC_ERR_RES_DISC;
 		}
+		break;
 		
 		case FC_STATE_STARTUP_H2:
 		if(gpio_get_pin_value(RESCON) == 0)
 		{
 			error_msg |= FC_ERR_RES_DISC;
 		}
+		break;
 		
 		case FC_STATE_STARTUP_PURGE:
 		if(gpio_get_pin_value(RESCON) == 0)
@@ -79,13 +85,14 @@ unsigned int FC_check_alarms(unsigned int fc_state)
 		{
 			error_msg |= FC_ERR_OVER_CUR;
 		}
-		
+		break;
 		
 		case FC_STATE_STARTUP_CHARGE:
 		if(gpio_get_pin_value(RESCON) == 0)
 		{
 			error_msg |= FC_ERR_RES_DISC;
 		}
+		break;
 		
 		case FC_STATE_RUN:
 		if(get_FCPRES() < FC_LOW_PRES_THRES)
@@ -100,6 +107,11 @@ unsigned int FC_check_alarms(unsigned int fc_state)
 		{
 			error_msg |= FC_ERR_OVER_CUR;
 		}
+		if(get_CAPVOLT() < CAP_VOLT_LOW)
+		{
+			error_msg |= FC_ERR_CAP_VOLT_LOW;
+		}
+		break;
 		
 		case FC_STATE_ALARM:
 		if(get_FCPRES() < FC_LOW_PRES_THRES)
@@ -114,6 +126,7 @@ unsigned int FC_check_alarms(unsigned int fc_state)
 		{
 			error_msg |= FC_ERR_OVER_CUR;
 		}
+		break;
 	}
 
 	return(error_msg);

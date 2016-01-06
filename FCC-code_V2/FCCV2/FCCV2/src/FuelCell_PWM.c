@@ -68,6 +68,17 @@ avr32_pwm_channel_t fan_pwm_channel = {
 	{0}, // dt
 	{0}};// dtupd  ;  fan channel config.
 
+//servo channel configuration
+avr32_pwm_channel_t servo_pwm_channel = {
+	{0}, // cmr
+	{0}, // cdty
+	{0}, // cdtyupd
+	{0}, // cprd
+	{0}, // cprdupd
+	{0}, // ccnt
+	{0}, // dt
+	{0}};// dtupd  ;  fan channel config.
+
 
 
 void PWMInit(void)
@@ -84,6 +95,7 @@ void PWMInit(void)
 		
 	//set pins to pwm function
 	gpio_enable_module_pin(FAN_PWM_PIN, FAN_PWM_FUNCTION);
+	gpio_enable_module_pin(SERVO_PWM_PIN,SERVO_PWM_FUNCTION);
 	
 	// PWM controller configuration.
 	pwm_opt.diva = AVR32_PWM_DIVA_CLK_OFF;
@@ -112,7 +124,7 @@ void PWMInit(void)
 	fan_pwm_channel.CMR.ces   = 0;        // 0/1 Channel Event at the End of PWM Period
 	fan_pwm_channel.CMR.calg  = PWM_MODE_LEFT_ALIGNED;       // Channel mode.
 	fan_pwm_channel.CMR.cpol  = PWM_POLARITY_LOW;            // Channel polarity.
-	fan_pwm_channel.CMR.cpre  = 2;           // Channel prescaler: no prescaler see page 1036 of datasheet
+	fan_pwm_channel.CMR.cpre  = 2;           // Channel prescaler: divide by 2 see page 1036 of datasheet
 	fan_pwm_channel.cdty      = 0;       // Channel duty cycle, should be < CPRD.
 	fan_pwm_channel.cprd      = 1024;       // Channel period.
 
@@ -123,8 +135,28 @@ void PWMInit(void)
 	//Fpwm == 27.34KHz
 
 
-	pwm_channel_init(FAN_PWM_CHANNEL_ID, &fan_pwm_channel); // Set channel configuration to channel 2
-	pwm_start_channels((1 << FAN_PWM_CHANNEL_ID));  // Start channel 2.
+	//Servo Channel configuration
+	servo_pwm_channel.CMR.dte   = 1;        // Enable Deadtime for complementary Mode
+	servo_pwm_channel.CMR.dthi  = 1;        // Deadtime Inverted on PWMH
+	servo_pwm_channel.CMR.dtli  = 0;        // Deadtime Not Inverted on PWML
+	servo_pwm_channel.CMR.ces   = 0;        // 0/1 Channel Event at the End of PWM Period
+	servo_pwm_channel.CMR.calg  = PWM_MODE_LEFT_ALIGNED;       // Channel mode.
+	servo_pwm_channel.CMR.cpol  = PWM_POLARITY_LOW;            // Channel polarity.
+	servo_pwm_channel.CMR.cpre  = 7;           // Channel prescaler: divide by 128 see page 1036 of datasheet
+	servo_pwm_channel.cdty      = 0;       // Channel duty cycle, should be < CPRD.
+	servo_pwm_channel.cprd      = 1024;       // Channel period.
+
+	//Fpwm = (MCK/prescaler)/period
+	//MCK  == 56MHz
+	//prescaler == 128
+	//period == 1024
+	//Fpwm == 427.246Hz
+
+
+	pwm_channel_init(SERVO_PWM_CHANNEL_ID,&servo_pwm_channel);
+	pwm_channel_init(FAN_PWM_CHANNEL_ID, &fan_pwm_channel); 
+	pwm_start_channels((1 << SERVO_PWM_CHANNEL_ID));
+	pwm_start_channels((1 << FAN_PWM_CHANNEL_ID)); 
 }
 
 

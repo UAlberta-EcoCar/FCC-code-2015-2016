@@ -26,6 +26,8 @@ void board_init(void)
 	scif_start_rc120M();
 	scif_start_rc8M();
 	
+	//enable brownout detection
+	scif_bod50_enable_irq(); //4.something volts
 	
 	//set cpu divide by 2^(1+1) = 4
 	pm_set_clk_domain_div(AVR32_PM_CLK_GRP_CPU,1);

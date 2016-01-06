@@ -4,6 +4,7 @@
  * Created: 2015-11-09 6:26:56 PM
  *  Author: Reegan
  */ 
+
 #include "asf.h"
 #include "FuelCell_ADC.h"
 #include "analog_defs.h"
@@ -43,24 +44,9 @@ void ReadADC_Sequencers(void)
 //functions for retrieving values from adcvals array based off of conversion sequence order in analog_defs.h
 int convert_temp(int temp_reading)
 {
-		temp_reading = temp_reading * (-1);
-		//thermistor curve has a linear range and non linear range
-		//see excel thermistor curve fit
-		/*if ((temp_reading <= 251)&(temp_reading > 88)) //reading is in the linear range (293 to 363K)
-		{
-			//temp in mK is
-			temp_reading = ( -4088 * temp_reading ) / 100 + 399090;
-		}
-		else if (temp_reading > 251) //lower non linear range (253 to 293K)
-		{
-			temp_reading = -494*temp_reading*temp_reading/10 + 25109*temp_reading-2900700;
-		}
-		else //temp is in upper linearish range (363K +)
-		{
-			temp_reading = -1361*temp_reading + 577290;
-		}*/
-		temp_reading = -428 * temp_reading + 404830;
-		
+		temp_reading = temp_reading * (-1); //thermistors are on negative input
+		//linear curve fit
+		temp_reading = -65 * temp_reading + 370650;
 		return(temp_reading);
 }
 int get_FCTEMP1(void)
@@ -80,6 +66,7 @@ int get_FCPRES(void)
 {
 	return(((FCPRESReading * 3000 / (2048-1) * (470+316) / 470) * 9578 - 23670));
 }
+/*not used
 int get_CAPCURR(void)
 {
 	//from ACS756 datasheet
@@ -91,6 +78,8 @@ int get_CAPCURR(void)
 	//Vout = CAPCURRReading * 3000/(2^11 - 1) * (31.6 + 47) / 47 mV
 	return(((CAPCURRReading * (316 + 470) / 470 * 3000 / (2048 - 1) - 2500) * 1000 / 40));
 }
+*/
+int FCCURR_intercept = 0;
 int get_FCCURR(void)
 {
 	//from ACS756 datasheet
@@ -100,24 +89,44 @@ int get_FCCURR(void)
 	//I = (Vout - 2500mV)/40mV
 	//because of 31.6k 47k voltage dividers / 12 bit reading
 	//Vout = adcreading * 3000/(2^11 - 1) * (31.6 + 47) / 47 mV
-	return(((FCCURRReading * (316 + 470) / 470 * 3000 / (2048 - 1) - 2500) * 1000 / 40));
+	return(FCCURRReading * (316 + 470) / 470 * 3000 / (2048 - 1) * 1000 / 40 - FCCURR_intercept);
 }
+//zero current reading on startup
+void zero_FCCURR(void)
+{
+	FCCURR_intercept = get_FCCURR();
+}
+int CAPVOLT_intercept = 0;
+
 int get_CAPVOLT(void)
 {
-	return(CAPVOLTReading * 3000 * 50 / 3 / (2048-1));
+	return(CAPVOLTReading * 3000 * 50 / 3 / (2048-1) - CAPVOLT_intercept);
 	//47k and 3k voltage divider
 	//3V reference
 	//CAPVOLT = ADCreading * 3000mV/(2^11-1) * (47 + 3) / 3
 	//should result in a voltage in mV
 }
+
+void zero_CAPVOLT(void)
+{
+	CAPVOLT_intercept = get_CAPVOLT();
+}
+
+int FCVOLT_intercept = 0;
 int get_FCVOLT(void)
 {
-	return((FCVOLTReading) * 3000 * 50 / 3 / (2048-1));
+	return((FCVOLTReading) * 3000 * 50 / 3 / (2048-1)-FCVOLT_intercept);
 	//47k and 3k voltage divider
 	//3V reference
 	//FCVolt = ADCreading * 3000mV/(2^11-1) * (47 + 3) / 3
 	//should result in a voltage in mV
 }
+
+void zero_FCVOLT(void)
+{
+	FCVOLT_intercept = get_FCVOLT();
+}
+/*
 int get_AMBTEMP0(void)
 {
 	return(convert_temp(AMBTEMP0Reading));
@@ -134,3 +143,4 @@ int get_AMBTEMP3(void)
 {
 	return(convert_temp(AMBTEMP3Reading));
 }
+*/

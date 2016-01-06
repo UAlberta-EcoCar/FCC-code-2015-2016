@@ -9,7 +9,7 @@
 #ifndef WDT_SCHEDULER_H_
 #define WDT_SCHEDULER_H_
 
-void wdt_scheduler(void);
+int wdt_scheduler(void);
 
 
 
