@@ -13,6 +13,7 @@
 
 #ifdef TEST_BENCH_MODE
 #define FCCURRCoefficient ((316 + 470) / 470 * 3000 / (2048 - 1) * 1000 / 40) //+-5V from zero point ~= +-125A
+#define CAPCURRCoefficient ((316 + 470) / 470 * 3000 / (2048 - 1) * 1000 / 40)
 #define CAPVOLTCoefficient (3000 * 50 / 3 / (2048-1) * 60) //FCC will think 10V is 60 Volts
 #define FCVOLTCoefficient (3000 * 50 / 3 / (2048-1) * 60) //FCC will think 10V is 60 Volts
 #define FCPRESCoefficient 0 //I don't know pressure sensor conversion
@@ -26,6 +27,7 @@
 
 #ifdef IN_CAR_MODE
 #define FCCURRCoefficient ((316 + 470) / 470 * 3000 / (2048 - 1) * 1000 / 40)
+#define CAPCURRCoefficient ((316 + 470) / 470 * 3000 / (2048 - 1) * 1000 / 40)
 #define CAPVOLTCoefficient (3000 * 50 / 3 / (2048-1))
 #define FCVOLTCoefficient (3000 * 50 / 3 / (2048-1))
 #define FCPRESCoefficient (3000 / (2048-1) * (470+316) / 470) * 9578)
@@ -39,6 +41,7 @@
 
 #ifdef OUT_OF_CAR_MODE
 #define FCCURRCoefficient ((316 + 470) / 470 * 3000 / (2048 - 1) * 1000 / 40)
+#define CAPCURRCoefficient ((316 + 470) / 470 * 3000 / (2048 - 1) * 1000 / 40)
 #define CAPVOLTCoefficient (3000 * 50 / 3 / (2048-1))
 #define FCVOLTCoefficient (3000 * 50 / 3 / (2048-1))
 #define FCPRESCoefficient (3000 / (2048-1) * (470+316) / 470) * 9578)

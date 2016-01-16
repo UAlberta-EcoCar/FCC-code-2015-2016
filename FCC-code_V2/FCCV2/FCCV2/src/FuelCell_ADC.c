@@ -62,11 +62,11 @@ int get_FCTEMP2(void)
 //one (or more) of these pressure conversions is wrong
 int get_TANKPRES(void)
 {
-	return(((TANKPRESReading * TANKPRESCoefficient - TANKPRESConst));
+	return(TANKPRESReading * TANKPRESCoefficient - TANKPRESConst);
 }
 int get_FCPRES(void)
 {
-	return(((FCPRESReading * FCPRESCoefficient - FCPRESConst));
+	return(FCPRESReading * FCPRESCoefficient - FCPRESConst);
 }
 /*not used
 int get_CAPCURR(void)
