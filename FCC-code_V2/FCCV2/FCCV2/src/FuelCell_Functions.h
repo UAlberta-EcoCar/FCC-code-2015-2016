@@ -32,6 +32,7 @@
 #define MAX_PURGE_INTERVAL 0 //max time between purges regardless of current output
 
 unsigned int get_time_between_last_purges(void);
+int calc_opt_temp(void);
 
 //state functions
 unsigned int FC_standby(void);

@@ -13,6 +13,7 @@
 #include "FuelCell_DataLogging.h"
 #include "millis_function.h"
 #include "FuelCell_PWM.h"
+#include "FuelCell_mode_Select.h"
 
 char str [20]; //buffer for storing strings. set to length of longest string needed to avoid wasting ram
 
@@ -36,6 +37,12 @@ void usart_data_log(unsigned int fc_state, unsigned int error_msg)
 			usart_data_log_timer = millis();
 			sprintf(str,"\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r");
 			usart_write_line(EXAMPLE_USART,str);
+			
+			#ifdef TEST_BENCH_MODE
+			usart_write_line(EXAMPLE_USART,"You are in test bench mode/n/r");
+			usart_write_line(EXAMPLE_USART,"Do NOT connect the fuel cell!/n/r");
+			#endif
+			
 			if(error_msg)
 			{
 				sprintf(str,"ERROR %d\n\r",error_msg);
@@ -68,6 +75,8 @@ void usart_data_log(unsigned int fc_state, unsigned int error_msg)
 		sprintf(str,"FCTEMP2 %d\n\r",get_FCTEMP2());
 		usart_write_line(EXAMPLE_USART,str);
 		sprintf(str,"FANSpeed %d\n\r",get_FANSpeed());
+		usart_write_line(EXAMPLE_USART,str);
+		sprintf(str,"OPT_TEMP %d\n\r",calc_opt_temp());
 		usart_write_line(EXAMPLE_USART,str);
 		sprintf(str,"\n\r");
 		usart_write_line(EXAMPLE_USART,str);

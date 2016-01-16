@@ -5,7 +5,8 @@
  *  Author: Reegan
  */ 
 
-#include "asf.h"
+
+include "asf.h"
 #include "FuelCell_Functions.h"
 #include "FC_error_codes.h"
 #include "digital_IO_defs.h"
@@ -55,6 +56,8 @@ unsigned int FC_startup_fans(void)
 	//relays open
 	gpio_clr_gpio_pin(START_RELAY);
 	gpio_clr_gpio_pin(MOTOR_RELAY);
+	gpio_clr_gpio_pin(RES_RELAY);
+	gpio_clr_gpio_pin(CAP_RELAY);
 	//valves closed
 	gpio_clr_gpio_pin(H2_VALVE);
 	gpio_clr_gpio_pin(PURGE_VALVE);
@@ -97,16 +100,17 @@ unsigned int FC_startup_h2(void)
 	gpio_clr_gpio_pin(START_RELAY);
 	gpio_clr_gpio_pin(MOTOR_RELAY);
 	gpio_clr_gpio_pin(RES_RELAY);
+	gpio_clr_gpio_pin(CAP_RELAY);
 	
 	//input h2 until voltage reaches 30
-	if (get_FCVOLT() < (30000)) //if voltage is less than 30V
+	if (get_FCVOLT() < 30000) //if voltage is less than 30V
 	{
 		//keep the hydrogen coming
 		fc_state = FC_STATE_STARTUP_H2;
 	}
 	else
 	{
-		//voltage is 30 then do start up purge
+		//voltage is 30 then go to start up purge
 		fc_state = FC_STATE_STARTUP_PURGE;
 	}
 	return(fc_state);
@@ -116,7 +120,7 @@ unsigned int FC_startup_h2(void)
 unsigned int purge_timer = 0; //used for timing how long purge valve is open
 unsigned int FC_startup_purge(void)
 {
-	//Purge step isn't on !Rescon to get air out of lines on startup. what???
+	//Purge step isn't skipped on !Rescon to get air out of lines on startup. what???
 	unsigned int fc_state;
 	
 	//h2 valve still open
@@ -127,6 +131,8 @@ unsigned int FC_startup_purge(void)
 	gpio_clr_gpio_pin(MOTOR_RELAY);
 	//RES relay still open
 	gpio_clr_gpio_pin(RES_RELAY);
+	//CAP relay still open
+	gpio_clr_gpio_pin(CAP_RELAY);
 	
 	//open purge valve and start timer
 	if(gpio_get_gpio_pin_output_value(PURGE_VALVE) == 0)
@@ -147,9 +153,17 @@ unsigned int FC_startup_purge(void)
 		gpio_clr_gpio_pin(PURGE_VALVE);
 		gpio_clr_gpio_pin(LED0);
 		
+		//supply valve still open
+		gpio_set_gpio_pin(H2_VALVE);
+		
 		//open startup relay
 		gpio_clr_gpio_pin(START_RELAY);
 		//other relays still open
+		gpio_clr_gpio_pin(RES_RELAY);
+		gpio_clr_gpio_pin(START_RELAY);
+		gpio_clr_gpio_pin(CAP_RELAY);
+		
+		//go to charge state
 		fc_state = FC_STATE_STARTUP_CHARGE;
 	}
 	return(fc_state);
@@ -207,8 +221,13 @@ unsigned int FC_startup_charge(void)
 		gpio_set_gpio_pin(RES_RELAY);
 		gpio_set_gpio_pin(LED1); //make led1 indicate charging state?
 		//other relays open still
+		gpio_clr_gpio_pin(START_RELAY);
+		gpio_clr_gpio_pin(MOTOR_RELAY);
+		gpio_clr_gpio_pin(CAP_RELAY);
 		//H2_valve open
+		gpio_set_gpio_pin(H2_VALVE);
 		//purge valve still closed
+		gpio_clr_gpio_pin(PURGE_VALVE);
 		//fc_State still charge
 	}
 	else //caps are charged
@@ -219,31 +238,43 @@ unsigned int FC_startup_charge(void)
 		//open resistor relay
 		//delay how long?
 		//why not one state machine cycle?
-		if(gpio_get_gpio_pin_output_value(RES_RELAY) == 1)
+		if(gpio_get_gpio_pin_output_value(RES_RELAY) == 1) //if res relay is closed
 		{
-			gpio_clr_gpio_pin(RES_RELAY);	
-			return(fc_state); //state will run again
+			//open res relay
+			gpio_clr_gpio_pin(RES_RELAY);
+			return(fc_state); //this state will exit and run again from start
 		}
 		
 		//close cap relay
 		//another delay
-		if(gpio_get_gpio_pin_output_value(CAP_RELAY == 0))
+		if(gpio_get_gpio_pin_output_value(CAP_RELAY == 0)) //if cap relay is open
 		{
+			//close cap relay
 			gpio_set_gpio_pin(CAP_RELAY);
-			return(fc_state);
+			return(fc_state); //this state will exit and run again from start
 		}
 		
 		//close motor relay
 		gpio_set_gpio_pin(MOTOR_RELAY);
 		
+		//Supply valve still open
+		gpio_set_gpio_pin(H2_VALVE);
+		//purge valve closed
+		gpio_clr_gpio_pin(PURGE_VALVE);
+		
 		//go to main run state
 		fc_state = FC_STATE_RUN;
 		gpio_clr_gpio_pin(LED_START);
 		gpio_set_gpio_pin(LED_RUN);
+		//send some sort of START signal over can
 	}
 	return(fc_state);
 }
 
+int calc_opt_temp(void)
+{
+	return((53*get_FCCURR()) / 100 + 299160);
+}
 
 unsigned int fan_update_timer;
 unsigned int FC_run(void)
@@ -254,7 +285,7 @@ unsigned int FC_run(void)
 	if(millis() - fan_update_timer > FANUPDATE_INTERVAL)
 	{
 		//pid fan control for temp regulation
-		FANUpdate(PID( ((get_FCTEMP1()+get_FCTEMP2())/2) , ((53*get_FCCURR()) / 100 + 299160) ));
+		FANUpdate(PID(((get_FCTEMP1()+get_FCTEMP2())/2) , calc_opt_temp() ));
 		fan_update_timer = millis();
 	}
 	
