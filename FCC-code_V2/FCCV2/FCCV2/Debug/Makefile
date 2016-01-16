@@ -79,6 +79,7 @@ C_SRCS +=  \
 ../src/ASF/avr32/drivers/gpio/gpio.c \
 ../src/ASF/avr32/drivers/pm/pm_uc3c.c \
 ../src/ASF/avr32/drivers/usart/usart.c \
+../src/FuelCell_DataLogging.c \
 ../src/wdt_scheduler.c \
 ../src/ASF/avr32/drivers/wdt/wdt4.c \
 ../src/FuelCell_CAN.c \
@@ -118,6 +119,7 @@ src/ASF/avr32/drivers/flashc/flashc.o \
 src/ASF/avr32/drivers/gpio/gpio.o \
 src/ASF/avr32/drivers/pm/pm_uc3c.o \
 src/ASF/avr32/drivers/usart/usart.o \
+src/FuelCell_DataLogging.o \
 src/wdt_scheduler.o \
 src/ASF/avr32/drivers/wdt/wdt4.o \
 src/FuelCell_CAN.o \
@@ -150,6 +152,7 @@ src/ASF/avr32/drivers/flashc/flashc.o \
 src/ASF/avr32/drivers/gpio/gpio.o \
 src/ASF/avr32/drivers/pm/pm_uc3c.o \
 src/ASF/avr32/drivers/usart/usart.o \
+src/FuelCell_DataLogging.o \
 src/wdt_scheduler.o \
 src/ASF/avr32/drivers/wdt/wdt4.o \
 src/FuelCell_CAN.o \
@@ -182,6 +185,7 @@ src/ASF/avr32/drivers/flashc/flashc.d \
 src/ASF/avr32/drivers/gpio/gpio.d \
 src/ASF/avr32/drivers/pm/pm_uc3c.d \
 src/ASF/avr32/drivers/usart/usart.d \
+src/FuelCell_DataLogging.d \
 src/wdt_scheduler.d \
 src/ASF/avr32/drivers/wdt/wdt4.d \
 src/FuelCell_CAN.d \
@@ -214,6 +218,7 @@ src/ASF/avr32/drivers/flashc/flashc.d \
 src/ASF/avr32/drivers/gpio/gpio.d \
 src/ASF/avr32/drivers/pm/pm_uc3c.d \
 src/ASF/avr32/drivers/usart/usart.d \
+src/FuelCell_DataLogging.d \
 src/wdt_scheduler.d \
 src/ASF/avr32/drivers/wdt/wdt4.d \
 src/FuelCell_CAN.d \
@@ -252,6 +257,8 @@ LINKER_SCRIPT_DEP+=
 
 
 # AVR32/GNU C Compiler
+
+
 
 
 

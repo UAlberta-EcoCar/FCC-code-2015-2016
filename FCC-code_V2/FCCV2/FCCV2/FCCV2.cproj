@@ -404,6 +404,12 @@
     <Compile Include="src\FuelCell_ADC_conversion_consts.h">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="src\FuelCell_DataLogging.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\FuelCell_DataLogging.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="src\FuelCell_mode_Select.h">
       <SubType>compile</SubType>
     </Compile>

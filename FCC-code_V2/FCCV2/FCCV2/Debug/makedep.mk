@@ -16,6 +16,8 @@ src\ASF\avr32\drivers\pm\pm_uc3c.c
 
 src\ASF\avr32\drivers\usart\usart.c
 
+src\FuelCell_DataLogging.c
+
 src\wdt_scheduler.c
 
 src\ASF\avr32\drivers\wdt\wdt4.c

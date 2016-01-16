@@ -13,9 +13,6 @@
 
 #ifdef TEST_BENCH_MODE
 
-#warning "You are in Test Bench Mode"
-#warning "Do not connect Fuel Cell"
-
 #define FCCURRCoefficient ((316 + 470) / 470 * 3000 / (2048 - 1) * 1000 / 40) //+-5V from zero point = +-125A
 #define CAPVOLTCoefficient (3000 * 50 / 3 / (2048-1) * 60) //FCC will think 10V is 60 Volts
 #define FCVOLTCoefficient (3000 * 50 / 3 / (2048-1) * 60) //FCC will think 10V is 60 Volts
@@ -45,9 +42,6 @@
 
 
 #ifdef OUT_OF_CAR_MODE
-
-#warning "You are in out of car mode"
-#warning "if you are using Power Board you will have issues"
 
 #define FCCURRCoefficient ((316 + 470) / 470 * 3000 / (2048 - 1) * 1000 / 40)
 #define CAPVOLTCoefficient (3000 * 50 / 3 / (2048-1))
