@@ -21,7 +21,7 @@
 
 #ifdef OUT_OF_CAR_MODE
 #warning "You are in out of car mode"
-#warning "if you are using Power Board you will have issues"
+#warning "If you are using Power Board you might have issues"
 #endif
 
 #endif /* FUELCELL_MODE_SELECT_H_ */
