@@ -11,7 +11,7 @@
 
 int wdt_scheduler(void)
 {
-	U32 error_msg = 0;
+	unsigned int error_msg = 0;
 	//enable wdt
 	wdt_opt_t opt = {
 		.dar   = false,     // After a watchdog reset, the WDT will still be enabled.

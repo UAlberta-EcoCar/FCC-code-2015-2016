@@ -111,6 +111,10 @@ unsigned int FC_check_alarms(unsigned int fc_state)
 		{
 			error_msg |= FC_ERR_CAP_VOLT_LOW;
 		}
+		if(gpio_get_pin_value(FC_PWR_GOOD) == 0)
+		{
+			error_msg |= FC_ERR_PWR_BAD;
+		}
 		break;
 		
 		case FC_STATE_ALARM:

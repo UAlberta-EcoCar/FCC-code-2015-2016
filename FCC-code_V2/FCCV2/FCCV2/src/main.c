@@ -11,6 +11,10 @@ test fan pid control code
 test test test
 */
 
+//change this file depending on whether you are using the test bench or not
+//
+#include "FuelCell_mode_Select.h"
+
 #include <stdlib.h>
 #include <stdio.h>
 #include "asf.h"
@@ -26,7 +30,7 @@ test test test
 #include "FuelCell_check_alarms.h"
 #include "wdt_scheduler.h"
 
-char str [20]; //buffer for storing strings set to length of longest string
+char str [20]; //buffer for storing strings. set to length of longest string needed to avoid wasting ram
 
 unsigned int error_msg;
 unsigned int fc_state = FC_STATE_STANDBY;
@@ -43,9 +47,9 @@ int main (void)
 	//zero readings
 	StartADC_Sequencers(); //start another conversion
 	ReadADC_Sequencers(); //read conversion	
-	zero_CAPVOLT();
-	zero_FCCURR();
-	zero_FCVOLT();
+	//zero_CAPVOLT(); Not a good idea if caps have left over voltage
+	zero_FCCURR(); //test bench mode: make sure this is zeroed at 5 V
+	//zero_FCVOLT(); Not a good idea either
 	
 	error_msg |= wdt_scheduler(); //start watchdog timer
 	//comment out for debugging
@@ -62,6 +66,7 @@ int main (void)
 		wdt_clear();
 		
 		error_msg = FC_check_alarms(fc_state);
+		error_msg &= ERROR_MASK;
 		if(error_msg)
 		{
 			fc_state = FC_STATE_ALARM;

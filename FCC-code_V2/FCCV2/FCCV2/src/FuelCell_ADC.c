@@ -8,6 +8,7 @@
 #include "asf.h"
 #include "FuelCell_ADC.h"
 #include "analog_defs.h"
+#include "FuelCell_ADC_conversion_consts.h"
 
 //create arrays that adc conversion results will be stored in
 int16_t adcvals_0[7];
@@ -18,6 +19,7 @@ void ADCInit(void)
 	//Set ADC pins to ADC Function
 	gpio_enable_module(ADCIFA_GPIO_MAP, sizeof(ADCIFA_GPIO_MAP) / sizeof(ADCIFA_GPIO_MAP[0]));
 	//adc pb clock settings
+	
 	
 	//Set up ADC
 	//adcifa_configure(&AVR32_ADCIFA, &adcifa_opt, 120000); this worked before
@@ -46,7 +48,7 @@ int convert_temp(int temp_reading)
 {
 		temp_reading = temp_reading * (-1); //thermistors are on negative input
 		//linear curve fit
-		temp_reading = -65 * temp_reading + 370650;
+		temp_reading = TEMPCoefficient * temp_reading + TEMPConst;
 		return(temp_reading);
 }
 int get_FCTEMP1(void)
@@ -60,11 +62,11 @@ int get_FCTEMP2(void)
 //one (or more) of these pressure conversions is wrong
 int get_TANKPRES(void)
 {
-	return(((TANKPRESReading * 3000 / (2048-1) * (470+316) / 470) * 50 - 39700));
+	return(((TANKPRESReading * TANKPRESCoefficient - TANKPRESConst));
 }
 int get_FCPRES(void)
 {
-	return(((FCPRESReading * 3000 / (2048-1) * (470+316) / 470) * 9578 - 23670));
+	return(((FCPRESReading * FCPRESCoefficient - FCPRESConst));
 }
 /*not used
 int get_CAPCURR(void)
@@ -89,7 +91,7 @@ int get_FCCURR(void)
 	//I = (Vout - 2500mV)/40mV
 	//because of 31.6k 47k voltage dividers / 12 bit reading
 	//Vout = adcreading * 3000/(2^11 - 1) * (31.6 + 47) / 47 mV
-	return(FCCURRReading * (316 + 470) / 470 * 3000 / (2048 - 1) * 1000 / 40 - FCCURR_intercept);
+	return(FCCURRReading * FCCURRCoefficient - FCCURR_intercept);
 }
 //zero current reading on startup
 void zero_FCCURR(void)
@@ -100,7 +102,7 @@ int CAPVOLT_intercept = 0;
 
 int get_CAPVOLT(void)
 {
-	return(CAPVOLTReading * 3000 * 50 / 3 / (2048-1) - CAPVOLT_intercept);
+	return(CAPVOLTReading * CAPVOLTCoefficient - CAPVOLT_intercept);
 	//47k and 3k voltage divider
 	//3V reference
 	//CAPVOLT = ADCreading * 3000mV/(2^11-1) * (47 + 3) / 3
@@ -115,7 +117,7 @@ void zero_CAPVOLT(void)
 int FCVOLT_intercept = 0;
 int get_FCVOLT(void)
 {
-	return((FCVOLTReading) * 3000 * 50 / 3 / (2048-1)-FCVOLT_intercept);
+	return((FCVOLTReading) * FCVOLTCoefficient - FCVOLT_intercept);
 	//47k and 3k voltage divider
 	//3V reference
 	//FCVolt = ADCreading * 3000mV/(2^11-1) * (47 + 3) / 3

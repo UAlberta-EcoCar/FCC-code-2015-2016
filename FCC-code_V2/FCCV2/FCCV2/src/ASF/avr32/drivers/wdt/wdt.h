@@ -58,7 +58,7 @@
 #if !defined(AVR32_SCIF_OSC32_FREQUENCY)
 #define AVR32_SCIF_OSC32_FREQUENCY         32768
 #else
-#warning "Duplicate define(s) to remove from the ASF"
+//#warning "Duplicate define(s) to remove from the ASF"
 #endif
 // These defines are missing from or wrong in the toolchain header file ip_xxx.h or part.h
 #if (defined AVR32_WDT_401_H_INCLUDED ) || (defined AVR32_WDT_410_H_INCLUDED )

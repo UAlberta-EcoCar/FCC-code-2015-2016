@@ -67,7 +67,7 @@ extern "C" {
 #ifndef AVR32_SCIF_OSCCTRL1
 #define AVR32_SCIF_OSCCTRL1                                0x00000028
 #else
-#warning "Duplicate define(s) to remove from the ASF"
+//#warning "Duplicate define(s) to remove from the ASF"
 #endif  //end AVR32_SCIF_OSCCTRL1
 
 //  These defines are missing from or wrong in the toolchain header file ip_xxx.h or part.h
