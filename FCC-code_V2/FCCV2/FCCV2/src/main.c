@@ -12,7 +12,6 @@ test test test
 */
 
 //change this file depending on whether you are using the test bench or not
-//
 #include "FuelCell_mode_Select.h"
 
 #include "asf.h"
