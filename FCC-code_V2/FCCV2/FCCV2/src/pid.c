@@ -5,47 +5,49 @@
 #include "FuelCell_Functions.h"
 #include "millis_function.h"
 
-#define P 1
-#define I 0.1
-#define D 10
+#define P 500
+#define I 0
+#define D 0
 
-float accumulated_error = 0;
-float time_called_previously = 0;
-float past_temperature = 0;
-U32 seconds = 0;
-U32 time_passed = 0;
+int accumulated_error = 0;
+unsigned int past_temperature = 0;
+unsigned int time_passed = 0;
 
-
-float PID(float currentTemp, float setPoint) {
-  seconds = millis() / 1000;
+unsigned int PID(int currentTemp, int setPoint) {
+  //don't need mK resolution
+  currentTemp = currentTemp >> 10; //fast way to divide by 1000 (2^10 = 1024 ~ 1000 with 2.4% error) (saves a couple microseconds yay!)
+  setPoint = setPoint >> 10;  //example 22222/1000 = 22 22222/1024 = 21
   
-  //convert to degree Celsius
-  currentTemp = currentTemp / 1000 - 273.15; 
-  setPoint = setPoint / 1000 - 273.15;
-
-  // proportional part
-  float p_value = 0;
+  //proportional part
+  int p_value = 0;
   p_value = (currentTemp - setPoint) * P;
-  
+
+  time_passed = millis() - time_passed; //calculate time difference since last update
 
   // integral part
-  time_passed = seconds - time_passed;
-  accumulated_error = (currentTemp - past_temperature)*(time_passed) + accumulated_error;
-  float i_value = accumulated_error * I;
+  accumulated_error = (currentTemp - setPoint)*(time_passed) + accumulated_error;
+  int i_value = accumulated_error * I;
   
-  float d_value = 0;
+  int d_value = 0;
   d_value = (currentTemp - past_temperature) / (time_passed);
   d_value = d_value * D;
 
-  time_passed = seconds;
+  time_passed = millis(); //record past run time
   past_temperature = currentTemp;
   //printf("p_value = %f, i_value = %f, d_value = %f\n", p_value, i_value, d_value);
-  return p_value + i_value + d_value;
+  setPoint = ((p_value + i_value + d_value) / 10); //scale value down
+  
+  //precaution against possible negative numbers
+  if(setPoint > 0)
+  {
+	  setPoint = 0;
+  }
+  return(setPoint);
 }
 
 void initialize_pid() {
   // initialize variables
-  time_passed = millis() / 1000;
+  time_passed = millis();
 }
 
 

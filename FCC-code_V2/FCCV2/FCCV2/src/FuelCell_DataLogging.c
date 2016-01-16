@@ -48,6 +48,8 @@ void usart_data_log(unsigned int fc_state, unsigned int error_msg)
 				sprintf(str,"ERROR %d\n\r",error_msg);
 				usart_write_line(EXAMPLE_USART,str);
 			}
+			sprintf(str,"NUMBER OF PURGES %d\n\r",get_number_of_purges());
+			usart_write_line(EXAMPLE_USART,str);
 			sprintf(str,"LASTPURGE %d\n\r",get_time_between_last_purges());
 			usart_write_line(EXAMPLE_USART,str);
 			sprintf(str,"STATE %d\n\r",fc_state);

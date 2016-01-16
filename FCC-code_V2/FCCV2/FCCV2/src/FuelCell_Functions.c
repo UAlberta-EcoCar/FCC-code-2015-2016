@@ -176,6 +176,11 @@ unsigned int get_time_between_last_purges(void)
 	return(time_between_last_purges);
 }
 
+unsigned int purge_counter = 0;
+unsigned int get_number_of_purges(void)
+{
+	return(purge_counter);
+}
 
 unsigned int purge_integration_timer; //using for integrating time between purges 
 unsigned int delta_purge_time;
@@ -285,7 +290,7 @@ unsigned int FC_run(void)
 	if(millis() - fan_update_timer > FANUPDATE_INTERVAL)
 	{
 		//pid fan control for temp regulation
-		FANUpdate(PID(((get_FCTEMP1()+get_FCTEMP2())/2) , calc_opt_temp() ));
+		FANUpdate(PID(((get_FCTEMP1()+get_FCTEMP2())/2) , calc_opt_temp()));
 		fan_update_timer = millis();
 	}
 	
@@ -304,16 +309,18 @@ unsigned int FC_run(void)
 		//open purge valve
 		gpio_set_gpio_pin(PURGE_VALVE);
 		
+		purge_counter++; //incriment number of purges
+		
 		//we restart counting mAms as soon as valve opens
 		//reset mAms sum
 		mAms_since_last_purge = 0;
 		//record time
 		time_between_last_purges = time_since_last_purge;
 		time_since_last_purge = 0; //reset timer		
-		//reset timer1
+		//reset timer
 		purge_integration_timer = millis();
 		
-		//start purge timer 2 to time purge
+		//start purge timer to time purge
 		purge_timer = millis();
 		purge_state = PURGE_VALVE_OPEN; //purge valve open
 		//set led0 on because why not
