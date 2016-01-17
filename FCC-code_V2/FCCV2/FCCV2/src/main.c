@@ -1,14 +1,17 @@
 /*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a> //this site is useless
- */
-
+ *
 /*
+
+
 to do list:
-get good adc conversions (test readings)
+//wire everything up
+pressure readings
 temp conversion
 can bus
+get PID values
 test fan pid control code
-test test test
+see if state machine actually works
 */
 
 //change this file depending on whether you are using the test bench or not
@@ -44,7 +47,7 @@ int main (void)
 	//zero_FCVOLT(); Not a good idea either
 	
 	error_msg |= wdt_scheduler(); //start watchdog timer
-	//comment out for debugging
+	//comment out for debugging (debugger is supposed to disable wdt automatically but it doesn't always)
 		
 	//Start of main loop
 	while(1)
@@ -56,7 +59,6 @@ int main (void)
 		//clear wdt value
 		wdt_clear();
 		//if code gets hung up wdt won't clear and a reset will occur
-
 		
 		error_msg = FC_check_alarms(fc_state);
 		error_msg &= ERROR_MASK;
@@ -64,7 +66,6 @@ int main (void)
 		{
 			fc_state = FC_STATE_ALARM;
 		}
-		
 		
 		//main state machine
 		switch (fc_state)
@@ -76,11 +77,11 @@ int main (void)
 		case FC_STATE_SHUTDOWN:
 			fc_state = FC_shutdown();
 			break;
-		
+			
 		case FC_STATE_STARTUP_FANS:
 			fc_state = FC_startup_fans();
 			break;
-		
+			
 		case FC_STATE_STARTUP_H2:
 			fc_state = FC_startup_h2();
 			break;
@@ -88,11 +89,11 @@ int main (void)
 		case FC_STATE_STARTUP_PURGE:
 			fc_state = FC_startup_purge();
 			break;
-		
+			
 		case FC_STATE_STARTUP_CHARGE:
 			fc_state = FC_startup_charge();	
 			break;
-		
+			
 		case FC_STATE_RUN:
 			fc_state = FC_run();
 			break;
