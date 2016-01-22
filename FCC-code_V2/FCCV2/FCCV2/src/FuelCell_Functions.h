@@ -33,6 +33,7 @@
 
 unsigned int get_time_between_last_purges(void);
 unsigned int get_number_of_purges(void);
+unsigned int get_total_charge_extracted(void);
 int calc_opt_temp(void);
 
 //state functions

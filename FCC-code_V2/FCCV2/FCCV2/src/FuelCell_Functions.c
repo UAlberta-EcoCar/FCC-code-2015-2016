@@ -182,6 +182,12 @@ unsigned int get_number_of_purges(void)
 	return(purge_counter);
 }
 
+unsigned int estimated_total_charge_extracted = 0;
+unsigned int get_total_charge_extracted(void)
+{
+	return(estimated_total_charge_extracted);
+}
+
 unsigned int purge_integration_timer; //using for integrating time between purges 
 unsigned int delta_purge_time;
 U64 mAms_since_last_purge;
@@ -310,6 +316,8 @@ unsigned int FC_run(void)
 		gpio_set_gpio_pin(PURGE_VALVE);
 		
 		purge_counter++; //incriment number of purges
+		
+		estimated_total_charge_extracted += mAms_since_last_purge / 1000 / 1000;
 		
 		//we restart counting mAms as soon as valve opens
 		//reset mAms sum
