@@ -49,7 +49,7 @@ int main (void)
 	zero_FCCURR(); 
 	//zero_FCVOLT(); Not a good idea either
 	
-	error_msg |= wdt_scheduler(); //start watchdog timer
+	//error_msg |= wdt_scheduler(); //start watchdog timer
 	//comment out for debugging (debugger is supposed to disable wdt automatically but it doesn't always)
 		
 	//Start of main loop
@@ -106,6 +106,7 @@ int main (void)
 			break;
 		}	
 		
-		usart_data_log(fc_state,error_msg);
+		usart_data_display(fc_state,error_msg);
+
 	}
 }
