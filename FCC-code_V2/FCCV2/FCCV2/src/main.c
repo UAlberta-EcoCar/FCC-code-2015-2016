@@ -5,13 +5,14 @@
 
 
 to do list:
-//wire everything up
+wire everything up
 pressure readings
 temp conversion
 can bus
 get PID values
 test fan pid control code
-see if state machine actually works
+Fix startup_fans state
+added purging to startup_charge state
 */
 
 //change this file depending on whether you are using the test bench or not

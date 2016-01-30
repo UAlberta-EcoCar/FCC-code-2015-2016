@@ -214,8 +214,47 @@ unsigned int FC_startup_charge(void)
 		time_since_last_purge += delta_purge_time;
 		purge_integration_timer = millis();
 	}
-	//we shouldn't need to purge in this state because 2300C/40V = 57.5F of capacitance we can fill
-	//but it still impacts time till next purge
+	// 2300C/40V = 57.5F of capacitance we can fill
+	// will have to purge ~3 times in this state
+	
+	if (mAms_since_last_purge > PURGE_THRESHOLD) //time to purge
+	{
+		//open purge valve
+		gpio_set_gpio_pin(PURGE_VALVE);
+		
+		purge_counter++; //incriment number of purges
+		
+		estimated_total_charge_extracted += mAms_since_last_purge / 1000 / 1000;
+		
+		//we restart counting mAms as soon as valve opens
+		//reset mAms sum
+		mAms_since_last_purge = 0;
+		//record time
+		time_between_last_purges = time_since_last_purge;
+		time_since_last_purge = 0; //reset timer
+		//reset timer
+		purge_integration_timer = millis();
+		
+		//start purge timer to time purge
+		purge_timer = millis();
+		purge_state = PURGE_VALVE_OPEN; //purge valve open
+		//set led0 on because why not
+		gpio_set_gpio_pin(LED0);
+	}
+	
+	if(purge_state == PURGE_VALVE_OPEN) //if purge valve is open
+	{
+		if(millis() - purge_timer > PURGE_TIME) //if it has completed purge //is there some way to use flow meter instead of a fixed time?
+		{
+			//close purge valve
+			gpio_clr_gpio_pin(PURGE_VALVE);
+			purge_state = PURGE_VALVE_CLOSED; //purge valve closed
+			
+			//turn led0 off
+			gpio_clr_gpio_pin(LED0);
+		}
+	}
+	
 	
 	//pid fan control to maintain temperature
 	if(millis() - fan_update_timer > FANUPDATE_INTERVAL)
@@ -301,7 +340,6 @@ unsigned int FC_run(void)
 	}
 	
 	//purge control: //purge based on amount of charge extracted from hydrogen (1 C = amp * sec)
-	
 	delta_purge_time = millis() - purge_integration_timer;
 	if(delta_purge_time > PURGE_INTEGRATION_INTERVAL)
 	{
