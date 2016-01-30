@@ -19,7 +19,7 @@ int wdt_scheduler(void)
 		.sfv   = false,     // WDT Control Register is not locked.
 		.fcd   = false,     // The flash calibration will be redone after a watchdog reset.
 		.cssel = WDT_CLOCK_SOURCE_SELECT_RCSYS,       // 115K system oscillator
-		.us_timeout_period = 50000  // Time out value: 50 ms
+		.us_timeout_period = 25000  // Time out value: 25 ms
 	};
 	//if last reset was power on reset enable watchdog timer
 	if(AVR32_PM.RCAUSE.por)

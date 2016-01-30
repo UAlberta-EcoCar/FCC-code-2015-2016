@@ -9,10 +9,12 @@ wire everything up
 pressure readings
 temp conversion
 can bus
+	data logging
+	active fuel cell control
 get PID values
 test fan pid control code
 Fix startup_fans state
-added purging to startup_charge state
+
 */
 
 //change this file depending on whether you are using the test bench or not
@@ -41,10 +43,10 @@ int main (void)
 	board_init();
 	
 	//zero readings
-	StartADC_Sequencers(); //start another conversion
-	ReadADC_Sequencers(); //read conversion	
+	StartADC_Sequencers(); //start ADC conversion
+	ReadADC_Sequencers(); //read conversion results	
 	//zero_CAPVOLT(); Not a good idea if caps have left over voltage
-	zero_FCCURR(); //test bench mode: make sure this is zeroed at 5 V
+	zero_FCCURR(); 
 	//zero_FCVOLT(); Not a good idea either
 	
 	error_msg |= wdt_scheduler(); //start watchdog timer
@@ -53,7 +55,7 @@ int main (void)
 	//Start of main loop
 	while(1)
 	{
-		//read analog inputs
+		//read analog inputs everytime the main loop runs
 		StartADC_Sequencers(); //start another conversion
 		ReadADC_Sequencers(); //read conversion
 		

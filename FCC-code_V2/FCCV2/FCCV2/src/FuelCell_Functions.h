@@ -29,11 +29,14 @@
 #define PURGE_THRESHOLD 2300000000 //2300 C from fuel cell documentation. units mA * ms
 //this is larger than max 32 bit value (nice)
 #define PURGE_TIME 200 //get this value from datasheet
-#define MAX_PURGE_INTERVAL 0 //max time between purges regardless of current output
+//purge on low voltage
+//#define PURGE_VOLT_THRES 30000
 
+//data logging / data retrieval functions
 unsigned int get_time_between_last_purges(void);
 unsigned int get_number_of_purges(void);
 unsigned int get_total_charge_extracted(void);
+
 int calc_opt_temp(void);
 
 //state functions
