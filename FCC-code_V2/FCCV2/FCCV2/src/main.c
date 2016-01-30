@@ -60,7 +60,7 @@ int main (void)
 		wdt_clear();
 		//if code gets hung up wdt won't clear and a reset will occur
 		
-		error_msg = FC_check_alarms(fc_state);
+		error_msg |= FC_check_alarms(fc_state);
 		error_msg &= ERROR_MASK;
 		if(error_msg)
 		{
