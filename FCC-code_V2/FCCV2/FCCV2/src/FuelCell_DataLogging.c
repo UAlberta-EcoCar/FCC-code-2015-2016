@@ -35,12 +35,12 @@ void usart_data_log(unsigned int fc_state, unsigned int error_msg)
 		{
 			usart_data_log_stagger = 1;
 			usart_data_log_timer = millis();
-			sprintf(str,"\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r");
+			sprintf(str,"\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r");
 			usart_write_line(EXAMPLE_USART,str);
 			
 			#ifdef TEST_BENCH_MODE
-			usart_write_line(EXAMPLE_USART,"You are in test bench mode/n/r");
-			usart_write_line(EXAMPLE_USART,"Do NOT connect the fuel cell!/n/r");
+			usart_write_line(EXAMPLE_USART,"You are in test bench mode\n\r");
+			usart_write_line(EXAMPLE_USART,"Do NOT connect the fuel cell!\n\r");
 			#endif
 			
 			if(error_msg)

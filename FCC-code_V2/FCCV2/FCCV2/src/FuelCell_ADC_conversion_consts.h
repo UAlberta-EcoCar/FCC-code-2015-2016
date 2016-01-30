@@ -14,14 +14,14 @@
 #ifdef TEST_BENCH_MODE
 #define FCCURRCoefficient ((316 + 470) / 470 * 3000 / (2048 - 1) * 1000 / 40) //+-5V from zero point ~= +-125A
 #define CAPCURRCoefficient ((316 + 470) / 470 * 3000 / (2048 - 1) * 1000 / 40)
-#define CAPVOLTCoefficient (3000 * 50 / 3 / (2048-1) * 60) //FCC will think 10V is 60 Volts
-#define FCVOLTCoefficient (3000 * 50 / 3 / (2048-1) * 60) //FCC will think 10V is 60 Volts
+#define CAPVOLTCoefficient (3000 * 50 / 3 / (2048-1) * 12) //FCC will think 5V is 60 Volts
+#define FCVOLTCoefficient (3000 * 50 / 3 / (2048-1) * 12) //FCC will think 5V is 60 Volts
 #define FCPRESCoefficient 0 //I don't know pressure sensor conversion
-#define FCPRESConst 4000 //will always read as 4 PSI
+#define FCPRESConst -4000 //will always read as 4 PSI
 #define TANKPRESCoefficient 0 // I don't know pressure sensor conversion
 #define TANKPRESConst 0 //tank isn't connected anyway
 #define TEMPCoefficient 0
-#define TEMPConst 370650 //Unable to connect Thermistors to test bench. Will always read 50degC
+#define TEMPConst 313000 //Unable to connect Thermistors to test bench. Will always read 40degC
 #endif
 
 

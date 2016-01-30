@@ -22,7 +22,7 @@ unsigned int FC_standby(void)
 	unsigned int fc_state;
 	if (gpio_get_pin_value(START))
 	{
-		fc_state = FC_STATE_STARTUP_FANS;
+		fc_state = FC_STATE_STARTUP_H2;
 		gpio_clr_gpio_pin(LED_STOP);
 		gpio_set_gpio_pin(LED_START);
 	}
@@ -210,7 +210,7 @@ unsigned int FC_startup_charge(void)
 	delta_purge_time = millis() - purge_integration_timer;
 	if(delta_purge_time > PURGE_INTEGRATION_INTERVAL)
 	{
-		mAms_since_last_purge += delta_purge_time * get_FCCURR();
+		mAms_since_last_purge += delta_purge_time * (get_FCCURR()+100);
 		time_since_last_purge += delta_purge_time;
 		purge_integration_timer = millis();
 	}
@@ -305,7 +305,7 @@ unsigned int FC_run(void)
 	delta_purge_time = millis() - purge_integration_timer;
 	if(delta_purge_time > PURGE_INTEGRATION_INTERVAL)
 	{
-		mAms_since_last_purge += delta_purge_time * get_FCCURR();
+		mAms_since_last_purge += delta_purge_time * (get_FCCURR());
 		purge_integration_timer = millis();
 		time_since_last_purge += delta_purge_time;
 	}

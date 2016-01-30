@@ -35,8 +35,8 @@
 #define FC_ERR_PWR_BAD (1 << 14)
 
 //define thresholds for over current etc
-#define LOW_TEMP_THRES 950 //-10C. 950 is closer to -5C I thought we'd be safe
-#define HIGH_TEMP_THRES 1680 // 75C
+#define LOW_TEMP_THRES 260000 //-10C. 
+#define HIGH_TEMP_THRES 348000 // 75C
 #define FC_HIGH_PRES_THRES 9810 //9.81 PSI
 #define FC_LOW_PRES_THRES 800 //0.8 PSI
 #define OVER_CUR_THRES 78000 //78A

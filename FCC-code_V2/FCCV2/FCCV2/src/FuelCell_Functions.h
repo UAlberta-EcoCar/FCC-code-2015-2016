@@ -23,7 +23,7 @@
 #define PURGE_VALVE_OPEN 2
 #define PURGE_VALVE_CLOSED 1
 
-#define FANUPDATE_INTERVAL 50
+#define FANUPDATE_INTERVAL 100
 
 #define PURGE_INTEGRATION_INTERVAL 10 //10 ms
 #define PURGE_THRESHOLD 2300000000 //2300 C from fuel cell documentation. units mA * ms

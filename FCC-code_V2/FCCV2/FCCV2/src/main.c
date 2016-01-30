@@ -46,7 +46,7 @@ int main (void)
 	zero_FCCURR(); //test bench mode: make sure this is zeroed at 5 V
 	//zero_FCVOLT(); Not a good idea either
 	
-	error_msg |= wdt_scheduler(); //start watchdog timer
+//	error_msg |= wdt_scheduler(); //start watchdog timer
 	//comment out for debugging (debugger is supposed to disable wdt automatically but it doesn't always)
 		
 	//Start of main loop

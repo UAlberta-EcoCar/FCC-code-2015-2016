@@ -91,15 +91,23 @@ int get_FCCURR(void)
 	//I = (Vout - 2500mV)/40mV
 	//because of 31.6k 47k voltage dividers / 12 bit reading
 	//Vout = adcreading * 3000/(2^11 - 1) * (31.6 + 47) / 47 mV
-	return(FCCURRReading * FCCURRCoefficient - FCCURR_intercept);
+	int val = FCCURRReading * FCCURRCoefficient - FCCURR_intercept;
+	if(val < 0) //filter out negative numbers b/c they mess with the current integration algorithym
+	{
+		return(0);
+	}
+	else
+	{
+		return(val);
+	}
 }
 //zero current reading on startup
 void zero_FCCURR(void)
 {
 	FCCURR_intercept = get_FCCURR();
 }
-int CAPVOLT_intercept = 0;
 
+int CAPVOLT_intercept = 0;
 int get_CAPVOLT(void)
 {
 	return(CAPVOLTReading * CAPVOLTCoefficient - CAPVOLT_intercept);
