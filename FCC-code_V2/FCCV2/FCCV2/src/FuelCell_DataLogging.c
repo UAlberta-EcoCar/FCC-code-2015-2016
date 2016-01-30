@@ -14,6 +14,7 @@
 #include "millis_function.h"
 #include "FuelCell_PWM.h"
 #include "FuelCell_mode_Select.h"
+#include "digital_IO_defs.h"
 
 char str [20]; //buffer for storing strings. set to length of longest string needed to avoid wasting ram
 
@@ -110,3 +111,54 @@ void usart_data_display(unsigned int fc_state, unsigned int error_msg)
 		break;
 	}
 }
+
+unsigned int usart_data_log_timer = 0;
+
+void usart_data_logging(unsigned int fc_state, unsigned int error_msg)
+{
+	if(millis()-usart_data_log_timer > USART_DATA_LOG_INTERVAL)
+	{
+	//start with message time stamp
+	sprintf(str,"MILLIS %lu\n\r",millis());
+	usart_write_line(LOG_USART,str);
+
+	//FC DATA
+	sprintf(str,"FCVOLT %d\n\r",get_FCVOLT());
+	usart_write_line(LOG_USART,str);
+	sprintf(str,"FCCURR %d\n\r",get_FCCURR());
+	usart_write_line(LOG_USART,str);
+	sprintf(str,"FCTEMP1 %d\n\r",get_FCTEMP1());
+	usart_write_line(LOG_USART,str);
+	sprintf(str,"FCTEMP2 %d\n\r",get_FCTEMP2());
+	usart_write_line(LOG_USART,str);
+	sprintf(str,"FCPRES %d\n\r",get_FCPRES());
+	usart_write_line(LOG_USART,str);
+	
+	sprintf(str,"CAPVOLT %d\n\r",get_CAPVOLT());
+	usart_write_line(LOG_USART,str);
+	
+	sprintf(str,"OPTTEMP %d\n\r",calc_opt_temp());
+	usart_write_line(LOG_USART,str);
+
+	//purge data
+	sprintf(str,"LAST_PURGE %d\n\r",get_time_between_last_purges());
+	usart_write_line(LOG_USART,str);
+	sprintf(str,"NUM_PURGE %d\n\r",get_number_of_purges());
+	usart_write_line(LOG_USART,str);
+	sprintf(str,"CHARGE_EXTRACT %d\n\r",get_total_charge_extracted());
+	usart_write_line(LOG_USART,str);
+	
+	//state information
+	sprintf(str,"STATE %d\n\r",fc_state);
+	usart_write_line(LOG_USART,str);
+	sprintf(str,"ERROR %d\n\r",error_msg);
+	usart_write_line(LOG_USART,str);
+	sprintf(str,"PURGE_VALVE %d\n\r",gpio_get_gpio_pin_output_value(PURGE_VALVE));
+	usart_write_line(LOG_USART,str);
+	usart_data_log_timer = millis();
+	}
+}
+
+
+
+
