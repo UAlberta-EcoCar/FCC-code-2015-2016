@@ -1,9 +1,9 @@
 /*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a> //this site is useless
  *
+*/
+
 /*
-
-
 to do list:
 wire everything up
 pressure readings
@@ -41,6 +41,8 @@ unsigned int fc_state = FC_STATE_STANDBY;
 int main (void)
 {
 	board_init();
+	
+	usart_data_log_start(fc_state,error_msg);
 	
 	//zero readings
 	StartADC_Sequencers(); //start ADC conversion

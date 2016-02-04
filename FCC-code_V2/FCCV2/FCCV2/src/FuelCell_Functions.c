@@ -191,6 +191,10 @@ unsigned int get_total_charge_extracted(void)
 unsigned int purge_integration_timer; //using for integrating time between purges 
 unsigned int delta_purge_time;
 U64 mAms_since_last_purge;
+U64 get_coulumbs_since_last_purge(void)
+{
+	return(mAms_since_last_purge/1000);
+}
 unsigned int time_since_last_purge; //keep track of time between purges
 unsigned int purge_state = FIRST_PURGE_CYCLE;
 unsigned int fan_update_timer;
