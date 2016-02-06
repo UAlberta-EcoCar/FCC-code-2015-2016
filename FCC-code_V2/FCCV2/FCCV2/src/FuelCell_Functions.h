@@ -37,6 +37,7 @@ unsigned int get_time_between_last_purges(void);
 unsigned int get_number_of_purges(void);
 unsigned int get_total_charge_extracted(void);
 U64 get_coulumbs_since_last_purge(void);
+U64 get_estimated_total_W(void);
 
 int calc_opt_temp(void);
 

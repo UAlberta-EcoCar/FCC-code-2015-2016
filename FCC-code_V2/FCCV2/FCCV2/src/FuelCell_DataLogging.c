@@ -118,8 +118,10 @@ unsigned int usart_data_log_timer = 0;
 //at the start of program make table header
 void usart_data_log_start(unsigned int fc_state, unsigned int error_msg)
 {
+	//data log program starts logging data when it receives a $
+	usart_write_line(LOG_USART,"$");
 	usart_write_line(LOG_USART,"\n\r");
-	sprintf(str,"MILLIS,ERROR,STATE,PURGE_COUNT,LAST_PURGE_TIME,");
+	sprintf(str,"MILLIS,ERROR,STATE,PURGE_COUNT,LAST_PURGE_TIME,ENERGY");
 	usart_write_line(LOG_USART,str);
 	sprintf(str,"CHARGE,TOTAL_CHARGE,FCVOLT,FCCURR,CAPVOLT,");
 	usart_write_line(LOG_USART,str);
@@ -134,7 +136,7 @@ void usart_data_logging(unsigned int fc_state, unsigned int error_msg)
 {
 	if(millis()-usart_data_log_timer > USART_DATA_LOG_INTERVAL)
 	{
-		sprintf(str,"%lu,%d,%d,%d,%d,",millis(),error_msg,fc_state,get_number_of_purges(),get_time_between_last_purges());
+		sprintf(str,"%lu,%d,%d,%d,%d,%llu",millis(),error_msg,fc_state,get_number_of_purges(),get_time_between_last_purges(),get_estimated_total_W());
 		usart_write_line(LOG_USART,str);
 		sprintf(str,"%llu,%d,%d,%d,%d,",get_coulumbs_since_last_purge(),get_total_charge_extracted(),get_FCVOLT(),get_FCCURR(),get_CAPVOLT());
 		usart_write_line(LOG_USART,str);

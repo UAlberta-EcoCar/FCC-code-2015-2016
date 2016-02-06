@@ -187,13 +187,18 @@ unsigned int get_total_charge_extracted(void)
 {
 	return(estimated_total_charge_extracted);
 }
-
+U64 uW_since_last_purge;
+U64 estimated_total_W;
+U64 get_estimated_total_W(void)
+{
+	return(estimated_total_W);
+}
 unsigned int purge_integration_timer; //using for integrating time between purges 
 unsigned int delta_purge_time;
 U64 mAms_since_last_purge;
 U64 get_coulumbs_since_last_purge(void)
 {
-	return(mAms_since_last_purge/1000);
+	return(mAms_since_last_purge/1000/1000);
 }
 unsigned int time_since_last_purge; //keep track of time between purges
 unsigned int purge_state = FIRST_PURGE_CYCLE;
@@ -214,8 +219,9 @@ unsigned int FC_startup_charge(void)
 	delta_purge_time = millis() - purge_integration_timer;
 	if(delta_purge_time > PURGE_INTEGRATION_INTERVAL)
 	{
-		mAms_since_last_purge += delta_purge_time * (get_FCCURR()+100);
+		mAms_since_last_purge += delta_purge_time * get_FCCURR();
 		time_since_last_purge += delta_purge_time;
+		uW_since_last_purge += delta_purge_time * get_FCCURR() * get_FCVOLT() / 1000;
 		purge_integration_timer = millis();
 	}
 	// 2300C/40V = 57.5F of capacitance we can fill
@@ -233,6 +239,9 @@ unsigned int FC_startup_charge(void)
 		//we restart counting mAms as soon as valve opens
 		//reset mAms sum
 		mAms_since_last_purge = 0;
+		//add energy total
+		estimated_total_W += uW_since_last_purge / 1000 / 1000;
+		uW_since_last_purge = 0; 
 		//record time
 		time_between_last_purges = time_since_last_purge;
 		time_since_last_purge = 0; //reset timer
