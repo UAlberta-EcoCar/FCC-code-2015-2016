@@ -41,7 +41,12 @@ void usart_data_display(unsigned int fc_state, unsigned int error_msg)
 			
 			#ifdef TEST_BENCH_MODE
 			usart_write_line(DISPLAY_USART,"You are in test bench mode\n\r");
-			usart_write_line(DISPLAY_USART,"Do NOT connect the fuel cell!\n\r");
+			usart_write_line(DISPLAY_USART,"Using the power board might give you issues!\n\r");
+			#endif
+			
+			#ifdef FAKE_INPUT_MODE
+			usart_write_line(DISPLAY_USART,"You are in fake input mode\n\r");
+			usart_write_line(DISPLAY_USART,"Do NOT connect the fuel cell!!\n\r");
 			#endif
 			
 			if(error_msg)
@@ -121,24 +126,24 @@ void usart_data_log_start(unsigned int fc_state, unsigned int error_msg)
 	//data log program starts logging data when it receives a $
 	usart_write_line(LOG_USART,"$");
 	usart_write_line(LOG_USART,"\n\r");
-	sprintf(str,"MILLIS,ERROR,STATE,PURGE_COUNT,LAST_PURGE_TIME,ENERGY");
-	usart_write_line(LOG_USART,str);
-	sprintf(str,"CHARGE,TOTAL_CHARGE,FCVOLT,FCCURR,CAPVOLT,");
-	usart_write_line(LOG_USART,str);
-	sprintf(str,"FCTEMP1,FCTEMP2,OPT_TEMP,FCPRES,");
-	usart_write_line(LOG_USART,str);
-	sprintf(str,"START_RELAY,RES_RELAY,CAP_RELAY,MOTOR_RELAY,");
-	usart_write_line(LOG_USART,str);
-	sprintf(str,"PURGE_VALVE,H2_VALVE\n\r");
-	usart_write_line(LOG_USART,str);
+
+	usart_write_line(LOG_USART,"MILLIS,ERROR,STATE,PURGE_COUNT,LAST_PURGE_TIME,ENERGY,TOTAL_ENERGY,");
+
+	usart_write_line(LOG_USART,"CHARGE,TOTAL_CHARGE,FCVOLT,FCCURR,CAPVOLT,");
+	
+	usart_write_line(LOG_USART,"FCTEMP1,FCTEMP2,OPT_TEMP,FCPRES,");
+	
+	usart_write_line(LOG_USART,"START_RELAY,RES_RELAY,CAP_RELAY,MOTOR_RELAY,");
+
+	usart_write_line(LOG_USART,"PURGE_VALVE,H2_VALVE\n\r");
 }
 void usart_data_logging(unsigned int fc_state, unsigned int error_msg)
 {
 	if(millis()-usart_data_log_timer > USART_DATA_LOG_INTERVAL)
 	{
-		sprintf(str,"%lu,%d,%d,%d,%d,%llu",millis(),error_msg,fc_state,get_number_of_purges(),get_time_between_last_purges(),get_estimated_total_W());
+		sprintf(str,"%lu,%d,%d,%d,%d,%llu,%llu,",millis(),error_msg,fc_state,get_number_of_purges(),get_time_between_last_purges(),get_J_since_last_purge(),get_total_E());
 		usart_write_line(LOG_USART,str);
-		sprintf(str,"%llu,%d,%d,%d,%d,",get_coulumbs_since_last_purge(),get_total_charge_extracted(),get_FCVOLT(),get_FCCURR(),get_CAPVOLT());
+		sprintf(str,"%llu,%llu,%d,%d,%d,",get_coulumbs_since_last_purge(),get_total_charge_extracted(),get_FCVOLT(),get_FCCURR(),get_CAPVOLT());
 		usart_write_line(LOG_USART,str);
 		sprintf(str,"%d,%d,%d,%d,",get_FCTEMP1(),get_FCTEMP2(),calc_opt_temp(),get_FCPRES());
 		usart_write_line(LOG_USART,str);
@@ -146,6 +151,7 @@ void usart_data_logging(unsigned int fc_state, unsigned int error_msg)
 		usart_write_line(LOG_USART,str);
 		sprintf(str,"%d,%d\n\r",gpio_get_gpio_pin_output_value(PURGE_VALVE),gpio_get_gpio_pin_output_value(H2_VALVE));
 		usart_write_line(LOG_USART,str);
+		usart_data_log_timer = millis();
 	}
 }
 

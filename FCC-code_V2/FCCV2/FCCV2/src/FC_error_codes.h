@@ -45,10 +45,10 @@
 #define CAP_VOLT_LOW 20000 //capacitors are drained too much
 
 //Some errors need to be compressed for testing
-#ifdef TEST_BENCH_MODE
+#ifdef FAKE_INPUT_MODE
 #define ERROR_MASK (0xFFFFFFFF^FC_ERR_PWR_BAD)
 #endif
-#ifdef OUT_OF_CAR_MODE
+#ifdef TEST_BENCH_MODE
 #define ERROR_MASK (0xFFFFFFFF^FC_ERR_PWR_BAD)
 #endif
 #ifdef IN_CAR_MODE

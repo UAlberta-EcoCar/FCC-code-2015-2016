@@ -15,8 +15,8 @@ unsigned int time_passed = 0;
 
 unsigned int PID(int currentTemp, int setPoint) {
   //don't need mK resolution
-  currentTemp = currentTemp >> 10; //fast way to divide by 1000 (2^10 = 1024 ~ 1000 with 2.4% error) (saves a couple microseconds yay!)
-  setPoint = setPoint >> 10;  //example 22222/1000 = 22 22222/1024 = 21
+  currentTemp = currentTemp / 1000; 
+  setPoint = setPoint / 1000;  
   
   //proportional part
   int p_value = 0;

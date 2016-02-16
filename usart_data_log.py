@@ -12,7 +12,7 @@ now = datetime.datetime.now()
 
 try: 
     file = open('log' + str(now.year) + '_' + str(now.month) + '_' + str(now.day) + '_' + str(now.hour) + '_' + str(now.minute) + '_' + '.csv','w')
-    file.write("New Log File" + str(now.isoformat()) + "\n\r")
+    #file.write("New Log File " + str(now.isoformat()) + "\n\r")
     
     ser = serial.Serial('COM6',115200,timeout=1)
     

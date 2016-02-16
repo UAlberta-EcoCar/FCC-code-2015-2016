@@ -5,7 +5,6 @@
  *  Author: Reegan
  */ 
 
-
 #include "asf.h"
 #include "FuelCell_Functions.h"
 #include "FC_error_codes.h"
@@ -22,7 +21,7 @@ unsigned int FC_standby(void)
 	unsigned int fc_state;
 	if (gpio_get_pin_value(START))
 	{
-		fc_state = FC_STATE_STARTUP_H2;
+		fc_state = FC_STATE_STARTUP_FANS;
 		gpio_clr_gpio_pin(LED_STOP);
 		gpio_set_gpio_pin(LED_START);
 	}
@@ -48,7 +47,7 @@ unsigned int FC_standby(void)
 	return(fc_state);
 }
 
-
+//this function doesn't work
 unsigned int tachometer_test = 0;
 unsigned int FC_startup_fans(void)
 {
@@ -84,7 +83,7 @@ unsigned int FC_startup_fans(void)
 			fc_state = FC_STATE_STARTUP_H2;
 		}
 	}
-	return(fc_state);
+	return(FC_STATE_STARTUP_H2); //don't run this function again it is broken
 }
 
 
@@ -120,7 +119,6 @@ unsigned int FC_startup_h2(void)
 unsigned int purge_timer = 0; //used for timing how long purge valve is open
 unsigned int FC_startup_purge(void)
 {
-	//Purge step isn't skipped on !Rescon to get air out of lines on startup. what???
 	unsigned int fc_state;
 	
 	//h2 valve still open
@@ -139,6 +137,7 @@ unsigned int FC_startup_purge(void)
 	{
 		purge_timer = millis();
 	}
+
 	gpio_set_gpio_pin(PURGE_VALVE);
 	gpio_set_gpio_pin(LED0);
 	
@@ -169,6 +168,7 @@ unsigned int FC_startup_purge(void)
 	return(fc_state);
 }
 
+unsigned int total_charge_energy_integration_timer;
 
 unsigned int time_between_last_purges;
 unsigned int get_time_between_last_purges(void)
@@ -176,72 +176,78 @@ unsigned int get_time_between_last_purges(void)
 	return(time_between_last_purges);
 }
 
+
 unsigned int purge_counter = 0;
 unsigned int get_number_of_purges(void)
 {
 	return(purge_counter);
 }
 
-unsigned int estimated_total_charge_extracted = 0;
-unsigned int get_total_charge_extracted(void)
+U64 estimated_total_charge_extracted = 0;
+U64 get_total_charge_extracted(void)
 {
-	return(estimated_total_charge_extracted);
+	return(estimated_total_charge_extracted / 1000);
 }
-U64 uW_since_last_purge;
-U64 estimated_total_W;
-U64 get_estimated_total_W(void)
+
+U64 uJ_since_last_purge;
+U64 get_J_since_last_purge(void)
 {
-	return(estimated_total_W);
+	return(uJ_since_last_purge / 1000 / 1000);
 }
+
+U64 estimated_total_E;
+U64 get_total_E(void)
+{
+	return(estimated_total_E / 1000);
+}
+
 unsigned int purge_integration_timer; //using for integrating time between purges 
-unsigned int delta_purge_time;
-U64 mAms_since_last_purge;
+unsigned int delta_purge_time; //used for calculating integration interval
+U64 mAms_since_last_purge; //sum of coulumbs since last purge
+
 U64 get_coulumbs_since_last_purge(void)
 {
 	return(mAms_since_last_purge/1000/1000);
 }
+
 unsigned int time_since_last_purge; //keep track of time between purges
-unsigned int purge_state = FIRST_PURGE_CYCLE;
-unsigned int fan_update_timer;
+unsigned int purge_state = FIRST_PURGE_CYCLE; //used for keeping track of switching b/w purge valve open closed
+unsigned int fan_update_timer; //used for timing pwm code
 unsigned int FC_startup_charge(void)
 {
 	unsigned int fc_state = FC_STATE_STARTUP_CHARGE; //will keep charging until state exits
-	//Skip charge step if resistors aren't connected
-	//pseudo code checked RESCON here
-	//however, RESCON == 0 will trigger and alarm anyway so I won't check
 
 	if(purge_state == FIRST_PURGE_CYCLE)
 	{
 		purge_integration_timer = millis(); //start timing
 		purge_state = PURGE_VALVE_CLOSED; //fuel cell running purge valve closed //prevents timer from being reset
 	}
+
 	//keep track of coulombs of charge produced since last purge
+	//also energy
 	delta_purge_time = millis() - purge_integration_timer;
 	if(delta_purge_time > PURGE_INTEGRATION_INTERVAL)
 	{
 		mAms_since_last_purge += delta_purge_time * get_FCCURR();
 		time_since_last_purge += delta_purge_time;
-		uW_since_last_purge += delta_purge_time * get_FCCURR() * get_FCVOLT() / 1000;
+		uJ_since_last_purge += delta_purge_time * get_FCCURR() * get_FCVOLT() / 1000;
 		purge_integration_timer = millis();
 	}
-	// 2300C/40V = 57.5F of capacitance we can fill
-	// will have to purge ~3 times in this state
 	
 	if (mAms_since_last_purge > PURGE_THRESHOLD) //time to purge
 	{
 		//open purge valve
 		gpio_set_gpio_pin(PURGE_VALVE);
 		
-		purge_counter++; //incriment number of purges
-		
-		estimated_total_charge_extracted += mAms_since_last_purge / 1000 / 1000;
+		purge_counter++; //increment number of purges
 		
 		//we restart counting mAms as soon as valve opens
 		//reset mAms sum
 		mAms_since_last_purge = 0;
-		//add energy total
-		estimated_total_W += uW_since_last_purge / 1000 / 1000;
-		uW_since_last_purge = 0; 
+		
+		//reset energy
+		uJ_since_last_purge = 0; 
+		
 		//record time
 		time_between_last_purges = time_since_last_purge;
 		time_since_last_purge = 0; //reset timer
@@ -267,14 +273,22 @@ unsigned int FC_startup_charge(void)
 			gpio_clr_gpio_pin(LED0);
 		}
 	}
-	
-	
+		
 	//pid fan control to maintain temperature
 	if(millis() - fan_update_timer > FANUPDATE_INTERVAL)
 	{
 		//pid fan control for temp regulation
-		FANUpdate(PID( ((get_FCTEMP1()+get_FCTEMP2())/2) , ((53*get_FCCURR()) / 100 + 299160) ));
+		FANUpdate(PID( ((get_FCTEMP1()+get_FCTEMP2())/2) , ((53*get_FCCURR()) / 100 + 299160)));
 		fan_update_timer = millis();
+	}
+	
+	//energy and charge integration for datalogging
+	unsigned int delta_t = millis() - total_charge_energy_integration_timer;
+	if(delta_t > TOTAL_CHARGE_ENERGY_INTEGRATION_INTERVAL)
+	{
+		estimated_total_E += get_FCVOLT() * get_FCCURR() * delta_t / 1000 / 1000;
+		estimated_total_charge_extracted += get_FCCURR() * delta_t / 1000;
+		total_charge_energy_integration_timer = millis();
 	}
 	
 	//charging capacitors through resistor to avoid temporary short circuit
@@ -357,6 +371,7 @@ unsigned int FC_run(void)
 	if(delta_purge_time > PURGE_INTEGRATION_INTERVAL)
 	{
 		mAms_since_last_purge += delta_purge_time * (get_FCCURR());
+		uJ_since_last_purge += delta_purge_time * get_FCCURR() * get_FCVOLT() / 1000;
 		purge_integration_timer = millis();
 		time_since_last_purge += delta_purge_time;
 	}
@@ -367,12 +382,14 @@ unsigned int FC_run(void)
 		gpio_set_gpio_pin(PURGE_VALVE);
 		
 		purge_counter++; //incriment number of purges
-		
-		estimated_total_charge_extracted += mAms_since_last_purge / 1000 / 1000;
-		
+				
 		//we restart counting mAms as soon as valve opens
 		//reset mAms sum
 		mAms_since_last_purge = 0;
+		
+		//reset energy
+		uJ_since_last_purge = 0; 
+		
 		//record time
 		time_between_last_purges = time_since_last_purge;
 		time_since_last_purge = 0; //reset timer		
@@ -399,6 +416,15 @@ unsigned int FC_run(void)
 		}
 	}
 	
+	//energy and charge integration for datalogging
+	unsigned int delta_t = millis() - total_charge_energy_integration_timer;
+	if(delta_t > TOTAL_CHARGE_ENERGY_INTEGRATION_INTERVAL)
+	{
+		estimated_total_E += get_FCVOLT() * get_FCCURR() * delta_t / 1000 / 1000;
+		estimated_total_charge_extracted += get_FCCURR() * delta_t / 1000;
+		total_charge_energy_integration_timer = millis();
+	}
+	
 	fc_state = FC_STATE_RUN;
 	return(fc_state);
 }
@@ -415,7 +441,8 @@ unsigned int FC_shutdown(void)
 	//close relays
 	gpio_clr_gpio_pin(MOTOR_RELAY);
 	gpio_clr_gpio_pin(START_RELAY);
-	
+	//fans to max
+	FANUpdate(1024);	
 	if(0)
 	{
 		//option of leaving shutdown state and restarting
@@ -427,7 +454,6 @@ unsigned int FC_shutdown(void)
 	}
 	return(fc_state);
 }
-
 
 unsigned int FC_alarm(void)
 {
