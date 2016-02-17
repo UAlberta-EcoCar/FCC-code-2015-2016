@@ -14,7 +14,7 @@
 void CANInit(void);
 
 /** Call Back prototype */
-void can_out_callback_channel0(U8 handle, U8 event);
+void can_out_callback_channel1(U8 handle, U8 event);
 
 //structure for building can messages to send to can_send_message()
 typedef struct
