@@ -11,9 +11,9 @@
 
 /* Local allocation for MOB buffer in HSB_RAM */
 #if defined (__GNUC__) && defined (__AVR32__)
-volatile can_msg_t mob_ram_ch0[NB_MOB_CHANNEL] __attribute__ ((section (".hsb_ram_loc")));
+volatile can_msg_t mob_ram_ch1[NB_MOB_CHANNEL] __attribute__ ((section (".hsb_ram_loc")));
 #elif defined (__ICCAVR32__)
-volatile __no_init can_msg_t mob_ram_ch0[NB_MOB_CHANNEL] @0xA0000000;
+volatile __no_init can_msg_t mob_ram_ch1[NB_MOB_CHANNEL] @0xA0000000;
 #endif
 
 /* Allocate one mob for TX */
@@ -84,7 +84,7 @@ void CANInit(void)
 	INTC_init_interrupts();
 
 	/* Initialize channel 1 */
-	can_init(1, ((uint32_t)&mob_ram_ch0[1]),CANIF_CHANNEL_MODE_NORMAL,can_out_callback_channel1);
+	can_init(1, ((uint32_t)&mob_ram_ch1[0]),CANIF_CHANNEL_MODE_NORMAL,can_out_callback_channel1);
 
 	/* Enable all interrupts. */
 	Enable_global_interrupt();
@@ -93,7 +93,7 @@ void CANInit(void)
 U8 can_send_message(CanMessage * p_message)
 {
 	//initialize channel 0
-	can_init(1, ((uint32_t)&mob_ram_ch0[1]), CANIF_CHANNEL_MODE_NORMAL,can_out_callback_channel1);
+	can_init(1, ((uint32_t)&mob_ram_ch1[0]), CANIF_CHANNEL_MODE_NORMAL,can_out_callback_channel1);
 	
 	fc_tx_mob.handle = can_mob_alloc(1); //get handle of a free mob
 	
