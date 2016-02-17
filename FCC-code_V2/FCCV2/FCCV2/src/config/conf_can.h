@@ -55,8 +55,11 @@
 #define NB_MOB_CHANNEL     16
 
 //! Setup the usage of CAN Under interruption
-//#define CAN_LIB_UNDER_INTERRUPT
+#define CAN_LIB_UNDER_INTERRUPT
 //I don't want interrupts
+
+//! Setup the usage of Autobaud feature, here the stack does not support it
+#define CAN_AUTOBAUD       0
 
 #define BAUDRATE_HZ 250000
 

@@ -16,6 +16,7 @@
 #include "FuelCell_Functions.h"
 #include "FuelCell_USART.h"
 #include "millis_function.h"
+#include "FuelCell_CAN.h"
 
 void board_init(void)
 {
@@ -53,4 +54,6 @@ void board_init(void)
 	
 	//setup usart
 	USARTInit();
+	
+	CANInit();
 }

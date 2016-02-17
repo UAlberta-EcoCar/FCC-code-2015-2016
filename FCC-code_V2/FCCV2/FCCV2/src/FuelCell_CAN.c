@@ -92,8 +92,6 @@ void CANInit(void)
 
 U8 can_send_message(CanMessage * p_message)
 {
-	//initialize channel 0
-	can_init(1, ((uint32_t)&mob_ram_ch1[0]), CANIF_CHANNEL_MODE_NORMAL,can_out_callback_channel1);
 	
 	fc_tx_mob.handle = can_mob_alloc(1); //get handle of a free mob
 	
@@ -130,7 +128,7 @@ U8 check_if_message_sent(U8 handle)
 	else if (status == CAN_STATUS_NOT_COMPLETED)
 	{
 		//message hasn't sent yet but everything is fine
-		return(0);
+		return(2);
 	}
 	else //CAN_STATUS_ERROR
 	{
