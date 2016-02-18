@@ -242,7 +242,7 @@ extern long pm_disable_module(unsigned long module);
 
 /*! \brief Returns MCU wake cause
  *
- * \return The MCU wake cause which can be masked with the
+ * \return The MCU wake cause which be masked with the
  *         \c AVR32_PM_WCAUSE_x_MASK bit-masks to isolate specific causes.
  */
 __always_inline static unsigned long pm_get_wake_cause(void)

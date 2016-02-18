@@ -37,10 +37,6 @@ Fix startup_fans state
 unsigned int error_msg;
 unsigned int fc_state = FC_STATE_STANDBY;
 
-CanMessage message;
-int handle;
-int x;
-unsigned int time7;
 
 int main (void)
 {
@@ -55,7 +51,7 @@ int main (void)
 	zero_FCCURR(); 
 	//zero_FCVOLT(); Not a good idea either
 	
-	//error_msg |= wdt_scheduler(); //start watchdog timer
+	error_msg |= wdt_scheduler(); //start watchdog timer
 	//comment out for debugging (debugger is supposed to disable wdt automatically but it doesn't always)
 
 	//Start of main loop
@@ -68,10 +64,6 @@ int main (void)
 		//clear wdt value
 		wdt_clear();
 		//if code gets hung up wdt won't clear and a reset will occur
-		
-		message.id = 99;
-		message.length = 1;
-		handle = can_send_message(&message);
 		
 		
 		error_msg |= FC_check_alarms(fc_state);
@@ -119,13 +111,6 @@ int main (void)
 		
 		usart_data_display(fc_state,error_msg);
 		usart_data_logging(fc_state,error_msg);
-		
-		x = check_if_message_sent(0);
-		
-		if (millis() - time7 > 1000)
-		{
-			gpio_set_gpio_pin(RES_RELAY);
-			time7 = millis();
-		}		
+			
 	}
 }

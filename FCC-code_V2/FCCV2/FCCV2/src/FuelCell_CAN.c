@@ -9,21 +9,22 @@
 #include "conf_can.h"
 #include "FuelCell_CAN.h"
 
-/* Local allocation for MOB buffer in HSB_RAM */
-#if defined (__GNUC__) && defined (__AVR32__)
-volatile can_msg_t mob_ram_ch1[NB_MOB_CHANNEL] __attribute__ ((section (".hsb_ram_loc")));
-#elif defined (__ICCAVR32__)
-volatile __no_init can_msg_t mob_ram_ch1[NB_MOB_CHANNEL] @0xA0000000;
-#endif
+typedef struct  
+{
+	U32                   : 1;
+	U32   rtr_bit         : 1;
+	U32   ide_bit         : 1;
+	U32   id_bit          : 29;
+	U32                   : 1;
+	U32   rtr_mask_bit    : 1;
+	U32   ide_mask_bit    : 1;
+	U32   id_mask_bit     : 29;
+	Union64 data;
+} my_mob_struct;
 
-/* Allocate one mob for TX */
-can_mob_t fc_tx_mob;
-//make a message object
-can_msg_t fc_tx_msg;
+//allocate an mob
 
-
-/** Define the number of message received on CAN Channel 0 */
-volatile U8 nb_message_received_on_channel1 = 0;
+my_mob_struct my_mob;
 
 
 /* Call Back called by can_drv */
@@ -37,6 +38,8 @@ void can_out_callback_channel1(U8 handle, U8 event)
 	}
 } //i don't want interrupts but this needs to be defined
 
+
+unsigned int x;
 
 void CANInit(void)
 {
@@ -76,63 +79,34 @@ void CANInit(void)
 	gpio_enable_module(CAN_GPIO_MAP,
 	sizeof(CAN_GPIO_MAP) / sizeof(CAN_GPIO_MAP[0]));
 
+	//set timing bits
+	CANIF_set_phs1(1,BAUDRATE_PHS1);
+	CANIF_set_phs2(1,BAUDRATE_PHS2);
+	CANIF_set_pres(1,BAUDRATE_PRES);
+	CANIF_set_prs(1,BAUDRATE_PRS);
+	CANIF_set_sjw(1,BAUDRATE_SJW);
+
+	//set mode
+	CANIF_set_channel_mode(1,CANIF_CHANNEL_MODE_NORMAL);
+
+	//reset
+	CANIF_set_reset(1);
+	while(CANIF_channel_enable_status(1));
+	CANIF_clr_reset(1);
+
+	//set ram pointer to mob
+	CANIF_set_ram_add(1,(unsigned long) &my_mob);
 	
-	/* Disable all interrupts. */
-	Disable_global_interrupt();
-
-	/* Initialize interrupt vectors. */
-	INTC_init_interrupts();
-
-	/* Initialize channel 1 */
-	can_init(1, ((uint32_t)&mob_ram_ch1[0]),CANIF_CHANNEL_MODE_NORMAL,can_out_callback_channel1);
-
-	/* Enable all interrupts. */
-	Enable_global_interrupt();
+	//clear those mobs (i don;t know why)
+	canif_clear_all_mob(1,1);
+	
+	//enable channel 1
+	CANIF_enable(1);	
+	
+	//wait for CAN to enable	
+	delay_ms(10);  //is it enabling?
+	
+	x = CANIF_channel_enable_status(1);
+	x = CANIF_channel_enable_status(1);
 }
 
-U8 can_send_message(CanMessage * p_message)
-{
-	
-	fc_tx_mob.handle = can_mob_alloc(1); //get handle of a free mob
-	
-	fc_tx_msg.id = p_message->id;
-	
-	fc_tx_msg.data = p_message->data;
-
-	/* Check return if no mob are available */
-	//16 mobs should not be full
-	if (fc_tx_mob.handle==CAN_CMD_REFUSED) 
-	{
-		while(1);
-	}
-	
-	fc_tx_mob.dlc = p_message->length;
-	fc_tx_mob.req_type = p_message->RTransR;
-	fc_tx_mob.can_msg = &fc_tx_msg;
-	
-	can_tx(1, fc_tx_mob.handle, fc_tx_mob.dlc, fc_tx_mob.req_type,fc_tx_mob.can_msg);
-	return(fc_tx_mob.handle);  //return the handle of the mob used so that it can be freed later
-}
-
-U8 check_if_message_sent(U8 handle)
-{
-	U8 status = can_mob_get_status(1,handle);
-	if (status == CAN_STATUS_COMPLETED) //message has sent
-	{
-		//clear mob status
-		can_clear_status(1,handle);
-		//free mob
-		can_mob_free(1,handle);
-		return(0);
-	}
-	else if (status == CAN_STATUS_NOT_COMPLETED)
-	{
-		//message hasn't sent yet but everything is fine
-		return(2);
-	}
-	else //CAN_STATUS_ERROR
-	{
-		//do something to report error
-		return(1);
-	}
-}
