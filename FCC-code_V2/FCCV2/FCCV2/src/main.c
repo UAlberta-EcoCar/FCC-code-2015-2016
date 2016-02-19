@@ -1,16 +1,8 @@
 /*
- * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a> //this site is useless
- *
-*/
-
-/*
 to do list:
-wire everything up
+
 pressure readings
 temp conversion
-can bus
-	data logging
-	active fuel cell control
 get PID values
 test fan pid control code
 Fix startup_fans state
@@ -19,7 +11,6 @@ Fix startup_fans state
 
 //change this file depending on whether you are using the test bench or not
 #include "FuelCell_mode_Select.h"
-
 #include "asf.h"
 #include "FuelCell_ADC.h"
 #include "FuelCell_Functions.h"
@@ -27,12 +18,13 @@ Fix startup_fans state
 #include "digital_IO_defs.h"
 #include "FC_error_codes.h"
 #include "FuelCell_USART.h"
-#include "FuelCell_CAN.h"
+//#include "FuelCell_CAN.h"
 #include "pid.h"
 #include "millis_function.h"
 #include "FuelCell_check_alarms.h"
 #include "wdt_scheduler.h"
 #include "FuelCell_DataLogging.h"
+
 
 unsigned int error_msg;
 unsigned int fc_state = FC_STATE_STANDBY;
@@ -57,7 +49,7 @@ int main (void)
 	//Start of main loop
 	while(1)
 	{
-		//read analog inputs everytime the main loop runs
+		//read analog inputs every time the main loop runs
 		StartADC_Sequencers(); //start another conversion
 		ReadADC_Sequencers(); //read conversion
 		
@@ -109,8 +101,8 @@ int main (void)
 			break;
 		}	
 		
-		usart_data_display(fc_state,error_msg);
-		usart_data_logging(fc_state,error_msg);
-			
+		//usart_data_display(fc_state,error_msg);
+		//usart_data_logging(fc_state,error_msg);
+		usart_can_bridge(fc_state, error_msg);
 	}
 }

@@ -278,7 +278,7 @@ unsigned int FC_startup_charge(void)
 	if(millis() - fan_update_timer > FANUPDATE_INTERVAL)
 	{
 		//pid fan control for temp regulation
-		FANUpdate(PID( ((get_FCTEMP1()+get_FCTEMP2())/2) , ((53*get_FCCURR()) / 100 + 299160)));
+		FANUpdate(PID( get_FCTEMP() , ((53*get_FCCURR()) / 100 + 299160)));
 		fan_update_timer = millis();
 	}
 	
@@ -362,7 +362,7 @@ unsigned int FC_run(void)
 	if(millis() - fan_update_timer > FANUPDATE_INTERVAL)
 	{
 		//pid fan control for temp regulation
-		FANUpdate(PID(((get_FCTEMP1()+get_FCTEMP2())/2) , calc_opt_temp()));
+		FANUpdate(PID(get_FCTEMP() , calc_opt_temp()));
 		fan_update_timer = millis();
 	}
 	

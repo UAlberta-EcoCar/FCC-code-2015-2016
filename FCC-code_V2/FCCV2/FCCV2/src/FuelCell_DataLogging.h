@@ -11,11 +11,14 @@
 
 #define USART_DATA_DISPLAY_INTERVAL 1000
 #define USART_DATA_LOG_INTERVAL 100
+#define USART_BRIDGE_INTERVAL 100
 
 void usart_data_display(unsigned int fc_state, unsigned int error_msg);
 
 void usart_data_log_start(unsigned int fc_state, unsigned int error_msg);
 void usart_data_logging(unsigned int fc_state, unsigned int error_msg);
 
+#define USART_BRIDGE LOG_USART
+void usart_can_bridge(unsigned int fc_state, unsigned int error_msg);
 
 #endif /* FUELCELL_DATALOGGING_H_ */

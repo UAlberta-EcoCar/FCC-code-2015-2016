@@ -78,9 +78,7 @@ void usart_data_display(unsigned int fc_state, unsigned int error_msg)
 		break;
 		
 		case 2:
-		sprintf(str,"FCTEMP1 %d\n\r",get_FCTEMP1());
-		usart_write_line(DISPLAY_USART,str);
-		sprintf(str,"FCTEMP2 %d\n\r",get_FCTEMP2());
+		sprintf(str,"FCTEMP %d\n\r",get_FCTEMP());
 		usart_write_line(DISPLAY_USART,str);
 		sprintf(str,"FANSpeed %d\n\r",get_FANSpeed());
 		usart_write_line(DISPLAY_USART,str);
@@ -145,7 +143,7 @@ void usart_data_logging(unsigned int fc_state, unsigned int error_msg)
 		usart_write_line(LOG_USART,str);
 		sprintf(str,"%llu,%llu,%d,%d,%d,",get_coulumbs_since_last_purge(),get_total_charge_extracted(),get_FCVOLT(),get_FCCURR(),get_CAPVOLT());
 		usart_write_line(LOG_USART,str);
-		sprintf(str,"%d,%d,%d,%d,",get_FCTEMP1(),get_FCTEMP2(),calc_opt_temp(),get_FCPRES());
+		sprintf(str,"%d,%d,%d,",get_FCTEMP(),calc_opt_temp(),get_FCPRES());
 		usart_write_line(LOG_USART,str);
 		sprintf(str,"%d,%d,%d,%d,",gpio_get_gpio_pin_output_value(START_RELAY),gpio_get_gpio_pin_output_value(RES_RELAY),gpio_get_gpio_pin_output_value(CAP_RELAY),gpio_get_gpio_pin_output_value(MOTOR_RELAY));
 		usart_write_line(LOG_USART,str);
@@ -155,6 +153,25 @@ void usart_data_logging(unsigned int fc_state, unsigned int error_msg)
 	}
 }
 
-
+unsigned int usart_bridge_timer;
+void usart_can_bridge(unsigned int fc_state, unsigned int error_msg)
+{
+	if(millis()-usart_bridge_timer > USART_BRIDGE_INTERVAL)
+	{
+		sprintf(str,"%d,%d,%d,%d,%llu,",error_msg,fc_state,get_number_of_purges(),get_time_between_last_purges(),get_J_since_last_purge());
+		usart_write_line(USART_BRIDGE,str);
+		
+		sprintf(str,"%llu,%llu,%llu,%d,%d,",get_total_E(),get_coulumbs_since_last_purge(),get_total_charge_extracted(),get_FCVOLT(),get_FCCURR());
+		usart_write_line(USART_BRIDGE,str);
+		
+		sprintf(str,"%d,%d,%d,%d,%d,",get_FCTEMP(),get_FCPRES(),get_CAPVOLT(),get_FANSpeed(),gpio_get_gpio_pin_output_value(START_RELAY));
+		usart_write_line(USART_BRIDGE,str);
+		
+		sprintf(str,"%d,%d,%d,%d,%d\n",gpio_get_gpio_pin_output_value(RES_RELAY),gpio_get_gpio_pin_output_value(CAP_RELAY),gpio_get_gpio_pin_output_value(MOTOR_RELAY),gpio_get_gpio_pin_output_value(PURGE_VALVE),gpio_get_gpio_pin_output_value(H2_VALVE));
+		usart_write_line(USART_BRIDGE,str);
+		
+		usart_bridge_timer = millis();
+	}	
+}
 
 

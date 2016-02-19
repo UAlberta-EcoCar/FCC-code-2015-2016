@@ -37,11 +37,11 @@ unsigned int FC_check_alarms(unsigned int fc_state)
 		error_msg |= FC_ERR_H2OK_LOW;
 	}
 	//check temp H L and pressure H always
-	if((get_FCTEMP1() > HIGH_TEMP_THRES) | (get_FCTEMP2() > HIGH_TEMP_THRES))
+	if(get_FCTEMP() > HIGH_TEMP_THRES)
 	{
 		error_msg |= FC_ERR_TEMP_H;
 	}
-	if((get_FCTEMP1() < LOW_TEMP_THRES) | (get_FCTEMP2() < LOW_TEMP_THRES))
+	if(get_FCTEMP() < LOW_TEMP_THRES)
 	{
 		error_msg |= FC_ERR_TEMP_L;
 	}

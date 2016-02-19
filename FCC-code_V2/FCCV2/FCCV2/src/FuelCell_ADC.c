@@ -51,13 +51,9 @@ int convert_temp(int temp_reading)
 		temp_reading = TEMPCoefficient * temp_reading + TEMPConst;
 		return(temp_reading);
 }
-int get_FCTEMP1(void)
+int get_FCTEMP(void)
 {
-	return(convert_temp(FCTEMP1Reading));
-}
-int get_FCTEMP2(void)
-{
-	return(convert_temp(FCTEMP2Reading));
+	return(convert_temp((FCTEMP1Reading + FCTEMP2Reading)/2));
 }
 //one (or more) of these pressure conversions is wrong
 int get_TANKPRES(void)

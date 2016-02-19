@@ -55,5 +55,5 @@ void board_init(void)
 	//setup usart
 	USARTInit();
 	
-	CANInit();
+//	CANInit();
 }

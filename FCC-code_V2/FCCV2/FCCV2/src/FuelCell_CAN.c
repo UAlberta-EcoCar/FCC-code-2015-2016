@@ -39,8 +39,6 @@ void can_out_callback_channel1(U8 handle, U8 event)
 } //i don't want interrupts but this needs to be defined
 
 
-unsigned int x;
-
 void CANInit(void)
 {
 	//start PLL1 for can bus to run off of
@@ -106,7 +104,5 @@ void CANInit(void)
 	//wait for CAN to enable	
 	delay_ms(10);  //is it enabling?
 	
-	x = CANIF_channel_enable_status(1);
-	x = CANIF_channel_enable_status(1);
 }
 

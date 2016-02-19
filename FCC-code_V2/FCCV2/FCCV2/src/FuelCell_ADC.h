@@ -16,8 +16,7 @@ void StartADC_Sequencers(void);
 void ReadADC_Sequencers(void);
 
 int convert_temp(int temp_reading);
-int get_FCTEMP1(void);
-int get_FCTEMP2(void);
+int get_FCTEMP(void);
 int get_TANKPRES(void);
 
 int get_FCPRES(void);
