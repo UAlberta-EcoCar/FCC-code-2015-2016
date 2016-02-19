@@ -25,6 +25,8 @@ int wdt_scheduler(void)
 	if(AVR32_PM.RCAUSE.por)
 	{
 		wdt_enable(&opt);
+		//set power bad alarm
+		error_msg |= FC_ERR_PWR_BAD;
 	}	
 	//if last reset was wdt reset reenable wdt and toggle LED3 to notify
 	else if(AVR32_PM.RCAUSE.wdt)
@@ -37,6 +39,7 @@ int wdt_scheduler(void)
 	else if(AVR32_PM.RCAUSE.ext)
 	{
 		wdt_enable(&opt);
+		//no error. good to go
 	}
 	else if(AVR32_PM.RCAUSE.bod | AVR32_PM.RCAUSE.bod33)
 	{

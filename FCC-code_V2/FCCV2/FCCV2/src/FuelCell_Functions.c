@@ -433,6 +433,7 @@ unsigned int FC_run(void)
 unsigned int FC_shutdown(void)
 {
 	unsigned int fc_state;
+	gpio_clr_gpio_pin(LED_START);
 	gpio_clr_gpio_pin(LED_RUN);
 	gpio_set_gpio_pin(LED_STOP);
 	//close valves
