@@ -429,7 +429,7 @@ unsigned int FC_run(void)
 	return(fc_state);
 }
 
-
+//need to look for proper shutdown procedure
 unsigned int FC_shutdown(void)
 {
 	unsigned int fc_state;

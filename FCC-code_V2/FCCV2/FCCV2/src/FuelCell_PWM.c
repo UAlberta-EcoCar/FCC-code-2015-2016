@@ -181,7 +181,7 @@ int pwm_update_duty_cycle(unsigned int channel_id, const avr32_pwm_channel_t *pw
 }
 
 unsigned int FANSpeed;
-int FANUpdate(unsigned int duty_cycle)
+int FANUpdate(int duty_cycle)
 {
 	if(duty_cycle < 1)
 	{

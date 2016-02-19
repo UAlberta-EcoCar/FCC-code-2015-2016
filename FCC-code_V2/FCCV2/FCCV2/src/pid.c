@@ -38,7 +38,7 @@ unsigned int PID(int currentTemp, int setPoint) {
   setPoint = ((p_value + i_value + d_value) / 10); //scale value down
   
   //precaution against possible negative numbers
-  if(setPoint > 0)
+  if(setPoint < 0)
   {
 	  setPoint = 0;
   }
