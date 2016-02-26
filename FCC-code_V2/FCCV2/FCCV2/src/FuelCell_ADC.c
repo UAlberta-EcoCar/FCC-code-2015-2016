@@ -67,26 +67,12 @@ int get_FCPRES(void)
 /*not used
 int get_CAPCURR(void)
 {
-	//from ACS756 datasheet
-	//is this the X50 or X100?
-	//if its X50:
-	//Vout = 2500mV + 40mV/A * I
-	//I = (Vout - 2500mV)/40mV
-	//because of 31.6k 47k voltage dividers / 12 bit reading
-	//Vout = CAPCURRReading * 3000/(2^11 - 1) * (31.6 + 47) / 47 mV
 	return(((CAPCURRReading * (316 + 470) / 470 * 3000 / (2048 - 1) - 2500) * 1000 / 40));
 }
 */
 int FCCURR_intercept = 0;
 int get_FCCURR(void)
 {
-	//from ACS756 datasheet
-	//is this the X50 or X100?
-	//if its X50:
-	//Vout = 2500mV + 40mV/A * I
-	//I = (Vout - 2500mV)/40mV
-	//because of 31.6k 47k voltage dividers / 12 bit reading
-	//Vout = adcreading * 3000/(2^11 - 1) * (31.6 + 47) / 47 mV
 	int val = FCCURRReading * FCCURRCoefficient - FCCURR_intercept;
 	if(val < 0) //filter out negative numbers b/c they mess with the current integration algorithym
 	{
