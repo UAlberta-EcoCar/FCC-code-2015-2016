@@ -43,6 +43,8 @@ U64 get_total_E(void);
 U64 get_J_since_last_purge(void);
 
 int calc_opt_temp(void);
+int calc_min_temp(void);
+int calc_max_temp(void);
 
 //state functions
 unsigned int FC_standby(void);

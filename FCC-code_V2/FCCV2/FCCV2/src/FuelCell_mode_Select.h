@@ -9,7 +9,7 @@
 #ifndef FUELCELL_MODE_SELECT_H_
 #define FUELCELL_MODE_SELECT_H_
 
-#define FAKE_INPUT_MODE //FCC just powered alone no power board
+#define TEST_BENCH_MODE //FCC just powered alone no power board
 //#define IN_CAR_MODE //FCC will expect a signal from power board
 //#define FAKE_INPUT_MODE //All conversions adjusted for 0-10V input range
 

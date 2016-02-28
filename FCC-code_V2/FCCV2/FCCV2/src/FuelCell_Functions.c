@@ -348,9 +348,21 @@ unsigned int FC_startup_charge(void)
 	return(fc_state);
 }
 
+//optimum temp changes with current draw
 int calc_opt_temp(void)
 {
 	return((53*get_FCCURR()) / 100 + 299160);
+}
+//minimum current changes with current draw
+int calc_min_temp(void)
+{
+	//this is a very rought aproximation
+	return((53*get_FCCURR()) / 100 + 279248);
+}
+//maximum current changes with current draw
+int calc_max_temp(void)
+{
+	return((355*get_FCCURR())/1000 + 325150);
 }
 
 unsigned int fan_update_timer;

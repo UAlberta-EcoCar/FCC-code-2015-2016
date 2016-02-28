@@ -26,8 +26,8 @@
 
 
 #ifdef IN_CAR_MODE
-#define FCCURRCoefficient ((316 + 470) / 470 * 3000 / (2048 - 1) / 16) //16 mV per Amp
-#define CAPCURRCoefficient ((316 + 470) / 470 * 3000 / (2048 - 1) / 16) //16 mV per Amp
+#define FCCURRCoefficient ((316 + 470) / 470 * 3000 / (2048 - 1) * 10 / 132) //13.2 mV per Amp
+#define CAPCURRCoefficient ((316 + 470) / 470 * 3000 / (2048 - 1) * 10 / 132) //13.2 mV per Amp
 #define CAPVOLTCoefficient (3000 * 50 / 3 / (2048-1))
 #define FCVOLTCoefficient (3000 * 50 / 3 / (2048-1))
 #define FCPRESCoefficient (3000 / (2048-1) * (470+316) / 470) * 9578) //P = (v - 2.47119999) / 0.1044
@@ -40,8 +40,8 @@
 
 
 #ifdef TEST_BENCH_MODE
-#define FCCURRCoefficient ((316 + 470) / 470 * 3000 / (2048 - 1) / 16) //16mV per Amp
-#define CAPCURRCoefficient ((316 + 470) / 470 * 3000 / (2048 - 1) / 16)
+#define FCCURRCoefficient ((316 + 470) / 470 * 3000 / (2048 - 1) * 10 / 132) //13.2mV per Amp
+#define CAPCURRCoefficient ((316 + 470) / 470 * 3000 / (2048 - 1) * 10 / 132) //13.2 mV per Amp
 #define CAPVOLTCoefficient (3000 * 50 / 3 / (2048-1))
 #define FCVOLTCoefficient (3000 * 50 / 3 / (2048-1))
 #define FCPRESCoefficient (3000 / (2048-1) * (470+316) / 470 * 9578)
