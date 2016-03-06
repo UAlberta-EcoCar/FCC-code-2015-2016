@@ -480,7 +480,7 @@ unsigned int FC_alarm(void)
 	//close relays
 	gpio_clr_gpio_pin(MOTOR_RELAY);
 	gpio_clr_gpio_pin(START_RELAY);
-	
+	FANUpdate(1024);
 	fc_state = FC_STATE_ALARM;
 	//manual reset required to exit alarm state
 	return(fc_state);

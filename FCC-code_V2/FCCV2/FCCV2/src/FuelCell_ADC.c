@@ -74,6 +74,7 @@ int FCCURR_intercept = 0;
 int get_FCCURR(void)
 {
 	int val = FCCURRReading * FCCURRCoefficient - FCCURR_intercept;
+	val = val *(-1); //I have sensor connected backwards 
 	if(val < 0) //filter out negative numbers b/c they mess with the current integration algorithym
 	{
 		return(0);
