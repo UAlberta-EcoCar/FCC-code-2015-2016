@@ -13,6 +13,7 @@
 
 #ifdef FAKE_INPUT_MODE
 #define FCCURRCoefficient ((316 + 470) / 470 * 3000 / (2048 - 1) * 1000 / 40) //+-5V from zero point ~= +-125A
+#define FCCURRConst 0
 #define CAPCURRCoefficient ((316 + 470) / 470 * 3000 / (2048 - 1) * 1000 / 40)
 #define CAPVOLTCoefficient (3000 * 50 / 3 / (2048-1) * 12) //FCC will think 5V is 60 Volts
 #define FCVOLTCoefficient (3000 * 50 / 3 / (2048-1) * 12) //FCC will think 5V is 60 Volts
@@ -40,9 +41,10 @@
 
 
 #ifdef TEST_BENCH_MODE
-#define FCCURRCoefficient ((316 + 470) / 470 * 3000 / (2048 - 1) * 10 / 132) //13.2mV per Amp
+#define FCCURRCoefficient (161) //13.2mV per Amp
+#define FCCURRConst (110068)
 #define CAPCURRCoefficient ((316 + 470) / 470 * 3000 / (2048 - 1) * 10 / 132) //13.2 mV per Amp
-#define CAPVOLTCoefficient (3000 * 50 / 3 / (2048-1))
+#define CAPVOLTCoefficient ((3000 * 50 / 3) / (2048-1))
 #define FCVOLTCoefficient (3000 * 50 / 3 / (2048-1))
 #define FCPRESCoefficient (3000 / (2048-1) * (470+316) / 470 * 958 / 100)
 #define FCPRESConst 23670 //P = (v - 2.47119999) / 0.1044

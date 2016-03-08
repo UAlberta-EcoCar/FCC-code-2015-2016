@@ -14,6 +14,16 @@
 int16_t adcvals_0[7];
 int16_t adcvals_1[6];
 
+int16_t readvals_0a[7];
+int16_t readvals_0b[7];
+int16_t readvals_0c[7];
+int16_t readvals_0d[7];
+
+int16_t readvals_1a[6];
+int16_t readvals_1b[6];
+int16_t readvals_1c[6];
+int16_t readvals_1d[6];
+
 void ADCInit(void)
 {	
 	//Set ADC pins to ADC Function
@@ -37,9 +47,60 @@ void StartADC_Sequencers(void)
 	adcifa_start_sequencer(&AVR32_ADCIFA, 1);
 }
 
+uint8_t readstagger = 0;
 void ReadADC_Sequencers(void)
 {
 	while((adcifa_get_values_from_sequencer(&AVR32_ADCIFA,0,&adcifa_sequence_opt,adcvals_0)!=ADCIFA_STATUS_COMPLETED)|(adcifa_get_values_from_sequencer(&AVR32_ADCIFA,1,&adcifa_sequence_opt,adcvals_1)!=ADCIFA_STATUS_COMPLETED));
+	switch(readstagger)
+	{
+		case 0:
+		for(int x = 1;x <= 7;x++)
+		{
+			readvals_0a[x] = adcvals_0[x];	
+		}
+		for(int x = 1;x <= 6;x++)
+		{
+			readvals_1a[x] = adcvals_1[x];	
+		}
+		readstagger = 1;
+		break;
+		
+		case 1:
+		for(int x = 1;x <= 7;x++)
+		{
+			readvals_0b[x] = adcvals_0[x];	
+		}
+		for(int x = 1;x <= 6;x++)
+		{
+			readvals_1b[x] = adcvals_1[x];	
+		}
+		readstagger = 2;
+		break;
+		
+		case 2:
+		for(int x = 1;x <= 7;x++)
+		{
+			readvals_0c[x] = adcvals_0[x];	
+		}
+		for(int x = 1;x <= 6;x++)
+		{
+			readvals_1c[x] = adcvals_1[x];	
+		}
+		readstagger = 3;
+		break;
+		
+		case 3:
+		for(int x = 1;x <= 7;x++)
+		{
+			readvals_0d[x] = adcvals_0[x];	
+		}
+		for(int x = 1;x <= 6;x++)
+		{
+			readvals_1d[x] = adcvals_1[x];	
+		}
+		readstagger = 0;
+		break;
+	}
 }
 
 
@@ -70,14 +131,15 @@ int get_CAPCURR(void)
 	return(((CAPCURRReading * (316 + 470) / 470 * 3000 / (2048 - 1) - 2500) * 1000 / 40));
 }
 */
-int FCCURR_intercept = 0;
+
+int FCCURR_intercept = FCCURRConst;
 int get_FCCURR(void)
 {
 	int val = FCCURRReading * FCCURRCoefficient - FCCURR_intercept;
-	val = val *(-1); //I have sensor connected backwards 
-	if(val < 0) //filter out negative numbers b/c they mess with the current integration algorithym
+	//val = val *(-1); //I have sensor connected backwards 
+	if(val < 0) //filter out negative numbers b/c they mess with the current integration algorithm
 	{
-		return(0);
+		return(val);
 	}
 	else
 	{

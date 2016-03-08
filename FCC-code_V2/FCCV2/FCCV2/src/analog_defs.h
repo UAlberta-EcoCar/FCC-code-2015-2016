@@ -139,8 +139,8 @@ adcifa_sequencer_conversion_opt_t adcifa_sequence_conversion_option_1[6] =
 
 //these are based off of the sequencer order in analog_defs.h
 #define MFLOWReading adcvals_0[0] //sequencer 0 adcin8
-#define FCTEMP1Reading adcvals_0[1] //seq 0 adcin9
-#define FCTEMP2Reading adcvals_0[2] //seq 0 adcin10
+#define FCTEMP1Reading ((readvals_0a[1] + readvals_0b[1] + readvals_0c[1]+ readvals_0d[1])/4) //seq 0 adcin9
+#define FCTEMP2Reading ((readvals_0a[2] + readvals_0b[2] + readvals_0c[2]+ readvals_0d[2])/4) //seq 0 adcin10
 //ambtemp not used atm
 #define AMBTEMP1Reading adcvals_0[3] //seq 0 adcin11
 #define AMBTEMP2Reading adcvals_0[4] //seq 0 adcin12
@@ -152,7 +152,7 @@ adcifa_sequencer_conversion_opt_t adcifa_sequence_conversion_option_1[6] =
 #define TANKPRESReading adcvals_1[0] //seq 1 adcin1
 #define FCPRESReading adcvals_1[1] //seq 1 adcin3
 #define CAPCURRReading adcvals_1[2] //seq 1 adcin4
-#define FCCURRReading adcvals_1[3]
+#define FCCURRReading ((readvals_1a[3] + readvals_1b[3] + readvals_1c[3]+ readvals_1d[3])/4)
 #define CAPVOLTReading adcvals_1[4]
 #define FCVOLTReading adcvals_1[5]
 

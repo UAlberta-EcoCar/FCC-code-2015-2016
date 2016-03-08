@@ -40,7 +40,7 @@ int main (void)
 	StartADC_Sequencers(); //start ADC conversion
 	ReadADC_Sequencers(); //read conversion results	
 	//zero_CAPVOLT(); Not a good idea if caps have left over voltage
-	zero_FCCURR(); 
+	//zero_FCCURR(); 
 	//zero_FCVOLT(); Not a good idea either
 	
 	error_msg |= wdt_scheduler(); //start watchdog timer
