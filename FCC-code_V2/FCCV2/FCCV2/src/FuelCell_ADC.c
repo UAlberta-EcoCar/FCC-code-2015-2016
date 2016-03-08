@@ -139,7 +139,7 @@ int get_FCCURR(void)
 	//val = val *(-1); //I have sensor connected backwards 
 	if(val < 0) //filter out negative numbers b/c they mess with the current integration algorithm
 	{
-		return(val);
+		return(0);
 	}
 	else
 	{

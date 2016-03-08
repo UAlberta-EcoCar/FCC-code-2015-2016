@@ -89,6 +89,10 @@ unsigned int FC_check_alarms(unsigned int fc_state)
 		{
 			error_msg |= FC_ERR_OVER_VOLT;
 		}
+		if(get_FCCURR() < UNDER_CUR_THRES)
+		{
+			error_msg |= FC_ERR_UND_CUR;
+		}
 		break;
 		
 		case FC_STATE_STARTUP_CHARGE:
@@ -108,6 +112,11 @@ unsigned int FC_check_alarms(unsigned int fc_state)
 		{
 			error_msg |= FC_ERR_OVER_CUR;
 		}
+		if(get_FCCURR() < UNDER_CUR_THRES)
+		{
+			
+			error_msg |= FC_ERR_UND_CUR;
+		}
 		if(get_FCVOLT() > OVER_VOLT_THRES)
 		{
 			error_msg |= FC_ERR_OVER_VOLT;
@@ -118,10 +127,6 @@ unsigned int FC_check_alarms(unsigned int fc_state)
 		if(get_FCPRES() < FC_LOW_PRES_THRES)
 		{
 			error_msg |= FC_ERR_PRES_L;
-		}
-		if(get_FCCURR() < UNDER_CUR_THRES)
-		{
-			error_msg |= FC_ERR_UND_CUR;
 		}
 		if(get_FCCURR() > OVER_CUR_THRES)
 		{
