@@ -154,7 +154,7 @@ adcifa_sequencer_conversion_opt_t adcifa_sequence_conversion_option_1[6] =
 #define CAPCURRReading adcvals_1[2] //seq 1 adcin4
 #define FCCURRReading ((readvals_1a[3] + readvals_1b[3] + readvals_1c[3]+ readvals_1d[3])/4)
 #define CAPVOLTReading adcvals_1[4]
-#define FCVOLTReading adcvals_1[5]
+#define FCVOLTReading ((readvals_1a[5] + readvals_1b[5] + readvals_1c[5]+ readvals_1d[5])/4)
 
 
 

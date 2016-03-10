@@ -312,6 +312,15 @@ unsigned int FC_startup_charge(void)
 		//turn off led1
 		gpio_clr_gpio_pin(LED1);
 		
+		//close cap relay
+		//another delay
+		if(gpio_get_gpio_pin_output_value(CAP_RELAY == 0)) //if cap relay is open
+		{
+			//close cap relay
+			gpio_set_gpio_pin(CAP_RELAY);
+			return(fc_state); //this state will exit and run again from start
+		}
+		
 		//open resistor relay
 		//delay how long?
 		//why not one state machine cycle?
@@ -322,14 +331,6 @@ unsigned int FC_startup_charge(void)
 			return(fc_state); //this state will exit and run again from start
 		}
 		
-		//close cap relay
-		//another delay
-		if(gpio_get_gpio_pin_output_value(CAP_RELAY == 0)) //if cap relay is open
-		{
-			//close cap relay
-			gpio_set_gpio_pin(CAP_RELAY);
-			return(fc_state); //this state will exit and run again from start
-		}
 		
 		//close motor relay
 		gpio_set_gpio_pin(MOTOR_RELAY);
