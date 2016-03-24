@@ -123,7 +123,7 @@ int get_TANKPRES(void)
 }
 int get_FCPRES(void)
 {
-	return(FCPRESReading * FCPRESCoefficient - FCPRESConst);
+	return((-1)*FCPRESReading * FCPRESCoefficient - FCPRESConst); //-1 but neg input
 }
 /*not used
 int get_CAPCURR(void)
@@ -132,10 +132,10 @@ int get_CAPCURR(void)
 }
 */
 
-int FCCURR_intercept = FCCURRConst;
+
 int get_FCCURR(void)
 {
-	int val = FCCURRReading * FCCURRCoefficient - FCCURR_intercept;
+	int val = FCCURRReading * FCCURRCoefficient - FCCURRConst;
 	//val = val *(-1); //I have sensor connected backwards 
 	if(val < 0) //filter out negative numbers b/c they mess with the current integration algorithm
 	{
@@ -146,41 +146,25 @@ int get_FCCURR(void)
 		return(val);
 	}
 }
-//zero current reading on startup
-void zero_FCCURR(void)
-{
-	FCCURR_intercept = get_FCCURR();
-}
 
-int CAPVOLT_intercept = 0;
 int get_CAPVOLT(void)
 {
-	return(CAPVOLTReading * CAPVOLTCoefficient - CAPVOLT_intercept);
+	return(CAPVOLTReading * CAPVOLTCoefficient);
 	//47k and 3k voltage divider
 	//3V reference
 	//CAPVOLT = ADCreading * 3000mV/(2^11-1) * (47 + 3) / 3
 	//should result in a voltage in mV
 }
 
-void zero_CAPVOLT(void)
-{
-	CAPVOLT_intercept = get_CAPVOLT();
-}
-
-int FCVOLT_intercept = 0;
 int get_FCVOLT(void)
 {
-	return((FCVOLTReading) * FCVOLTCoefficient - FCVOLT_intercept);
+	return((FCVOLTReading) * FCVOLTCoefficient);
 	//47k and 3k voltage divider
 	//3V reference
 	//FCVolt = ADCreading * 3000mV/(2^11-1) * (47 + 3) / 3
 	//should result in a voltage in mV
 }
 
-void zero_FCVOLT(void)
-{
-	FCVOLT_intercept = get_FCVOLT();
-}
 /*
 int get_AMBTEMP0(void)
 {

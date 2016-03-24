@@ -46,7 +46,7 @@ static const gpio_map_t ADCIFA_GPIO_MAP = {
 
 //ADC settings
 adcifa_opt_t adcifa_opt = {
-	.frequency                = 500000,  // ADC frequency (Hz) //worked at 10000 and 250000
+	.frequency                = 250000,  // ADC frequency (Hz) //worked at 10000 and 250000, 500000
 	.reference_source         = ADCIFA_REF06VDD, // Reference Source 0.6*5V = 3V
 	.sample_and_hold_disable  = 0,    // Disable Sample and Hold Time
 	.single_sequencer_mode    = 0,    // Single Sequencer Mode

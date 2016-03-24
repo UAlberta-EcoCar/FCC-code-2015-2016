@@ -42,7 +42,7 @@
 
 #ifdef TEST_BENCH_MODE
 #define FCCURRCoefficient (161) //13.2mV per Amp
-#define FCCURRConst (110068)
+#define FCCURRConst (110068 + 500)
 #define CAPCURRCoefficient ((316 + 470) / 470 * 3000 / (2048 - 1) * 10 / 132) //13.2 mV per Amp
 #define CAPVOLTCoefficient ((3000 * 50 / 3) / (2048-1))
 #define FCVOLTCoefficient (3000 * 50 / 3 / (2048-1))

@@ -5,6 +5,8 @@
  *  Author: Reegan
  */ 
 
+/*non of this code works
+
 #include "asf.h"
 #include "conf_can.h"
 #include "FuelCell_CAN.h"
@@ -27,7 +29,7 @@ typedef struct
 my_mob_struct my_mob;
 
 
-/* Call Back called by can_drv */
+// Call Back called by can_drv 
 //I think this is what runs when there is an interrupt
 void can_out_callback_channel1(U8 handle, U8 event)
 {
@@ -52,20 +54,20 @@ void CANInit(void)
 		.pll_freq = 1,        // Set to 1 for VCO frequency range 80-180MHz, set to 0 for VCO frequency range 160-240Mhz. (VCO = 80 MHz in this case)
 	};
 	
-	/* Setup PLL0 on RC8M, mul=9 ,no divisor, lockcount=16, ie. (8Mhzx(PLLMUL+1)*2  = 128 MHz output see page 100 of datasheet */
+	// Setup PLL0 on RC8M, mul=9 ,no divisor, lockcount=16, ie. (8Mhzx(PLLMUL+1)*2  = 128 MHz output see page 100 of datasheet 
 	scif_pll_setup(SCIF_PLL0, &opt); // lockcount in main clock for the PLL wait lock
 
-	/* Enable PLL0 */
+	// Enable PLL0 
 	scif_pll_enable(SCIF_PLL0);
 
-	/* Wait for PLL0 locked */
+	// Wait for PLL0 locked 
 	scif_wait_for_pll_locked(SCIF_PLL0) ;
 
 	
-	/* Setup the generic clock for CAN */
+	// Setup the generic clock for CAN 
 	scif_gc_setup(AVR32_SCIF_GCLK_CANIF,SCIF_GCCTRL_OSC0,AVR32_SCIF_GC_DIV_CLOCK,2);
 	//128MHz / 2^(2+1) = 16MHz
-	/* Now enable the generic clock */
+	// Now enable the generic clock 
 	scif_gc_enable(AVR32_SCIF_GCLK_CANIF);
 
 	//set pins to CAN-BUS function
@@ -73,7 +75,7 @@ void CANInit(void)
 		{AVR32_CANIF_RXLINE_1_1_PIN, AVR32_CANIF_RXLINE_1_1_FUNCTION},
 		{AVR32_CANIF_TXLINE_1_1_PIN, AVR32_CANIF_TXLINE_1_1_FUNCTION}
 	};
-	/* Assign GPIO to CAN. */
+	// Assign GPIO to CAN. 
 	gpio_enable_module(CAN_GPIO_MAP,
 	sizeof(CAN_GPIO_MAP) / sizeof(CAN_GPIO_MAP[0]));
 
@@ -106,3 +108,4 @@ void CANInit(void)
 	
 }
 
+*/

@@ -127,7 +127,7 @@ unsigned int FC_startup_purge(void)
 	gpio_set_gpio_pin(START_RELAY);
 	//motor relay still open
 	gpio_clr_gpio_pin(MOTOR_RELAY);
-	//RES relay still open
+	//RES relay open
 	gpio_clr_gpio_pin(RES_RELAY);
 	//CAP relay still open
 	gpio_clr_gpio_pin(CAP_RELAY);
@@ -203,7 +203,7 @@ U64 get_total_E(void)
 
 unsigned int purge_integration_timer; //using for integrating time between purges 
 unsigned int delta_purge_time; //used for calculating integration interval
-U64 mAms_since_last_purge; //sum of coulumbs since last purge
+U64 mAms_since_last_purge; //sum of coulombs since last purge
 
 U64 get_coulumbs_since_last_purge(void)
 {
@@ -292,7 +292,7 @@ unsigned int FC_startup_charge(void)
 	}
 	
 	//charging capacitors through resistor to avoid temporary short circuit
-	if (get_CAPVOLT() < 40000) //if voltage is less than 40V
+	if (get_CAPVOLT() < 35000) //if voltage is less than 40V
 	{
 		//close resistor relay
 		gpio_set_gpio_pin(RES_RELAY);
@@ -312,18 +312,11 @@ unsigned int FC_startup_charge(void)
 		//turn off led1
 		gpio_clr_gpio_pin(LED1);
 		
-		//close cap relay
-		//another delay
-		if(gpio_get_gpio_pin_output_value(CAP_RELAY == 0)) //if cap relay is open
-		{
-			//close cap relay
-			gpio_set_gpio_pin(CAP_RELAY);
-			return(fc_state); //this state will exit and run again from start
-		}
+		//start relay still open
+		gpio_clr_gpio_pin(START_RELAY);
 		
 		//open resistor relay
-		//delay how long?
-		//why not one state machine cycle?
+		//delay
 		if(gpio_get_gpio_pin_output_value(RES_RELAY) == 1) //if res relay is closed
 		{
 			//open res relay
@@ -331,9 +324,17 @@ unsigned int FC_startup_charge(void)
 			return(fc_state); //this state will exit and run again from start
 		}
 		
+		//close cap relay
+		if(gpio_get_gpio_pin_output_value(CAP_RELAY == 0)) //if cap relay is open
+		{
+			//close cap relay
+			gpio_set_gpio_pin(CAP_RELAY);
+			return(fc_state); //this state will exit and run again from start
+		}
 		
 		//close motor relay
 		gpio_set_gpio_pin(MOTOR_RELAY);
+			
 		
 		//Supply valve still open
 		gpio_set_gpio_pin(H2_VALVE);
@@ -357,7 +358,7 @@ int calc_opt_temp(void)
 //minimum current changes with current draw
 int calc_min_temp(void)
 {
-	//this is a very rought aproximation
+	//this is a very rough approximation
 	return((53*get_FCCURR()) / 100 + 279248);
 }
 //maximum current changes with current draw
@@ -394,7 +395,7 @@ unsigned int FC_run(void)
 		//open purge valve
 		gpio_set_gpio_pin(PURGE_VALVE);
 		
-		purge_counter++; //incriment number of purges
+		purge_counter++; //increment number of purges
 				
 		//we restart counting mAms as soon as valve opens
 		//reset mAms sum
@@ -438,11 +439,15 @@ unsigned int FC_run(void)
 		total_charge_energy_integration_timer = millis();
 	}
 	
+	//start and res relays stay open
+	gpio_clr_gpio_pin(START_RELAY);
+	gpio_clr_gpio_pin(RES_RELAY);
+	
 	fc_state = FC_STATE_RUN;
 	return(fc_state);
 }
 
-//need to look for proper shutdown procedure
+
 unsigned int FC_shutdown(void)
 {
 	unsigned int fc_state;

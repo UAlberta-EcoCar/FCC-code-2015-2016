@@ -34,14 +34,10 @@ int main (void)
 {
 	board_init();
 	
-	//usart_data_log_start(fc_state,error_msg);
+	usart_data_log_start(fc_state,error_msg);
 	
-	//zero readings
 	StartADC_Sequencers(); //start ADC conversion
 	ReadADC_Sequencers(); //read conversion results	
-	//zero_CAPVOLT(); Not a good idea if caps have left over voltage
-	//zero_FCCURR(); 
-	//zero_FCVOLT(); Not a good idea either
 	
 	error_msg |= wdt_scheduler(); //start watchdog timer
 	//comment out for debugging (debugger is supposed to disable wdt automatically but it doesn't always)
@@ -102,7 +98,7 @@ int main (void)
 		}	
 		
 		usart_data_display(fc_state,error_msg);
-		//usart_data_logging(fc_state,error_msg);
-		usart_can_bridge(fc_state, error_msg);
+		usart_data_logging(fc_state,error_msg);
+		//usart_can_bridge(fc_state, error_msg);
 	}
 }
