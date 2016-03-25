@@ -263,7 +263,7 @@ unsigned int FC_startup_charge(void)
 	
 	if(purge_state == PURGE_VALVE_OPEN) //if purge valve is open
 	{
-		if(millis() - purge_timer > PURGE_TIME) //if it has completed purge //is there some way to use flow meter instead of a fixed time?
+		if(millis() - purge_timer > PURGE_TIME) //if it has completed purge 
 		{
 			//close purge valve
 			gpio_clr_gpio_pin(PURGE_VALVE);
@@ -304,7 +304,7 @@ unsigned int FC_startup_charge(void)
 		//H2_valve open
 		gpio_set_gpio_pin(H2_VALVE);
 		//purge valve still closed
-		gpio_clr_gpio_pin(PURGE_VALVE);
+		//gpio_clr_gpio_pin(PURGE_VALVE);
 		//fc_State still charge
 	}
 	else //caps are charged
@@ -325,7 +325,7 @@ unsigned int FC_startup_charge(void)
 		}
 		
 		//close cap relay
-		if(gpio_get_gpio_pin_output_value(CAP_RELAY == 0)) //if cap relay is open
+		if((gpio_get_gpio_pin_output_value(CAP_RELAY) == 0)|(gpio_get_gpio_pin_output_value(RES_RELAY) == 0)) //if cap relay is open
 		{
 			//close cap relay
 			gpio_set_gpio_pin(CAP_RELAY);
