@@ -325,7 +325,7 @@ unsigned int FC_startup_charge(void)
 		}
 		
 		//close cap relay
-		if((gpio_get_gpio_pin_output_value(CAP_RELAY) == 0)|(gpio_get_gpio_pin_output_value(RES_RELAY) == 0)) //if cap relay is open
+		if((gpio_get_gpio_pin_output_value(CAP_RELAY) == 0)|(gpio_get_gpio_pin_output_value(RES_RELAY) == 0)) //if cap relay is open and resistor relay is open
 		{
 			//close cap relay
 			gpio_set_gpio_pin(CAP_RELAY);
@@ -334,7 +334,6 @@ unsigned int FC_startup_charge(void)
 		
 		//close motor relay
 		gpio_set_gpio_pin(MOTOR_RELAY);
-			
 		
 		//Supply valve still open
 		gpio_set_gpio_pin(H2_VALVE);
