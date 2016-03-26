@@ -304,7 +304,7 @@ unsigned int FC_startup_charge(void)
 	}
 	
 	//charging capacitors through resistor to avoid temporary short circuit
-	if (get_CAPVOLT() < charge_thres) //if voltage is less than 40V
+	if (get_CAPVOLT() < charge_thres) //if voltage is less than 35V
 	{
 		//close resistor relay
 		gpio_set_gpio_pin(RES_RELAY);
