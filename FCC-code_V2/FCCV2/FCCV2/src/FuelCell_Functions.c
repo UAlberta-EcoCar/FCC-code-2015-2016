@@ -124,7 +124,10 @@ unsigned int FC_startup_purge(void)
 	//h2 valve still open
 	gpio_set_gpio_pin(H2_VALVE);
 	//close startup relay
-	gpio_set_gpio_pin(START_RELAY);
+	if((gpio_get_gpio_pin_output_value(RES_RELAY)|gpio_get_gpio_pin_output_value(CAP_RELAY))==0)
+		{
+			gpio_set_gpio_pin(START_RELAY);
+		}
 	//motor relay still open
 	gpio_clr_gpio_pin(MOTOR_RELAY);
 	//RES relay open
@@ -159,7 +162,7 @@ unsigned int FC_startup_purge(void)
 		gpio_clr_gpio_pin(START_RELAY);
 		//other relays still open
 		gpio_clr_gpio_pin(RES_RELAY);
-		gpio_clr_gpio_pin(START_RELAY);
+		gpio_clr_gpio_pin(MOTOR_RELAY);
 		gpio_clr_gpio_pin(CAP_RELAY);
 		
 		//go to charge state
@@ -175,7 +178,6 @@ unsigned int get_time_between_last_purges(void)
 {
 	return(time_between_last_purges);
 }
-
 
 unsigned int purge_counter = 0;
 unsigned int get_number_of_purges(void)
