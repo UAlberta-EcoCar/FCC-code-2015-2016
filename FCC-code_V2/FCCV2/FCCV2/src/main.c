@@ -42,6 +42,7 @@ int main (void)
 	error_msg |= wdt_scheduler(); //start watchdog timer
 	//comment out for debugging (debugger is supposed to disable wdt automatically but it doesn't always)
 
+	
 	//Start of main loop
 	while(1)
 	{

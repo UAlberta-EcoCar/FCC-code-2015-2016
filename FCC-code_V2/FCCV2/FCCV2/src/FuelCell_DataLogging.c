@@ -129,7 +129,7 @@ void usart_data_log_start(unsigned int fc_state, unsigned int error_msg)
 
 	usart_write_line(LOG_USART,"CHARGE,TOTAL_CHARGE,FCVOLT,FCCURR,CAPVOLT,");
 	
-	usart_write_line(LOG_USART,"FCTEMP1,FCTEMP2,OPT_TEMP,FCPRES,");
+	usart_write_line(LOG_USART,"FCTEMP1,OPT_TEMP,FCPRES,");
 	
 	usart_write_line(LOG_USART,"START_RELAY,RES_RELAY,CAP_RELAY,MOTOR_RELAY,");
 
