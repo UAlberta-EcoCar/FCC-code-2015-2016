@@ -15,7 +15,8 @@
 #include "pid.h"
 #include "millis_function.h"
 
-unsigned long delay_timer;
+unsigned long delay_timer1;
+unsigned long delay_timer2;
 
 unsigned int FC_standby(void)
 {
@@ -149,7 +150,6 @@ unsigned int FC_startup_purge(void)
 	if(millis() - purge_timer < 3000)
 	{
 		fc_state = FC_STATE_STARTUP_PURGE;
-		delay_timer = millis();
 	}
 	else //3 seconds are over
 	{
@@ -163,16 +163,12 @@ unsigned int FC_startup_purge(void)
 		//open start up relay
 		gpio_clr_gpio_pin(START_RELAY);
 		
-		//delay
-		if(millis() - delay_timer < 1000)
-		{
-			return(FC_STATE_STARTUP_PURGE);
-		}
-		
 		//other relays still open
 		gpio_clr_gpio_pin(RES_RELAY);
 		gpio_clr_gpio_pin(MOTOR_RELAY);
 		gpio_clr_gpio_pin(CAP_RELAY);
+		
+		delay_timer1 = millis(); //reset delay timer to have delay at start of charge
 		
 		//go to charge state
 		fc_state = FC_STATE_STARTUP_CHARGE;
@@ -228,7 +224,13 @@ unsigned int charge_thres = 35000;
 unsigned int FC_startup_charge(void)
 {
 	unsigned int fc_state = FC_STATE_STARTUP_CHARGE; //will keep charging until state exits
-
+	
+	if(millis() - delay_timer1 < 1000)
+	{
+		return(fc_state);
+	}
+	//this won't run until above timer times out
+	
 	if(purge_state == FIRST_PURGE_CYCLE)
 	{
 		purge_integration_timer = millis(); //start timing
@@ -318,7 +320,7 @@ unsigned int FC_startup_charge(void)
 		//purge valve still closed
 		//gpio_clr_gpio_pin(PURGE_VALVE);
 		//fc_State still charge
-		delay_timer = millis();
+		delay_timer2 = millis();
 	}
 	else //caps are charged
 	{
@@ -332,14 +334,14 @@ unsigned int FC_startup_charge(void)
 		//open resistor relay
 		gpio_clr_gpio_pin(RES_RELAY);
 		
-		if(millis() - delay_timer < 1000)
+		if(millis() - delay_timer2 < 2000)
 		{
 			return(fc_state);
 		}
 		
 		gpio_set_gpio_pin(CAP_RELAY);
 		
-		if(millis() - delay_timer < 2000)
+		if(millis() - delay_timer2 < 4000)
 		{
 			return(fc_state);
 		}
@@ -347,20 +349,20 @@ unsigned int FC_startup_charge(void)
 		//close motor relay
 		gpio_set_gpio_pin(MOTOR_RELAY);
 		
-		if(millis() - delay_timer < 3000)
+		if(millis() - delay_timer2 < 6000)
 		{
 			return(fc_state);
 		}
-		
-		//Supply valve still open
-		gpio_set_gpio_pin(H2_VALVE);
-		//purge valve closed
-		gpio_clr_gpio_pin(PURGE_VALVE);
 		
 		//go to main run state
 		fc_state = FC_STATE_RUN;
 		gpio_clr_gpio_pin(LED_START);
 		gpio_set_gpio_pin(LED_RUN);
+		
+		if(millis() - delay_timer2 < 8000)
+		{
+			return(fc_state);
+		}
 		//send some sort of START signal over can
 	}
 	return(fc_state);
@@ -387,8 +389,10 @@ unsigned int fan_update_timer;
 unsigned int FC_run(void)
 {
 	unsigned int fc_state;
-	
-	
+	if(millis() - delay_timer2 < 12000)
+	{
+		return(fc_state);
+	}
 	//pid fan control to maintain temperature
 	if(millis() - fan_update_timer > FANUPDATE_INTERVAL)
 	{
@@ -493,7 +497,8 @@ unsigned int FC_alarm(void)
 {
 	unsigned int fc_state;
 	gpio_clr_gpio_pin(LED_RUN);
-	gpio_set_gpio_pin(LED_ERROR);
+	gpio_set_gpio_pin(LED_
+);
 	gpio_set_gpio_pin(LED_STOP);
 	//close valves
 	gpio_clr_gpio_pin(H2_VALVE);

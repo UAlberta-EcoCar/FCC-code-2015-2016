@@ -119,7 +119,7 @@ unsigned int FC_check_alarms(unsigned int fc_state)
 		{
 			error_msg |= FC_ERR_CAP_VOLT_LOW;
 		}
-		if(get_FCVOLT() > FC_ERR_OVER_VOLT)
+		if(get_FCVOLT() > OVER_VOLT_THRES)
 		{
 			error_msg |= FC_ERR_OVER_VOLT;
 		}

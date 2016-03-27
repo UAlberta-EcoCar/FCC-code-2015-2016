@@ -10,7 +10,7 @@
 #define FUELCELL_DATALOGGING_H_
 
 #define USART_DATA_DISPLAY_INTERVAL 250
-#define USART_DATA_LOG_INTERVAL 50
+#define USART_DATA_LOG_INTERVAL 25
 #define USART_BRIDGE_INTERVAL 100
 
 void usart_data_display(unsigned int fc_state, unsigned int error_msg);
