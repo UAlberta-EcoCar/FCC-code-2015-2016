@@ -497,8 +497,7 @@ unsigned int FC_alarm(void)
 {
 	unsigned int fc_state;
 	gpio_clr_gpio_pin(LED_RUN);
-	gpio_set_gpio_pin(LED_
-);
+	gpio_set_gpio_pin(LED_ERROR);
 	gpio_set_gpio_pin(LED_STOP);
 	//close valves
 	gpio_clr_gpio_pin(H2_VALVE);
