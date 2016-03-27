@@ -14,7 +14,7 @@ try:
     file = open('log' + str(now.year) + '_' + str(now.month) + '_' + str(now.day) + '_' + str(now.hour) + '_' + str(now.minute) + '_' + '.csv','w')
     #file.write("New Log File " + str(now.isoformat()) + "\n\r")
     
-    ser = serial.Serial('COM9',115200,timeout=1)
+    ser = serial.Serial('COM5',115200,timeout=1)
     
     accepted_chars = ['1','2','3','4','5','6','7','8','9','0','A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z',',','-',' ','_']
 

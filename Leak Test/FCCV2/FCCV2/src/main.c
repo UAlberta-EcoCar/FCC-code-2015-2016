@@ -80,19 +80,7 @@ int main (void)
 		case FC_STATE_STARTUP_H2:
 			fc_state = FC_startup_h2();
 			break;
-			
-		case FC_STATE_STARTUP_PURGE:
-			fc_state = FC_startup_purge();
-			break;
-			
-		case FC_STATE_STARTUP_CHARGE:
-			fc_state = FC_startup_charge();	
-			break;
-			
-		case FC_STATE_RUN:
-			fc_state = FC_run();
-			break;
-			
+						
 		case FC_STATE_ALARM:
 			fc_state = FC_alarm();			
 			break;
