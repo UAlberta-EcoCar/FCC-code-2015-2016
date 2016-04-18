@@ -5,7 +5,7 @@
 #include "FuelCell_Functions.h"
 #include "millis_function.h"
 
-#define P 500
+#define P 750
 #define I 0
 #define D 0
 
@@ -35,7 +35,7 @@ unsigned int PID(int currentTemp, int setPoint) {
   time_passed = millis(); //record past run time
   past_temperature = currentTemp;
   //printf("p_value = %f, i_value = %f, d_value = %f\n", p_value, i_value, d_value);
-  setPoint = ((p_value + i_value + d_value) / 10); //scale value down
+  setPoint = ((p_value + i_value + d_value) / 10); 
   
   //precaution against possible negative numbers
   if(setPoint < 0)
