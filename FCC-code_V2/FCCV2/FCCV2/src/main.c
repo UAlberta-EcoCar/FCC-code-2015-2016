@@ -98,8 +98,8 @@ int main (void)
 			break;
 		}	
 		
-		//usart_data_display(fc_state,error_msg);
-		//usart_data_logging(fc_state,error_msg);
-		usart_can_bridge(fc_state, error_msg);
+		usart_data_display(fc_state,error_msg);
+		usart_data_logging(fc_state,error_msg);
+		//usart_can_bridge(fc_state, error_msg);
 	}
 }

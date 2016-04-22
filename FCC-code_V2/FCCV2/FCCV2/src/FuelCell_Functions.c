@@ -389,6 +389,10 @@ unsigned int fan_update_timer;
 unsigned int FC_run(void)
 {
 	unsigned int fc_state;
+	if(millis() - delay_timer2 < 12000)
+	{
+		return(fc_state);
+	}
 	//pid fan control to maintain temperature
 	if(millis() - fan_update_timer > FANUPDATE_INTERVAL)
 	{

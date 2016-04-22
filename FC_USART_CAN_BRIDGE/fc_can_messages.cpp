@@ -63,7 +63,7 @@ void send_fc_error(uint16_t error)
 	msg.id = fc_error_msg.id();
 	msg.length = fc_error_msg.len();
 	fc_error_msg.buf(msg.data, error);
-	can_send_message(&msg);
+	while(can_send_message(&msg));
 }
 
 //FC_STATE
@@ -74,7 +74,7 @@ void send_fc_state(uint8_t state)
 	msg.id = fc_state_msg.id();
 	msg.length = fc_state_msg.len();
 	fc_state_msg.buf(msg.data, state);
-	can_send_message(&msg);
+	while(can_send_message(&msg));
 }
 
 //FC_PURGE_COUNT
@@ -85,7 +85,7 @@ void send_fc_purge_count(uint8_t count)
 	msg.id = fc_purge_count_msg.id();
 	msg.length = fc_purge_count_msg.len();
 	fc_purge_count_msg.buf(msg.data, count);
-	can_send_message(&msg);
+	while(can_send_message(&msg));
 }
 
 //FC_TIME_BETWEEN_LAST_PURGES
@@ -96,7 +96,7 @@ void send_fc_time_between_last_purges(uint32_t time_var)
 	msg.id = fc_time_between_last_purges_msg.id();
 	msg.length = fc_time_between_last_purges_msg.len();
 	fc_time_between_last_purges_msg.buf(msg.data, time_var);
-	can_send_message(&msg);
+	while(can_send_message(&msg));
 }
 
 //FC_ENERGY TOTAL / SINCE_LAST_PURGE
@@ -107,7 +107,7 @@ void send_fc_energy(uint32_t total, uint32_t last)
 	msg.id = fc_energy_msg.id();
 	msg.length = fc_energy_msg.len();
 	fc_energy_msg.buf(msg.data, total << can_msg::FC_TOTAL_ENERGY | last << can_msg::FC_ENERGY_SINCE_LAST_PURGE);
-	can_send_message(&msg);
+	while(can_send_message(&msg));
 }
 
 
@@ -120,7 +120,7 @@ void send_fc_charge(uint32_t total, uint32_t last)
 	msg.id = fc_charge_msg.id();
 	msg.length = fc_charge_msg.len();
 	fc_charge_msg.buf(msg.data, (total << can_msg::FC_TOTAL_CHARGE | last << can_msg::FC_CHARGE_SINCE_LAST_PURGE));
-	can_send_message(&msg);
+	while(can_send_message(&msg));
 }
 
 
@@ -132,7 +132,7 @@ void send_fc_volt(int32_t volt)
 	msg.id = fc_volt_msg.id();
 	msg.length = fc_volt_msg.len();
 	fc_volt_msg.buf(msg.data, volt);
-	can_send_message(&msg);
+	while(can_send_message(&msg));
 }
 
 //FCCURR
@@ -143,7 +143,7 @@ void send_fc_curr(int32_t curr)
 	msg.id = fc_curr_msg.id();
 	msg.length = fc_curr_msg.len();
 	fc_curr_msg.buf(msg.data, curr);
-	can_send_message(&msg);
+	while(can_send_message(&msg));
 }
 
 //FCTEMP
@@ -154,7 +154,7 @@ void send_fc_temp(int32_t temp)
 	msg.id = fc_temp_msg.id();
 	msg.length = fc_temp_msg.len();
 	fc_temp_msg.buf(msg.data, temp);
-	can_send_message(&msg);
+	while(can_send_message(&msg));
 }
 
 //FCPRES
@@ -165,7 +165,7 @@ void send_fc_pres(int32_t pres)
 	msg.id = fc_pres_msg.id();
 	msg.length = fc_pres_msg.len();
 	fc_pres_msg.buf(msg.data, pres);
-	can_send_message(&msg);
+	while(can_send_message(&msg));
 }
 
 //FC_CAPVOLT
@@ -176,7 +176,7 @@ void send_fc_capvolt(int32_t volt)
 	msg.id = fc_capvolt_msg.id();
 	msg.length = fc_capvolt_msg.len();
 	fc_capvolt_msg.buf(msg.data, volt);
-	can_send_message(&msg);
+	while(can_send_message(&msg));
 }
 
 
@@ -188,7 +188,7 @@ void send_fc_fan_speed(int32_t speed)
 	msg.id = fc_fan_speed_msg.id();
 	msg.length = fc_fan_speed_msg.len();
 	fc_fan_speed_msg.buf(msg.data, speed);
-	can_send_message(&msg);
+	while(can_send_message(&msg));
 }
 
 //FC_OUTPUTS
@@ -198,5 +198,5 @@ void send_fc_outputs(int8_t start, int8_t res, int8_t cap,int8_t motor,int8_t pu
 	msg.id = fc_outputs_msg.id();
 	msg.length = fc_outputs_msg.len();
 	fc_outputs_msg.buf(msg.data, start << can_msg::FC_START_RELAY | res << can_msg::FC_RES_RELAY | cap << can_msg::FC_CAP_RELAY | motor << can_msg::FC_MOTOR_RELAY | purge << can_msg::FC_PURGE_VALVE | h2 << can_msg::FC_PURGE_VALVE);
-	can_send_message(&msg);
+	while(can_send_message(&msg));
 }

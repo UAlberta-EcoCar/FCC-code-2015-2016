@@ -2,8 +2,10 @@
 //instead, this sketch will link the CAN-BUS to the FCC usart module
 
 //to do:
+//rumman's new message id system
 //implement two way communication 
 
+#include <MemoryFree.h>
 #include <mcp2515_lib.h>
 #include "fc_can_messages.h"
 #include <mcp2515_filters.h>
@@ -23,7 +25,7 @@ void setup() {
   Serial.setTimeout(500);
 
   //start CAN-bus
-  while(can_init(0,0,0,0,0,0,0,0)) 
+  while(can_init(EXACT_FILTER_MASK,0,0,EXACT_FILTER_MASK,0,0,0,0)) //will ignore all rx messages
   {
     Serial.println("mcp2515 init error");
   }
@@ -36,16 +38,12 @@ void setup() {
 
 String dataString;
 
-uint8_t x;
-
 void loop() 
 {
     digitalWrite(MSG_STATUS_LED,LOW);
     dataString = "";
     dataString = Serial.readStringUntil('\n'); //note this has to be single quotes
     //it is a character -> double " is a string
-
-    Serial.println(dataString);
 
     if(dataString == "")
     {
@@ -69,11 +67,9 @@ void loop()
       //PURGE_COUNT
       uint8_t count = parse_csv(FC_PURGE_COUNT_CSV,dataString);
       send_fc_purge_count(count);
-
       
       //TIME_BETWEEN_LAST_PURGES
       uint32_t time_var = parse_csv(FC_TIME_BETWEEN_LAST_PURGES_CSV,dataString);
-      Serial.println(time_var);
       send_fc_time_between_last_purges(time_var);
 
       delay(1);
@@ -145,5 +141,9 @@ void loop()
       }
   	  send_fc_outputs(start,r_relay,c_relay,m_relay,p_valve,h_valve);
       
+	  
+      Serial.println("");
+      Serial.print("freeMemory: ");
+      Serial.println(freeMemory());
     }
 }
