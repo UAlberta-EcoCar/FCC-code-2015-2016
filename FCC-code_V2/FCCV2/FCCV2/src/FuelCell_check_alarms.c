@@ -55,24 +55,14 @@ unsigned int FC_check_alarms(unsigned int fc_state)
 		//case FC_STATE_SHUTDOWN:
 		
 		case FC_STATE_STARTUP_FANS:
-		if(gpio_get_pin_value(RESCON) == 0)
-		{
-			error_msg |= FC_ERR_RES_DISC;
-		}
+		
 		break;
 		
 		case FC_STATE_STARTUP_H2:
-		if(gpio_get_pin_value(RESCON) == 0)
-		{
-			error_msg |= FC_ERR_RES_DISC;
-		}
+		
 		break;
 		
 		case FC_STATE_STARTUP_PURGE:
-		if(gpio_get_pin_value(RESCON) == 0)
-		{
-			error_msg |= FC_ERR_RES_DISC;
-		}
 		if(get_FCPRES() < FC_LOW_PRES_THRES)
 		{
 			error_msg |= FC_ERR_PRES_L;
@@ -88,10 +78,6 @@ unsigned int FC_check_alarms(unsigned int fc_state)
 		break;
 		
 		case FC_STATE_STARTUP_CHARGE:
-		if(gpio_get_pin_value(RESCON) == 0)
-		{
-			error_msg |= FC_ERR_RES_DISC;
-		}
 		if(get_FCPRES() < FC_LOW_PRES_THRES)
 		{
 			error_msg |= FC_ERR_PRES_L;
@@ -123,10 +109,7 @@ unsigned int FC_check_alarms(unsigned int fc_state)
 		{
 			error_msg |= FC_ERR_OVER_VOLT;
 		}
-		if(gpio_get_pin_value(FC_PWR_GOOD) == 0)
-		{
-			error_msg |= FC_ERR_PWR_BAD;
-		}
+		
 		break;
 		
 		case FC_STATE_ALARM:

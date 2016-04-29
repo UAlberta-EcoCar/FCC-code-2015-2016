@@ -1,11 +1,7 @@
 //I quit attempting to can the FCC can bus module to work
 //instead, this sketch will link the CAN-BUS to the FCC usart module
 
-//to do:
-//rumman's new message id system
-//implement two way communication 
 
-#include <MemoryFree.h>
 #include <mcp2515_lib.h>
 #include "fc_can_messages.h"
 #include <mcp2515_filters.h>
@@ -13,6 +9,7 @@
 
 
 const int CAN_STATUS_LED = 2;
+
 const int MSG_STATUS_LED  = 3;
 
 void setup() {
@@ -140,10 +137,16 @@ void loop()
         h_valve = 1;
       }
   	  send_fc_outputs(start,r_relay,c_relay,m_relay,p_valve,h_valve);
-      
-	  
-      Serial.println("");
-      Serial.print("freeMemory: ");
-      Serial.println(freeMemory());
+
+    }
+    if(digitalRead(9) == 0)
+    {
+      //message recieved
+      can_get_message();
+      digitalWrite(CAN_STATUS_LED,HIGH);
+    }
+    else
+    {
+      digitalWrite(CAN_STATUS_LED,LOW);
     }
 }

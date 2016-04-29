@@ -129,7 +129,7 @@ void usart_data_log_start(unsigned int fc_state, unsigned int error_msg)
 
 	usart_write_line(LOG_USART,"CHARGE,TOTAL_CHARGE,FCVOLT,FCCURR,CAPVOLT,");
 	
-	usart_write_line(LOG_USART,"FCTEMP1,OPT_TEMP,FCPRES,");
+	usart_write_line(LOG_USART,"FCTEMP1,OPT_TEMP,FAN_SPEED,FCPRES,");
 	
 	usart_write_line(LOG_USART,"START_RELAY,RES_RELAY,CAP_RELAY,MOTOR_RELAY,");
 
@@ -143,7 +143,7 @@ void usart_data_logging(unsigned int fc_state, unsigned int error_msg)
 		usart_write_line(LOG_USART,str);
 		sprintf(str,"%llu,%llu,%d,%d,%d,",get_coulumbs_since_last_purge(),get_total_charge_extracted(),get_FCVOLT(),get_FCCURR(),get_CAPVOLT());
 		usart_write_line(LOG_USART,str);
-		sprintf(str,"%d,%d,%d,",get_FCTEMP(),calc_opt_temp(),get_FCPRES());
+		sprintf(str,"%d,%d,%d,%d",get_FCTEMP(),calc_opt_temp(),get_FANSpeed(),get_FCPRES());
 		usart_write_line(LOG_USART,str);
 		sprintf(str,"%d,%d,%d,%d,",gpio_get_gpio_pin_output_value(START_RELAY),gpio_get_gpio_pin_output_value(RES_RELAY),gpio_get_gpio_pin_output_value(CAP_RELAY),gpio_get_gpio_pin_output_value(MOTOR_RELAY));
 		usart_write_line(LOG_USART,str);

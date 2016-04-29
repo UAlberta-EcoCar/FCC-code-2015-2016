@@ -187,9 +187,9 @@ int FANUpdate(int duty_cycle)
 	{
 		FANSpeed = 0;
 	}
-	else if (duty_cycle > 1024)
+	else if (duty_cycle > 1023)
 	{
-		FANSpeed = 1024;
+		FANSpeed = 1023;
 	}
 	else
 	{

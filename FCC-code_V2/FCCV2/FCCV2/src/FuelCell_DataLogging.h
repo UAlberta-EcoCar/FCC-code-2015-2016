@@ -18,7 +18,7 @@ void usart_data_display(unsigned int fc_state, unsigned int error_msg);
 void usart_data_log_start(unsigned int fc_state, unsigned int error_msg);
 void usart_data_logging(unsigned int fc_state, unsigned int error_msg);
 
-#define USART_BRIDGE LOG_USART
+#define USART_BRIDGE DISPLAY_USART
 void usart_can_bridge(unsigned int fc_state, unsigned int error_msg);
 
 #endif /* FUELCELL_DATALOGGING_H_ */
