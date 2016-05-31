@@ -17,7 +17,7 @@ void send_fc_volt(int32_t volt);
 
 void send_fc_curr(int32_t curr);
 
-void send_fc_temp(int32_t temp);
+void send_fc_temp(uint8_t temp,uint8_t opttemp);
 
 void send_fc_pres(int32_t pres);
 

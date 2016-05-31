@@ -35,7 +35,7 @@ can_msg::MsgEncode fc_volt_msg( can_msg::INT32, can_msg::FUEL_CELL, can_msg::FC_
 can_msg::MsgEncode fc_curr_msg( can_msg::INT32, can_msg::FUEL_CELL, can_msg::FC_CURR, can_msg::INFORMATION, 1);
 
 //FCTEMP
-can_msg::MsgEncode fc_temp_msg( can_msg::INT32, can_msg::FUEL_CELL, can_msg::FC_TEMP, can_msg::INFORMATION, 1);
+can_msg::MsgEncode fc_temp_msg( can_msg::UINT8, can_msg::FUEL_CELL, can_msg::FC_TEMP, can_msg::INFORMATION, 2);
 
 //FCPRES
 can_msg::MsgEncode fc_pres_msg( can_msg::INT32, can_msg::FUEL_CELL, can_msg::FC_PRES, can_msg::INFORMATION, 1);
@@ -106,7 +106,7 @@ void send_fc_energy(uint32_t total, uint32_t last)
 	CanMessage msg;
 	msg.id = fc_energy_msg.id();
 	msg.length = fc_energy_msg.len();
-	fc_energy_msg.buf(msg.data, total << can_msg::FC_TOTAL_ENERGY | last << can_msg::FC_ENERGY_SINCE_LAST_PURGE);
+	fc_energy_msg.buf(msg.data, (total << can_msg::FC_TOTAL_ENERGY) | ((uint64_t)last << can_msg::FC_ENERGY_SINCE_LAST_PURGE));
 	while(can_send_message(&msg));
 }
 
@@ -119,7 +119,7 @@ void send_fc_charge(uint32_t total, uint32_t last)
 	CanMessage msg;
 	msg.id = fc_charge_msg.id();
 	msg.length = fc_charge_msg.len();
-	fc_charge_msg.buf(msg.data, (total << can_msg::FC_TOTAL_CHARGE | last << can_msg::FC_CHARGE_SINCE_LAST_PURGE));
+	fc_charge_msg.buf(msg.data, ((7 << can_msg::FC_TOTAL_CHARGE) | ((uint64_t)last << can_msg::FC_CHARGE_SINCE_LAST_PURGE)));
 	while(can_send_message(&msg));
 }
 
@@ -147,13 +147,13 @@ void send_fc_curr(int32_t curr)
 }
 
 //FCTEMP
-void send_fc_temp(int32_t temp)
+void send_fc_temp(uint8_t temp,uint8_t opttemp)
 {
 	//make a messages
 	CanMessage msg;
 	msg.id = fc_temp_msg.id();
 	msg.length = fc_temp_msg.len();
-	fc_temp_msg.buf(msg.data, temp);
+	fc_temp_msg.buf(msg.data, temp|((uint16_t)opttemp << 8));
 	while(can_send_message(&msg));
 }
 
@@ -197,6 +197,6 @@ void send_fc_outputs(int8_t start, int8_t res, int8_t cap,int8_t motor,int8_t pu
 	CanMessage msg;
 	msg.id = fc_outputs_msg.id();
 	msg.length = fc_outputs_msg.len();
-	fc_outputs_msg.buf(msg.data, start << can_msg::FC_START_RELAY | res << can_msg::FC_RES_RELAY | cap << can_msg::FC_CAP_RELAY | motor << can_msg::FC_MOTOR_RELAY | purge << can_msg::FC_PURGE_VALVE | h2 << can_msg::FC_PURGE_VALVE);
+	fc_outputs_msg.buf(msg.data, start << can_msg::FC_START_RELAY | res << can_msg::FC_RES_RELAY | cap << can_msg::FC_CAP_RELAY | motor << can_msg::FC_MOTOR_RELAY | purge << can_msg::FC_PURGE_VALVE | h2 << can_msg::FC_H2_VALVE);
 	while(can_send_message(&msg));
 }
