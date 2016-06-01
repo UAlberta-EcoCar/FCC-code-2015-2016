@@ -324,7 +324,7 @@ unsigned int FC_startup_charge(void)
 	}
 	else //caps are charged
 	{
-		charge_thres = 30000; //set threshold low to stop above if from running
+		charge_thres = 33000; //set threshold low to stop above if from running
 		//turn off led1
 		gpio_clr_gpio_pin(LED1);
 		
@@ -336,34 +336,25 @@ unsigned int FC_startup_charge(void)
 		
 		if(millis() - delay_timer2 < 2000)
 		{
-			return(fc_state);
+			return(FC_STATE_STARTUP_CHARGE);
 		}
 		
 		gpio_set_gpio_pin(CAP_RELAY);
 		
 		if(millis() - delay_timer2 < 4000)
 		{
-			return(fc_state);
+			return(FC_STATE_STARTUP_CHARGE);
 		}
 		
 		//close motor relay
 		gpio_set_gpio_pin(MOTOR_RELAY);
 		
-		if(millis() - delay_timer2 < 6000)
-		{
-			return(fc_state);
-		}
 		
 		//go to main run state
 		fc_state = FC_STATE_RUN;
 		gpio_clr_gpio_pin(LED_START);
 		gpio_set_gpio_pin(LED_RUN);
 		
-		if(millis() - delay_timer2 < 8000)
-		{
-			return(fc_state);
-		}
-		//send some sort of START signal over can
 	}
 	return(fc_state);
 }
@@ -389,10 +380,7 @@ unsigned int fan_update_timer;
 unsigned int FC_run(void)
 {
 	unsigned int fc_state;
-	if(millis() - delay_timer2 < 12000)
-	{
-		return(fc_state);
-	}
+	
 	//pid fan control to maintain temperature
 	if(millis() - fan_update_timer > FANUPDATE_INTERVAL)
 	{

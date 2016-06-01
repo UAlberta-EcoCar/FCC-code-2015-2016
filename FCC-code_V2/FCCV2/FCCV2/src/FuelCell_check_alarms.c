@@ -101,7 +101,7 @@ unsigned int FC_check_alarms(unsigned int fc_state)
 		{
 			error_msg |= FC_ERR_OVER_CUR;
 		}
-		if(get_CAPVOLT() < CAP_VOLT_LOW)
+		if(get_CAPVOLT() < CAP_VOLT_LOW_THRES)
 		{
 			error_msg |= FC_ERR_CAP_VOLT_LOW;
 		}

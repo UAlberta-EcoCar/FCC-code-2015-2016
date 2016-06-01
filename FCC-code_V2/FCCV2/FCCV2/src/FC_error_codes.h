@@ -42,7 +42,7 @@
 #define OVER_CUR_THRES 75000 //78A
 #define UNDER_CUR_THRES 0 //only possible if sensor is disconnected if in start purge 
 #define OVER_VOLT_THRES 50600 //50.6V
-#define CAP_VOLT_LOW 15000 //capacitors are drained too much 15V
+#define CAP_VOLT_LOW_THRES 15000 //capacitors are drained too much 15V
 
 //Some errors need to be compressed for testing
 #ifdef FAKE_INPUT_MODE

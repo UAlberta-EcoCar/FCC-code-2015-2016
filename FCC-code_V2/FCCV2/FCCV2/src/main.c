@@ -34,7 +34,7 @@ int main (void)
 {
 	board_init();
 	
-	usart_data_log_start(fc_state,error_msg);
+//	usart_data_log_start(fc_state,error_msg);
 	
 	StartADC_Sequencers(); //start ADC conversion
 	ReadADC_Sequencers(); //read conversion results	
