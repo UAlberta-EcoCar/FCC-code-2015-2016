@@ -324,7 +324,7 @@ unsigned int FC_startup_charge(void)
 	}
 	else //caps are charged
 	{
-		charge_thres = 33000; //set threshold low to stop above if from running
+		charge_thres = 33000; //set threshold lower to stop above if from running
 		//turn off led1
 		gpio_clr_gpio_pin(LED1);
 		
