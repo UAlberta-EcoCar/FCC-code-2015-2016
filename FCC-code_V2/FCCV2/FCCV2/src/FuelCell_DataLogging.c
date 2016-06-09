@@ -16,7 +16,7 @@
 #include "FuelCell_mode_Select.h"
 #include "digital_IO_defs.h"
 
-char str [100]; //buffer for storing strings. set to length of longest string needed to avoid wasting ram
+char str [120]; //buffer for storing strings. set to length of longest string needed to avoid wasting ram
 
 unsigned int usart_data_display_stagger = 0;
 unsigned int usart_data_display_timer;
@@ -154,11 +154,11 @@ void usart_data_logging(unsigned int fc_state, unsigned int error_msg)
 }
 
 unsigned int usart_bridge_timer;
-void usart_can_bridge(unsigned int fc_state, unsigned int error_msg)
+void usart_can_bridge(unsigned int fc_state, unsigned int error_msg,unsigned int past_fc_state)
 {
 	if(millis()-usart_bridge_timer > USART_BRIDGE_INTERVAL)
 	{
-		sprintf(str,"%ul,%d,%d,%d,%d,%llu,",millis(),error_msg,fc_state,get_number_of_purges(),get_time_between_last_purges(),get_J_since_last_purge());
+		sprintf(str,"%d,%d,%d,%d,%d,%llu,",millis(),error_msg,fc_state,get_number_of_purges(),get_time_between_last_purges(),get_J_since_last_purge());
 		usart_write_line(USART_BRIDGE,str);
 		
 		sprintf(str,"%llu,%llu,%llu,%d,%d,",get_total_E(),get_coulumbs_since_last_purge(),get_total_charge_extracted(),get_FCVOLT(),get_FCCURR());
@@ -167,11 +167,9 @@ void usart_can_bridge(unsigned int fc_state, unsigned int error_msg)
 		sprintf(str,"%d,%d,%d,%d,%d,%d,",get_CAPVOLT(),get_FCTEMP()/1000-273,calc_opt_temp()/1000-273,get_FCPRES(),get_FANSpeed(),gpio_get_gpio_pin_output_value(START_RELAY));
 		usart_write_line(USART_BRIDGE,str);
 
-		sprintf(str,"%d,%d,%d,%d,%d\n",gpio_get_gpio_pin_output_value(RES_RELAY),gpio_get_gpio_pin_output_value(CAP_RELAY),gpio_get_gpio_pin_output_value(MOTOR_RELAY),gpio_get_gpio_pin_output_value(PURGE_VALVE),gpio_get_gpio_pin_output_value(H2_VALVE));
+		sprintf(str,"%d,%d,%d,%d,%d,%d\n",gpio_get_gpio_pin_output_value(RES_RELAY),gpio_get_gpio_pin_output_value(CAP_RELAY),gpio_get_gpio_pin_output_value(MOTOR_RELAY),gpio_get_gpio_pin_output_value(PURGE_VALVE),gpio_get_gpio_pin_output_value(H2_VALVE),past_fc_state);
 		usart_write_line(USART_BRIDGE,str);
 		
 		usart_bridge_timer = millis();
 	}	
 }
-
-

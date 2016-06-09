@@ -29,10 +29,11 @@
 #define FC_ERR_UND_CUR (1 << 9) //(-3A)
 //voltage
 #define FC_ERR_OVER_VOLT (1 << 10) // (50.6V)
-#define FC_ERR_CAP_VOLT_LOW (1 << 15) //capacitor low
+#define FC_ERR_VOLT_LOW (1 << 11) //capacitor low
 #define FC_ERR_WDT (1 << 12) //watch dog timer
 #define FC_ERR_BOD (1 << 13) //brown out detection
 #define FC_ERR_PWR_BAD (1 << 14)
+
 
 //define thresholds for over current etc
 #define LOW_TEMP_THRES 270000 //0C. 
@@ -42,7 +43,8 @@
 #define OVER_CUR_THRES 75000 //78A
 #define UNDER_CUR_THRES 0 //only possible if sensor is disconnected if in start purge 
 #define OVER_VOLT_THRES 50600 //50.6V
-#define CAP_VOLT_LOW_THRES 15000 //capacitors are drained too much 15V
+#define LOW_VOLT_THRES 15000 //capacitors are drained too much 15V
+
 
 //Some errors need to be compressed for testing
 #ifdef FAKE_INPUT_MODE

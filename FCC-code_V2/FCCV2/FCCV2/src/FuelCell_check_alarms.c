@@ -50,18 +50,7 @@ unsigned int FC_check_alarms(unsigned int fc_state)
 		error_msg |= FC_ERR_PRES_H;
 	}
 	switch (fc_state)
-	{
-		//case FC_STATE_STANDBY:
-		//case FC_STATE_SHUTDOWN:
-		
-		case FC_STATE_STARTUP_FANS:
-		
-		break;
-		
-		case FC_STATE_STARTUP_H2:
-		
-		break;
-		
+	{		
 		case FC_STATE_STARTUP_PURGE:
 		if(get_FCPRES() < FC_LOW_PRES_THRES)
 		{
@@ -101,15 +90,14 @@ unsigned int FC_check_alarms(unsigned int fc_state)
 		{
 			error_msg |= FC_ERR_OVER_CUR;
 		}
-		if(get_CAPVOLT() < CAP_VOLT_LOW_THRES)
-		{
-			error_msg |= FC_ERR_CAP_VOLT_LOW;
-		}
 		if(get_FCVOLT() > OVER_VOLT_THRES)
 		{
 			error_msg |= FC_ERR_OVER_VOLT;
 		}
-		
+		if(get_FCVOLT() < LOW_VOLT_THRES)
+		{
+			error_msg |= FC_ERR_VOLT_LOW;
+		}
 		break;
 		
 		case FC_STATE_ALARM:

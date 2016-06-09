@@ -28,7 +28,7 @@ Fix startup_fans state
 
 unsigned int error_msg;
 unsigned int fc_state = FC_STATE_STANDBY;
-
+unsigned int past_fc_state = 0;
 
 int main (void)
 {
@@ -59,6 +59,14 @@ int main (void)
 		error_msg &= ERROR_MASK;
 		if(error_msg)
 		{
+			if(past_fc_state)
+			{
+				
+			}
+			else
+			{
+				past_fc_state = fc_state; //fc_state before error is triggered
+			}
 			fc_state = FC_STATE_ALARM;
 		}
 		
@@ -98,8 +106,6 @@ int main (void)
 			break;
 		}	
 		
-		//usart_data_display(fc_state,error_msg);
-		//usart_data_logging(fc_state,error_msg);
-		usart_can_bridge(fc_state, error_msg);
+		usart_can_bridge(fc_state, error_msg,past_fc_state);
 	}
 }

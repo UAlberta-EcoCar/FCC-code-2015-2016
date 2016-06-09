@@ -34,6 +34,7 @@
 
 #define TOTAL_CHARGE_ENERGY_INTEGRATION_INTERVAL 5
 
+
 //data logging / data retrieval functions
 unsigned int get_time_between_last_purges(void);
 unsigned int get_number_of_purges(void);
