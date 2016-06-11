@@ -105,12 +105,12 @@ adcifa_sequencer_conversion_opt_t adcifa_sequence_conversion_option_0[7] =
 adcifa_sequencer_conversion_opt_t adcifa_sequence_conversion_option_1[6] =
 {
 	{
-		.channel_p = AVR32_ADCIFA_INP_ADCIN1,             // Positive Channel
+		.channel_p = AVR32_ADCIFA_INP_ADCIN0,             // Positive Channel
 		.channel_n = AVR32_ADCIFA_INN_GNDANA,             // Negative Channel
 		.gain      = ADCIFA_SHG_1                     // Gain of the conversion
 	},
 	{
-		.channel_p = AVR32_ADCIFA_INP_ADCIN3,             // Positive Channel
+		.channel_p = AVR32_ADCIFA_INP_ADCIN2,             // Positive Channel
 		.channel_n = AVR32_ADCIFA_INN_GNDANA,             // Negative Channel
 		.gain      = ADCIFA_SHG_1                     // Gain of the conversion
 	},
