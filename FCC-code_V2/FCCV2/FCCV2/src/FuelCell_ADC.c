@@ -124,7 +124,7 @@ int get_TANKPRES(void)
 }
 int get_FCPRES(void)
 {
-	return((-1)*FCPRESReading * FCPRESCoefficient - FCPRESConst); //-1 but neg input
+	return(FCPRESReading * FCPRESCoefficient - FCPRESConst); 
 }
 /*not used
 int get_CAPCURR(void)

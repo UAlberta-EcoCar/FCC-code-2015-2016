@@ -30,8 +30,7 @@ unsigned int error_msg;
 unsigned int fc_state = FC_STATE_STANDBY;
 unsigned int past_fc_state = 0;
 
-int main (void)
-{
+int main (void){
 	board_init();
 	
 //	usart_data_log_start(fc_state,error_msg);

@@ -26,18 +26,6 @@
 #endif
 
 
-#ifdef IN_CAR_MODE
-#define FCCURRCoefficient ((316 + 470) / 470 * 3000 / (2048 - 1) * 10 / 132) //13.2 mV per Amp
-#define CAPCURRCoefficient ((316 + 470) / 470 * 3000 / (2048 - 1) * 10 / 132) //13.2 mV per Amp
-#define CAPVOLTCoefficient (3000 * 50 / 3 / (2048-1))
-#define FCVOLTCoefficient (3000 * 50 / 3 / (2048-1))
-#define FCPRESCoefficient (3000 / (2048-1) * (470+316) / 470) * 993 / 100) //P = (v - 2.47119999) / 0.1044
-#define FCPRESConst 24648
-#define TANKPRESCoefficient (3000 / (2048-1) * (470+316) / 470) * 50)
-#define TANKPRESConst 39700
-#define TEMPCoefficient 0
-#define TEMPConst 323150
-#endif
 
 
 #ifdef TEST_BENCH_MODE
@@ -46,8 +34,8 @@
 #define CAPCURRCoefficient ((316 + 470) / 470 * 3000 / (2048 - 1) * 10 / 132) //13.2 mV per Amp
 #define CAPVOLTCoefficient ((3000 * 50 / 3) / (2048-1))
 #define FCVOLTCoefficient (3000 * 50 / 3 / (2048-1))
-#define FCPRESCoefficient (3000 / (2048-1) * (470+316) / 470 * 958 / 100)
-#define FCPRESConst 23670 //P = (v - 2.47119999) / 0.1044
+#define FCPRESCoefficient 24
+#define FCPRESConst 24648
 #define TANKPRESCoefficient 0
 #define TANKPRESConst 0
 #define TEMPCoefficient -62
