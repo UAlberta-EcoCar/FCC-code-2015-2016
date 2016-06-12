@@ -17,6 +17,7 @@
 
 unsigned long delay_timer1;
 unsigned long delay_timer2;
+unsigned long repress_delay;
 
 unsigned int FC_standby(void)
 {
@@ -170,7 +171,18 @@ unsigned int FC_startup_purge(void)
 		
 		delay_timer1 = millis(); //reset delay timer to have delay at start of charge
 		
-		//go to charge state
+		repress_delay = millis();
+		//go to repressurized delay
+		fc_state = FC_STATE_REPRESSURIZE;
+	}
+	return(fc_state);
+}
+
+unsigned int FC_repressurize(void)
+{
+	unsigned int fc_state = FC_STATE_REPRESSURIZE;
+	if( millis() - repress_delay > 1000)
+	{
 		fc_state = FC_STATE_STARTUP_CHARGE;
 	}
 	return(fc_state);
@@ -485,6 +497,7 @@ unsigned int FC_alarm(void)
 {
 	unsigned int fc_state;
 	gpio_clr_gpio_pin(LED_RUN);
+	gpio_clr_gpio_pin(LED_START);
 	gpio_set_gpio_pin(LED_ERROR);
 	gpio_set_gpio_pin(LED_STOP);
 	//close valves

@@ -38,23 +38,17 @@
 //define thresholds for over current etc
 #define LOW_TEMP_THRES 270000 //0C. 
 #define HIGH_TEMP_THRES 348000 // 75C
-#define FC_HIGH_PRES_THRES 8000 //9.81 PSI
-#define FC_LOW_PRES_THRES 1000 //0.8 PSI
+#define FC_HIGH_PRES_THRES 8500 //8 PSI
+#define FC_LOW_PRES_THRES 4000 //2.5 PSI
 #define OVER_CUR_THRES 75000 //78A
 #define UNDER_CUR_THRES 0 //only possible if sensor is disconnected if in start purge 
 #define OVER_VOLT_THRES 50600 //50.6V
 #define LOW_VOLT_THRES 15000 //capacitors are drained too much 15V
 
 
-//Some errors need to be compressed for testing
-#ifdef FAKE_INPUT_MODE
-#define ERROR_MASK (0xFFFFFFFF^FC_ERR_PWR_BAD)
-#endif
-#ifdef TEST_BENCH_MODE
-#define ERROR_MASK (0xFFFFFFFF^(FC_ERR_PWR_BAD|FC_ERR_RES_DISC|FC_ERR_PRES_L))
-#endif
-#ifdef IN_CAR_MODE
-#define ERROR_MASK 0xFFFFFFFF
-#endif
+
+
+#define ERROR_MASK (!(FC_ERR_PRES_L))
+
 
 #endif /* FC_ERROR_CODES_H_ */

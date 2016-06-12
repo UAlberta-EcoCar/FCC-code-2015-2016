@@ -33,12 +33,10 @@ unsigned int past_fc_state = 0;
 int main (void){
 	board_init();
 	
-//	usart_data_log_start(fc_state,error_msg);
-	
 	StartADC_Sequencers(); //start ADC conversion
 	ReadADC_Sequencers(); //read conversion results	
 	
-	error_msg |= wdt_scheduler(); //start watchdog timer
+//	error_msg |= wdt_scheduler(); //start watchdog timer
 	//comment out for debugging (debugger is supposed to disable wdt automatically but it doesn't always)
 
 	
@@ -55,7 +53,7 @@ int main (void){
 		
 		
 		error_msg |= FC_check_alarms(fc_state);
-		error_msg &= ERROR_MASK;
+		
 		if(error_msg)
 		{
 			if(past_fc_state)
@@ -102,9 +100,14 @@ int main (void){
 			
 		case FC_STATE_ALARM:
 			fc_state = FC_alarm();			
-			break;
-		}	
+			break;	
 		
-		usart_can_bridge(fc_state, error_msg,past_fc_state);
+		case FC_STATE_REPRESSURIZE:
+			fc_state = FC_repressurize();
+			break;
+		}
+		
+	usart_can_bridge(fc_state, error_msg,past_fc_state);
+			
 	}
 }

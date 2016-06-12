@@ -52,9 +52,9 @@ unsigned int FC_check_alarms(unsigned int fc_state)
 	switch (fc_state)
 	{		
 		case FC_STATE_STARTUP_PURGE:
-		if(get_FCPRES() < FC_LOW_PRES_THRES)
+		if(get_FCPRES() > FC_HIGH_PRES_THRES)
 		{
-			error_msg |= FC_ERR_PRES_L;
+			error_msg |= FC_ERR_PRES_H;
 		}
 		if(get_FCCURR() > OVER_CUR_THRES)
 		{
@@ -71,6 +71,10 @@ unsigned int FC_check_alarms(unsigned int fc_state)
 		{
 			error_msg |= FC_ERR_PRES_L;
 		}
+		if (get_FCPRES() > FC_HIGH_PRES_THRES)
+		{
+			error_msg |= FC_ERR_PRES_H;
+		}
 		if(get_FCCURR() > OVER_CUR_THRES)
 		{
 			error_msg |= FC_ERR_OVER_CUR;
@@ -85,6 +89,10 @@ unsigned int FC_check_alarms(unsigned int fc_state)
 		if(get_FCPRES() < FC_LOW_PRES_THRES)
 		{
 			error_msg |= FC_ERR_PRES_L;
+		}
+		if(get_FCPRES() > FC_HIGH_PRES_THRES)
+		{
+			error_msg |= FC_ERR_PRES_H;
 		}
 		if(get_FCCURR() > OVER_CUR_THRES)
 		{

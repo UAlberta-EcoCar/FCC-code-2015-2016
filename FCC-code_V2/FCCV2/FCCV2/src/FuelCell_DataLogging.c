@@ -16,7 +16,7 @@
 #include "FuelCell_mode_Select.h"
 #include "digital_IO_defs.h"
 
-char str [125]; //buffer for storing strings. set to length of longest string needed to avoid wasting ram
+char str [130]; //buffer for storing strings. set to length of longest string needed to avoid wasting ram
 
 
 unsigned int usart_bridge_timer;
