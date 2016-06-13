@@ -38,7 +38,7 @@
 //define thresholds for over current etc
 #define LOW_TEMP_THRES 270000 //0C. 
 #define HIGH_TEMP_THRES 348000 // 75C
-#define FC_HIGH_PRES_THRES 8500 //8 PSI
+#define FC_HIGH_PRES_THRES 8000 //8 PSI
 #define FC_LOW_PRES_THRES 4000 //2.5 PSI
 #define OVER_CUR_THRES 75000 //78A
 #define UNDER_CUR_THRES 0 //only possible if sensor is disconnected if in start purge 
