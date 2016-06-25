@@ -33,6 +33,7 @@
 #define FC_ERR_WDT (1 << 12) //watch dog timer
 #define FC_ERR_BOD (1 << 13) //brown out detection
 #define FC_ERR_PWR_BAD (1 << 14)
+#define FC_ERR_PURGE_PRESS_LOW (1 << 15)
 
 
 //define thresholds for over current etc
@@ -44,7 +45,7 @@
 #define UNDER_CUR_THRES 0 //only possible if sensor is disconnected if in start purge 
 #define OVER_VOLT_THRES 50600 //50.6V
 #define LOW_VOLT_THRES 15000 //capacitors are drained too much 15V
-
+#define PURGE_PRESS_LOW_THRES 1000
 
 
 

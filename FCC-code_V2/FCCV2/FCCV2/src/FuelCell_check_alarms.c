@@ -64,6 +64,10 @@ unsigned int FC_check_alarms(unsigned int fc_state)
 		{
 			error_msg |= FC_ERR_OVER_VOLT;
 		}
+		if(get_FCPRES() < PURGE_PRESS_LOW_THRES)
+		{
+			error_msg |= FC_ERR_PURGE_PRESS_LOW;
+		}
 		break;
 		
 		case FC_STATE_STARTUP_CHARGE:
