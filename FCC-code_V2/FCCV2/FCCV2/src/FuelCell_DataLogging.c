@@ -27,10 +27,10 @@ void usart_can_bridge(unsigned int fc_state, unsigned int error_msg,unsigned int
 		sprintf(str,"%d,%d,%d,%d,%d,%llu,",millis(),error_msg,fc_state,get_number_of_purges(),get_time_between_last_purges(),get_J_since_last_purge());
 		usart_write_line(USART_BRIDGE,str);
 		
-		sprintf(str,"%llu,%llu,%llu,%d,%d,",get_total_E(),get_coulumbs_since_last_purge(),get_total_charge_extracted(),get_FCVOLT(),get_FCCURR());
+		sprintf(str,"%llu,%llu,%llu,%d,%d,",get_total_E(),get_coulumbs_since_last_purge(),get_total_charge_extracted(),get_FCVOLT()/1000,get_FCCURR()/1000);
 		usart_write_line(USART_BRIDGE,str);
 		
-		sprintf(str,"%d,%d,%d,%d,%d,%d,",get_CAPVOLT(),get_FCTEMP()/1000-273,calc_opt_temp()/1000-273,get_FCPRES(),get_FANSpeed(),gpio_get_gpio_pin_output_value(START_RELAY));
+		sprintf(str,"%d,%d,%d,%d,%d,%d,",get_CAPVOLT()/1000,get_FCTEMP()/1000-273,calc_opt_temp()/1000-273,get_FCPRES()/1000,get_FANSpeed(),gpio_get_gpio_pin_output_value(START_RELAY));
 		usart_write_line(USART_BRIDGE,str);
 
 		sprintf(str,"%d,%d,%d,%d,%d,%d\n",gpio_get_gpio_pin_output_value(RES_RELAY),gpio_get_gpio_pin_output_value(CAP_RELAY),gpio_get_gpio_pin_output_value(MOTOR_RELAY),gpio_get_gpio_pin_output_value(PURGE_VALVE),gpio_get_gpio_pin_output_value(H2_VALVE),past_fc_state);

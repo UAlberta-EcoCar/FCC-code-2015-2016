@@ -1,12 +1,10 @@
 //I quit attempting to can the FCC can bus module to work
 //instead, this sketch will link the CAN-BUS to the FCC usart module
 
-
 #include <mcp2515_lib.h>
 #include "fc_can_messages.h"
 #include <mcp2515_filters.h>
 #include "FC_USART_CAN_BRIDGE_LIB.h"
-
 
 const int CAN_STATUS_LED = 2;
 
@@ -17,9 +15,10 @@ void setup() {
   pinMode(MSG_STATUS_LED,OUTPUT);
   
   // Start Serial Communication
-  Serial.begin(9600);
+  Serial.begin(115200);
   while (!Serial);
-  Serial.setTimeout(500);
+
+  delay(500);
 
   //start CAN-bus
   while(can_init(0,0,0,0,0,0,0,0))
@@ -31,18 +30,21 @@ void setup() {
   
   // Short delay and then begin listening
   delay(2000);
+
+  //read a line and discard
+  Serial.readStringUntil('\n');
 }
 
 String dataString;
 
 void loop() 
 {
-    delay(450);
     digitalWrite(MSG_STATUS_LED,LOW);
-    dataString = "0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,1,1,1,1,1,1";
-    Serial.println("String Recieved");
-//    dataString = Serial.readStringUntil('\n'); //note this has to be single quotes
+    
+    dataString = Serial.readStringUntil('\n'); //note this has to be single quotes
     //it is a character -> double " is a string
+
+    Serial.println("String Recieved");
 
     if(dataString == "")
     {
@@ -51,9 +53,8 @@ void loop()
     else
     {
       digitalWrite(MSG_STATUS_LED,HIGH);
-      //run through everything and send over CAN-BUS
 
-      //read cvs values
+      //parse string and read cvs values
       uint16_t fc_error = parse_csv(FC_ERROR_CSV,&dataString);
       uint8_t fc_state = parse_csv(FC_STATE_CSV,&dataString);
       
@@ -63,7 +64,6 @@ void loop()
       uint32_t fc_total_energy = parse_csv(FC_TOTAL_ENERGY_CSV,&dataString);
       uint32_t fc_charge_since_last_purge = parse_csv(FC_CHARGE_SINCE_LAST_PURGE_CSV,&dataString);
       uint32_t fc_total_charge = parse_csv(FC_TOTAL_CHARGE_CSV,&dataString);
-      Serial.println(fc_total_charge);
 
       int32_t fcvolt = parse_csv(FCVOLT_CSV,&dataString);
       int32_t fccurr = parse_csv(FCCURR_CSV,&dataString);
@@ -79,7 +79,8 @@ void loop()
       bool fc_motor_relay = parse_csv(FC_MOTOR_RELAY_CSV,&dataString);
       bool fc_purge_valve = parse_csv(FC_PURGE_VALVE_CSV,&dataString);
       bool fc_h2_valve = parse_csv(FC_H2_VALVE_CSV,&dataString);
-      
+
+      //send values with 10 ms delays so slower chips can keep up
       send_fc_error(fc_error);
       send_fc_state(fc_state);
       delay(10);
