@@ -15,16 +15,18 @@ void setup() {
   pinMode(MSG_STATUS_LED,OUTPUT);
   
   // Start Serial Communication
-  Serial.begin(115200);
+  Serial.begin(57600);
   while (!Serial);
-
-  delay(500);
+i
+  delay(1000);
 
   //start CAN-bus
   while(can_init(0,0,0,0,0,0,0,0))
   {
     Serial.println("mcp2515 init error");
   }
+
+  Serial.print("mcp2515 started");
   
   digitalWrite(CAN_STATUS_LED,HIGH);
   
@@ -37,14 +39,17 @@ void setup() {
 
 String dataString;
 
+#define comma Serial.print(',')
+
 void loop() 
 {
     digitalWrite(MSG_STATUS_LED,LOW);
     
     dataString = Serial.readStringUntil('\n'); //note this has to be single quotes
     //it is a character -> double " is a string
-
-    Serial.println("String Recieved");
+    
+    Serial.println("String Recieved:");
+    Serial.println(dataString);
 
     if(dataString == "")
     {
@@ -55,8 +60,10 @@ void loop()
       digitalWrite(MSG_STATUS_LED,HIGH);
 
       //parse string and read cvs values
-      uint16_t fc_error = parse_csv(FC_ERROR_CSV,&dataString);
+      uint16_t fc_error = 1;//parse_csv(FC_ERROR_CSV,&dataString);
+      Serial.print(fc_error);comma;
       uint8_t fc_state = parse_csv(FC_STATE_CSV,&dataString);
+      Serial.print(fc_state);comma;
       
       uint8_t fc_purge_count = parse_csv(FC_PURGE_COUNT_CSV,&dataString);
       uint32_t fc_time_between_last_purges = parse_csv(FC_TIME_BETWEEN_LAST_PURGES_CSV,&dataString);
@@ -80,28 +87,37 @@ void loop()
       bool fc_purge_valve = parse_csv(FC_PURGE_VALVE_CSV,&dataString);
       bool fc_h2_valve = parse_csv(FC_H2_VALVE_CSV,&dataString);
 
+
       //send values with 10 ms delays so slower chips can keep up
       send_fc_error(fc_error);
+      
+      delay(10);
       send_fc_state(fc_state);
       delay(10);
       
       send_fc_purge_count(fc_purge_count);
+      delay(10);
       send_fc_time_between_last_purges(fc_time_between_last_purges);
       delay(10);
       send_fc_energy(fc_total_energy,fc_energy_since_last_purge);
+      delay(10);
       send_fc_charge(fc_total_charge,fc_charge_since_last_purge);
       delay(10);
       
       send_fc_volt(fcvolt);
+      delay(10);
       send_fc_curr(fccurr);
       delay(10);
       send_fc_capvolt(capvolt);
       delay(10);
       send_fc_temp(fctemp,opttemp);
+      
       send_fc_pres(fcpres);
       delay(10);
       send_fc_fan_speed(fc_fan_speed);
+      delay(10);
       send_fc_outputs(fc_start_relay,fc_res_relay,fc_cap_relay,fc_motor_relay,fc_purge_valve,fc_h2_valve);
+
     }
 
     if(digitalRead(9) == 0)
