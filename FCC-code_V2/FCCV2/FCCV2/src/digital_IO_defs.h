@@ -49,7 +49,7 @@
 #define MOTOR_RELAY OP_4
 //valves
 #define PURGE_VALVE OP_9
-#define H2_VALVE OP_10
+#define H2_VALVE OP_8
 
 
 
