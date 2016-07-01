@@ -18,6 +18,7 @@
 unsigned long delay_timer1;
 unsigned long delay_timer2;
 unsigned long repress_delay;
+unsigned long start_delay;
 
 unsigned int FC_standby(void)
 {
@@ -86,6 +87,7 @@ unsigned int FC_startup_fans(void)
 			fc_state = FC_STATE_STARTUP_H2;
 		}
 	}
+	start_delay = millis();
 	return(FC_STATE_STARTUP_H2); //don't run this function again it is broken
 }
 
@@ -105,7 +107,7 @@ unsigned int FC_startup_h2(void)
 	gpio_clr_gpio_pin(CAP_RELAY);
 	
 	//input h2 until voltage reaches 30
-	if (get_FCVOLT() < 30000) //if voltage is less than 30V
+	if ((get_FCVOLT() < 30000)|(millis()-start_delay<1000)) //if voltage is less than 30V
 	{
 		//keep the hydrogen coming
 		fc_state = FC_STATE_STARTUP_H2;
