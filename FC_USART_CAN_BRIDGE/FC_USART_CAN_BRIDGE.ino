@@ -17,8 +17,8 @@ void setup() {
   // Start Serial Communication
   Serial.begin(57600);
   while (!Serial);
-i
-  delay(1000);
+
+  delay(2000);
 
   //start CAN-bus
   while(can_init(0,0,0,0,0,0,0,0))
@@ -88,34 +88,34 @@ void loop()
       bool fc_h2_valve = parse_csv(FC_H2_VALVE_CSV,&dataString);
 
 
-      //send values with 10 ms delays so slower chips can keep up
+      //send values with 20 ms delays so slower chips can keep up
       send_fc_error(fc_error);
       
-      delay(10);
+      delay(20);
       send_fc_state(fc_state);
-      delay(10);
+      delay(20);
       
       send_fc_purge_count(fc_purge_count);
-      delay(10);
+      delay(20);
       send_fc_time_between_last_purges(fc_time_between_last_purges);
-      delay(10);
+      delay(20);
       send_fc_energy(fc_total_energy,fc_energy_since_last_purge);
-      delay(10);
+      delay(20);
       send_fc_charge(fc_total_charge,fc_charge_since_last_purge);
-      delay(10);
+      delay(20);
       
       send_fc_volt(fcvolt);
-      delay(10);
+      delay(20);
       send_fc_curr(fccurr);
-      delay(10);
+      delay(20);
       send_fc_capvolt(capvolt);
-      delay(10);
+      delay(20);
       send_fc_temp(fctemp,opttemp);
       
       send_fc_pres(fcpres);
-      delay(10);
+      delay(20);
       send_fc_fan_speed(fc_fan_speed);
-      delay(10);
+      delay(20);
       send_fc_outputs(fc_start_relay,fc_res_relay,fc_cap_relay,fc_motor_relay,fc_purge_valve,fc_h2_valve);
 
     }
