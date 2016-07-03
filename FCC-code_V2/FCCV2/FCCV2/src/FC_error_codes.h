@@ -41,7 +41,7 @@
 #define HIGH_TEMP_THRES 348000 // 75C
 #define FC_HIGH_PRES_THRES 10000 //10 PSI
 #define FC_LOW_PRES_THRES 2000 //2.5 PSI
-#define OVER_CUR_THRES 75000 //78A
+#define OVER_CUR_THRES 75000 //75A
 #define UNDER_CUR_THRES 0 //only possible if sensor is disconnected if in start purge 
 #define OVER_VOLT_THRES 50600 //50.6V
 #define LOW_VOLT_THRES 15000 //capacitors are drained too much 15V
