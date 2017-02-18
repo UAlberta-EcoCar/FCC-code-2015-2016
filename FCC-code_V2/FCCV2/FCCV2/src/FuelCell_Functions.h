@@ -18,6 +18,7 @@
 #define FC_STATE_RUN 6
 #define FC_STATE_ALARM 8
 #define FC_STATE_REPRESSURIZE 9
+#define FC_STATE_MANUAL_DEPRESSURIZE 10
 
 
 //different sub states while running
@@ -56,6 +57,7 @@ unsigned int FC_startup_h2(void);
 unsigned int FC_startup_purge(void);
 unsigned int FC_startup_charge(void);
 unsigned int FC_repressurize(void);
+unsigned int FC_manual_depressurize(void);
 
 unsigned int FC_run(void);
 

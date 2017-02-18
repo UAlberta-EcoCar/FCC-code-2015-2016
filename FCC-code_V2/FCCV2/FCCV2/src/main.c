@@ -1,5 +1,17 @@
 /*
 to do list:
+Set up an air starve mode (new run mode)
+Update microcontroller pins
+program the buttons to choose run modes, as well as LEDs to indicate run mode
+
+Air Starve Mode:
+	- Disable alarm conditions
+	- Turn off fans
+	
+Manual Depressurize:
+	- Close supply valve
+	- Open purge valve only for 500 ms
+	- Open relays
 
 pressure readings
 temp conversion
@@ -26,7 +38,7 @@ Fix startup_fans state
 #include "FuelCell_DataLogging.h"
 
 
-unsigned int error_msg;
+unsigned int error_msg; // Used to check if error occurs
 unsigned int fc_state = FC_STATE_STANDBY;
 unsigned int past_fc_state = 0;
 
@@ -52,7 +64,7 @@ int main (void){
 		//if code gets hung up wdt won't clear and a reset will occur
 		
 		
-		error_msg |= FC_check_alarms(fc_state);
+		error_msg |= FC_check_alarms(fc_state); // Becomes true if FC_check_alarms returns true, and stays true
 		
 		if(error_msg)
 		{

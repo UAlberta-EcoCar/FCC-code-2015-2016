@@ -2,7 +2,7 @@
  * FuelCell_Functions.c
  *
  * Created: 2015-11-09 11:07:53 AM
- *  Author: Reegan
+ *  Author: Reegan 
  */ 
 
 #include "asf.h"
@@ -186,6 +186,30 @@ unsigned int FC_repressurize(void)
 	if( millis() - repress_delay > 1000)
 	{
 		fc_state = FC_STATE_STARTUP_CHARGE;
+	}
+	return(fc_state);
+}
+
+unsigned int FC_manual_depressurize(void)
+{
+	if(gpio_get_gpio_pin_output_value(PURGE_VALVE) == 0) // If the purge valve is closed
+	{
+		purge_timer = millis(); // Start timer
+	}
+	
+	gpio_set_gpio_pin(PURGE_VALVE); // open purge valve
+	gpio_set_gpio_pin(LED0); // turn on LED to notify that purge valve is on
+	
+	if (millis() - purge_timer < 500) // loop through function
+	{
+		fc_state = FC_STATE_MANUAL_DEPRESSURIZE;
+	}
+	
+	else // 500 ms over
+	{
+		gpio_clr_gpio_pin(PURGE_VALVE); // close purge valve
+		gpio_clr_gpio_pin(LED0); // turn off purge LED
+		fc_state = FC_STATE_ALARM; // go to alarm state
 	}
 	return(fc_state);
 }
