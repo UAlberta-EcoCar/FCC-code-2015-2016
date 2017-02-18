@@ -20,12 +20,15 @@ unsigned long delay_timer2;
 unsigned long repress_delay;
 unsigned long start_delay;
 
-unsigned int FC_standby(void)
+unsigned int FC_standby(int manual_depressurize_check)
 {
 	unsigned int fc_state;
 	if (gpio_get_pin_value(START))
 	{
-		fc_state = FC_STATE_STARTUP_FANS;
+		if (manual_depressurize_check)
+			fc_state = FC_STATE_MANUAL_DEPRESSURIZE
+		else
+			fc_state = FC_STATE_STARTUP_FANS;
 		gpio_clr_gpio_pin(LED_STOP);
 		gpio_set_gpio_pin(LED_START);
 	}
@@ -192,6 +195,7 @@ unsigned int FC_repressurize(void)
 
 unsigned int FC_manual_depressurize(void)
 {
+	gpio_set_gpio_pin(LED_STAT1); // Turn on manual_depressurize LED
 	if(gpio_get_gpio_pin_output_value(PURGE_VALVE) == 0) // If the purge valve is closed
 	{
 		purge_timer = millis(); // Start timer
@@ -259,7 +263,7 @@ unsigned int time_since_last_purge; //keep track of time between purges
 unsigned int purge_state = FIRST_PURGE_CYCLE; //used for keeping track of switching b/w purge valve open closed
 unsigned int fan_update_timer; //used for timing pwm code
 unsigned int charge_thres = 35000;
-unsigned int FC_startup_charge(void)
+unsigned int FC_startup_charge(air_starve_check)
 {
 	unsigned int fc_state = FC_STATE_STARTUP_CHARGE; //will keep charging until state exits
 	
@@ -491,16 +495,13 @@ unsigned int FC_run(void)
 }
 
 
-unsigned int FC_STATE_AIR_STARVE
+unsigned int FC_air_starve(void);
 {
+	// Turn fans off
+	FANUpdate(0);
 	
-	//pid fan control to maintain temperature
-	if(millis() - fan_update_timer > FANUPDATE_INTERVAL)
-	{
-		//pid fan control for temp regulation
-		FANUpdate(PID(get_FCTEMP() , calc_opt_temp()));
-		fan_update_timer = millis();
-	}
+	// Turn on air starve LED
+	gpio_set_gpio_pin(LED_STAT1);
 	
 	//purge control: //purge based on amount of charge extracted from hydrogen (1 C = amp * sec)
 	delta_purge_time = millis() - purge_integration_timer;
@@ -561,7 +562,7 @@ unsigned int FC_STATE_AIR_STARVE
 		total_charge_energy_integration_timer = millis();
 	}
 	
-	fc_state = FC_STATE_RUN;
+	fc_state = FC_STATE_AIR_STARVE;
 	return(fc_state);
 }
 
