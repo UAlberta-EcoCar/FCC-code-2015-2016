@@ -49,7 +49,14 @@ unsigned int FC_standby(int manual_depressurize_check)
 		gpio_clr_gpio_pin(LED_STOP);
 		//fan low
 		FANUpdate(0);
-		fc_state = FC_STATE_STANDBY;
+		if (manual_depressurize_check == 1)
+		{
+			fc_state = FC_STATE_MANUAL_DEPRESSURIZE;
+		}
+		else if (manual_depressurize_check == 0)
+		{
+			fc_state = FC_STATE_STANDBY;
+		}
 	}
 	return(fc_state);
 }
@@ -393,7 +400,14 @@ unsigned int FC_startup_charge(air_starve_check)
 		
 		
 		//go to main run state
-		fc_state = FC_STATE_RUN;
+		if (air_starve_check == 1)
+		{
+			fc_state = FC_STATE_AIR_STARVE;
+		}
+		else if (air_starve_check == 0)
+		{
+			fc_state = FC_STATE_RUN;	
+		}
 		gpio_clr_gpio_pin(LED_START);
 		gpio_set_gpio_pin(LED_RUN);
 		

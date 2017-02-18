@@ -112,6 +112,25 @@ unsigned int FC_check_alarms(unsigned int fc_state)
 		}
 		break;
 		
+		case FC_STATE_AIR_STARVE:
+		if(get_FCPRES() < FC_LOW_PRES_THRES)
+		{
+			error_msg |= FC_ERR_PRES_L;
+		}
+		if(get_FCPRES() > FC_HIGH_PRES_THRES)
+		{
+			error_msg |= FC_ERR_PRES_H;
+		}
+		if(get_FCCURR() > OVER_CUR_THRES)
+		{
+			error_msg |= FC_ERR_OVER_CUR;
+		}
+		if(get_FCVOLT() > OVER_VOLT_THRES)
+		{
+			error_msg |= FC_ERR_OVER_VOLT;
+		}
+		break;
+		
 		case FC_STATE_ALARM:
 		if(get_FCCURR() > OVER_CUR_THRES)
 		{

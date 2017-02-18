@@ -41,6 +41,8 @@ Fix startup_fans state
 unsigned int error_msg; // Used to check if error occurs
 unsigned int fc_state = FC_STATE_STANDBY;
 unsigned int past_fc_state = 0;
+unsigned int man_depress_check = 0;
+unsigned int air_starve_check = 0;
 int main (void){
 	board_init();
 	
@@ -81,7 +83,8 @@ int main (void){
 		if((millis() - btn1count >= 5000) && (btn1count != 0)) 
 		{
 			
-			fc_state = FC_STATE_MANUAL_DEPRESSURIZE;
+			man_depress_check = 1;
+			air_starve_check = 0;
 			btn1count = 0;
 			
 		}
@@ -105,7 +108,8 @@ int main (void){
 		if((millis() - btn1count >= 5000) && (btn1count != 0)) 
 		{
 			
-			fc_state = FC_STATE_MANUAL_DEPRESSURIZE;
+			man_depress_check = 0;
+			air_starve_check = 1;
 			btn1count = 0;
 			
 		}
@@ -129,7 +133,7 @@ int main (void){
 		switch (fc_state)
 		{
 		case FC_STATE_STANDBY:
-			fc_state = FC_standby();
+			fc_state = FC_standby(man_depress_check);
 			break;
 			
 		case FC_STATE_SHUTDOWN:
@@ -149,7 +153,7 @@ int main (void){
 			break;
 			
 		case FC_STATE_STARTUP_CHARGE:
-			fc_state = FC_startup_charge();	
+			fc_state = FC_startup_charge(air_starve_check);	
 			break;
 			
 		case FC_STATE_RUN:

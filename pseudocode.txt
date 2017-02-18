@@ -86,6 +86,7 @@ number StartupH2(measured value(s)){
 	else{
 		return Startuppurge;
 	}
+
 number StartupPurge(measured value(s)){
 	//Purge step isnt skipped on !Rescon to get air out of lines on startup
 	number state;
@@ -120,6 +121,7 @@ number StartupCharge(measured value(s)){
 	
 
 }
+
 number run(){
 	pid control for temp;
 	purge control; //Purge based on amount of charge extracted from hydrogen (integral of current with respect to time)
