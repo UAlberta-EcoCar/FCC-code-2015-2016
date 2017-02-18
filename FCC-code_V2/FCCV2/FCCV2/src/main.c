@@ -41,7 +41,6 @@ Fix startup_fans state
 unsigned int error_msg; // Used to check if error occurs
 unsigned int fc_state = FC_STATE_STANDBY;
 unsigned int past_fc_state = 0;
-
 int main (void){
 	board_init();
 	
@@ -63,6 +62,29 @@ int main (void){
 		wdt_clear();
 		//if code gets hung up wdt won't clear and a reset will occur
 		
+		// The following code checks to see if the button 1 (corresponding to manual depressurize) has been pressed for 5 seconds
+		
+		if(gpio_get_pin_value(MODEBTN1) && (count == 0) && (fc_state == FC_STATE_STANDBY))
+		{
+			
+			btn1count = millis();
+			
+		}
+		
+		else if(!gpio_get_pin_value(MODEBTN1))
+		{
+			
+			btn1count = 0;
+			
+		}
+		
+		if((millis() - btn1count >= 5000) && (btn1count != 0)) 
+		{
+			
+			fc_state = FC_STATE_MANUAL_DEPRESSURIZE;
+			btn1count = 0;
+			
+		}
 		
 		error_msg |= FC_check_alarms(fc_state); // Becomes true if FC_check_alarms returns true, and stays true
 		
@@ -117,8 +139,11 @@ int main (void){
 		case FC_STATE_REPRESSURIZE:
 			fc_state = FC_repressurize();
 			break;
+			
+		case FC_STATE_MANUAL_DEPRESSURIZE;
+			fc_state = FC_manual_depressurize();
+			break;
 		}
-		
 	usart_can_bridge(fc_state, error_msg,past_fc_state);
 			
 	}

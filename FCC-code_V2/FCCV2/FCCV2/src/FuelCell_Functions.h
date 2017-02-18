@@ -19,7 +19,7 @@
 #define FC_STATE_ALARM 8
 #define FC_STATE_REPRESSURIZE 9
 #define FC_STATE_MANUAL_DEPRESSURIZE 10
-
+#define FC_STATE_AIR_STARVE 11
 
 //different sub states while running
 #define FIRST_PURGE_CYCLE 0
@@ -60,6 +60,7 @@ unsigned int FC_repressurize(void);
 unsigned int FC_manual_depressurize(void);
 
 unsigned int FC_run(void);
+unsigned int FC_air_starve(void);
 
 unsigned int FC_shutdown(void);
 unsigned int FC_alarm(void);
