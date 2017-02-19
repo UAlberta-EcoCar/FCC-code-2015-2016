@@ -199,7 +199,7 @@ void PWMInit(void)
 	//MCK  == 56MHz
 	//prescaler == 2
 	//period == 1024
-	//Fpwm == 27.24KHz
+	//Fpwm == 27.34KHz
 	
 	//fan 3 Channel configuration
 	fan3_pwm_channel.CMR.dte   = 1;        // Enable Deadtime for complementary Mode
@@ -216,7 +216,7 @@ void PWMInit(void)
 	//MCK  == 56MHz
 	//prescaler == 2
 	//period == 1024
-	//Fpwm == 27.24KHz
+	//Fpwm == 27.34KHz
 	
 	//fan 4 Channel configuration
 	fan4_pwm_channel.CMR.dte   = 1;        // Enable Deadtime for complementary Mode
@@ -233,7 +233,7 @@ void PWMInit(void)
 	//MCK  == 56MHz
 	//prescaler == 2
 	//period == 1024
-	//Fpwm == 27.24KHz
+	//Fpwm == 27.34KHz
 
 	//fan 5 Channel configuration
 	fan5_pwm_channel.CMR.dte   = 1;        // Enable Deadtime for complementary Mode
@@ -250,7 +250,7 @@ void PWMInit(void)
 	//MCK  == 56MHz
 	//prescaler == 2
 	//period == 1024
-	//Fpwm == 27.24KHz
+	//Fpwm == 27.34KHz
 	
 	pwm_channel_init(FAN5_PWM_CHANNEL_ID, &fan5_pwm_channel);
 	pwm_channel_init(FAN4_PWM_CHANNEL_ID, &fan4_pwm_channel);
