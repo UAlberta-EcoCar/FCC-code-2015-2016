@@ -4,6 +4,12 @@
  * Created: 2015-11-10 2:33:13 PM
  *  Author: Reegan
  */ 
+
+/* The PWM and Tachometer signals for Fan 4 have not been initialized. The PWM signal 
+is being kept unused for unexpected changes to the system in the near future that require
+a GPIO connection. The Tachometer signal is being repurposed to read the "Probe disconnect
+signal from the CVM board"*/
+
 #include "asf.h"
 #include "FuelCell_PWM.h"
 
@@ -19,10 +25,6 @@
 #define FAN3_PWM_PIN AVR32_PWM_PWMH_2_PIN // Corresponds to FAN 3
 #define FAN3_PWM_FUNCTION AVR32_PWM_PWMH_2_FUNCTION
 #define FAN3_PWM_CHANNEL_ID 3
-
-#define FAN4_PWM_PIN AVR32_PWM_PWML_3_PIN // Corresponds to FAN 4
-#define FAN4_PWM_FUNCTION AVR32_PWM_PWML_3_FUNCTION
-#define FAN4_PWM_CHANNEL_ID 4
 
 #define FAN5_PWM_PIN AVR32_PWM_PWMH_3_PIN // Corresponds to FAN 5
 #define FAN5_PWM_FUNCTION AVR32_PWM_PWMH_3_FUNCTION
@@ -103,17 +105,6 @@ avr32_pwm_channel_t fan3_pwm_channel = {
 	{0}, // dt
 	{0}};// dtupd  ;  fan channel config.
 	
-//fan 4 channel configuration
-avr32_pwm_channel_t fan4_pwm_channel = {
-	{0}, // cmr
-	{0}, // cdty
-	{0}, // cdtyupd
-	{0}, // cprd
-	{0}, // cprdupd
-	{0}, // ccnt
-	{0}, // dt
-	{0}};// dtupd  ;  fan channel config.
-	
 //fan 5 channel configuration
 avr32_pwm_channel_t fan5_pwm_channel = {
 	{0}, // cmr
@@ -143,7 +134,6 @@ void PWMInit(void)
 	gpio_enable_module_pin(FAN1_PWM_PIN, FAN1_PWM_FUNCTION);
 	gpio_enable_module_pin(FAN2_PWM_PIN, FAN2_PWM_FUNCTION);
 	gpio_enable_module_pin(FAN3_PWM_PIN, FAN3_PWM_FUNCTION);
-	gpio_enable_module_pin(FAN4_PWM_PIN, FAN4_PWM_FUNCTION);
 	gpio_enable_module_pin(FAN5_PWM_PIN, FAN5_PWM_FUNCTION);
 	
 	// PWM controller configuration.
@@ -217,23 +207,6 @@ void PWMInit(void)
 	//prescaler == 2
 	//period == 1024
 	//Fpwm == 27.34KHz
-	
-	//fan 4 Channel configuration
-	fan4_pwm_channel.CMR.dte   = 1;        // Enable Deadtime for complementary Mode
-	fan4_pwm_channel.CMR.dthi  = 1;        // Deadtime Inverted on PWMH
-	fan4_pwm_channel.CMR.dtli  = 0;        // Deadtime Not Inverted on PWML
-	fan4_pwm_channel.CMR.ces   = 0;        // 0/1 Channel Event at the End of PWM Period
-	fan4_pwm_channel.CMR.calg  = PWM_MODE_LEFT_ALIGNED;       // Channel mode.
-	fan4_pwm_channel.CMR.cpol  = PWM_POLARITY_LOW;            // Channel polarity.
-	fan4_pwm_channel.CMR.cpre  = 2;           // Channel prescaler: divide by 2 see page 1036 of datasheet
-	fan4_pwm_channel.cdty      = 0;       // Channel duty cycle, should be < CPRD.
-	fan4_pwm_channel.cprd      = 1024;       // Channel period.
-
-	//Fpwm = (MCK/prescaler)/period
-	//MCK  == 56MHz
-	//prescaler == 2
-	//period == 1024
-	//Fpwm == 27.34KHz
 
 	//fan 5 Channel configuration
 	fan5_pwm_channel.CMR.dte   = 1;        // Enable Deadtime for complementary Mode
@@ -253,12 +226,10 @@ void PWMInit(void)
 	//Fpwm == 27.34KHz
 	
 	pwm_channel_init(FAN5_PWM_CHANNEL_ID, &fan5_pwm_channel);
-	pwm_channel_init(FAN4_PWM_CHANNEL_ID, &fan4_pwm_channel);
 	pwm_channel_init(FAN3_PWM_CHANNEL_ID, &fan3_pwm_channel);
 	pwm_channel_init(FAN2_PWM_CHANNEL_ID, &fan2_pwm_channel);
 	pwm_channel_init(FAN1_PWM_CHANNEL_ID, &fan1_pwm_channel); 
 	pwm_start_channels((1 << FAN5_PWM_CHANNEL_ID));
-	pwm_start_channels((1 << FAN4_PWM_CHANNEL_ID));
 	pwm_start_channels((1 << FAN3_PWM_CHANNEL_ID));
 	pwm_start_channels((1 << FAN2_PWM_CHANNEL_ID));
 	pwm_start_channels((1 << FAN1_PWM_CHANNEL_ID)); 
@@ -303,10 +274,13 @@ int FANUpdate(int duty_cycle)
 	fan1_pwm_channel.cdtyupd = FANSpeed;
 	fan2_pwm_channel.cdtyupd = FANSpeed;
 	fan3_pwm_channel.cdtyupd = FANSpeed;
-	fan4_pwm_channel.cdtyupd = FANSpeed;
 	fan5_pwm_channel.cdtyupd = FANSpeed;
 	
-	return(pwm_update_duty_cycle(FAN1_PWM_CHANNEL_ID,&fan1_pwm_channel));
+	pwm_update_duty_cycle(FAN1_PWM_CHANNEL_ID,&fan1_pwm_channel)
+	pwm_update_duty_cycle(FAN2_PWM_CHANNEL_ID,&fan2_pwm_channel)
+	pwm_update_duty_cycle(FAN3_PWM_CHANNEL_ID,&fan3_pwm_channel)
+	pwm_update_duty_cycle(FAN5_PWM_CHANNEL_ID,&fan5_pwm_channel)
+	return;
 }
 
 unsigned int get_FANSpeed(void)
