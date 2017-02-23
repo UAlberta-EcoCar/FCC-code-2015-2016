@@ -13,10 +13,10 @@
 //digital Inputs
 #define START AVR32_PIN_PB03
 #define SYSOK AVR32_PIN_PB02
-#define FCCON AVR32_PIN_PB23
-#define CAPCON AVR32_PIN_PC00
-#define RESCON AVR32_PIN_PB22
-#define FAN_TACH AVR32_PIN_PD02
+#define FAN1_TACH AVR32_PIN_PC20
+#define FAN2_TACH AVR32_PIN_PC19
+#define FAN3_TACH AVR32_PIN_PC18
+#define FAN5_TACH AVR32_PIN_PC16
 #define FC_PWR_GOOD AVR32_PIN_PC06
 
 //LEDs
@@ -47,10 +47,9 @@
 #define OP_7 AVR32_PIN_PD11
 #define OP_8 AVR32_PIN_PD10
 #define OP_9 AVR32_PIN_PD09
-#define OP_10 AVR32_PIN_PD08
 
 //digital outputs
-//relays
+`//relays
 #define START_RELAY OP_1
 #define RES_RELAY OP_2
 #define CAP_RELAY OP_3
@@ -59,7 +58,9 @@
 #define PURGE_VALVE OP_9
 #define H2_VALVE OP_8
 
-
+// Openlog
+#define OPENLOG_RX PC5
+#define OPENLOG_DTR PC6
 
 
 #endif /* INCFILE1_H_ */

@@ -1,6 +1,6 @@
 /*
  * FuelCell_Functions.c
- *
+ * 
  * Created: 2015-11-09 11:07:53 AM
  *  Author: Reegan 
  */ 
@@ -20,9 +20,30 @@ unsigned long delay_timer2;
 unsigned long repress_delay;
 unsigned long start_delay;
 
+unsigned int man_depress_LED_time = 0; // Timer used to control LED Blinking
 unsigned int FC_standby(int manual_depressurize_check)
 {
 	unsigned int fc_state;
+	if (manual_depressurize_check)
+	{
+		if (man_depress_LED_time == 0) // First time
+		{
+			man_depress_LED_time = millis()
+		}
+		if (millis() - man_depress_LED_time >= 250) // Set a blink rate of 250 ms 
+		{
+			if (gpio_get_pin_value(LED_STAT2) == 1) // If on turn off, reset timer
+			{
+				gpio_clr_gpio_pin(LED_STAT2);
+				man_depress_LED_time = millis();
+			}
+			else if (gpio_get_pin_value(LED_STAT2) == 0) // If off turn on, reset timer
+			{
+				gpio_set_gpio_pin(LED_STAT2);
+				man_depress_LED_time = millis();
+			}
+		}
+	}
 	if (gpio_get_pin_value(START))
 	{
 		if (manual_depressurize_check)
@@ -81,7 +102,7 @@ unsigned int FC_startup_fans(void)
 	//increment if tach is 0 and reads 1
 	if(tachometer_test == 0)
 	{
-		if(gpio_get_pin_value(FAN_TACH)==1)
+		if(gpio_get_pin_value(FAN1_TACH)== 1 && gpio_get_pin_value(FAN2_TACH)== 1 && gpio_get_pin_value(FAN3_TACH)== 1 gpio_get_pin_value(FAN5_TACH)== 1)
 		{
 			tachometer_test = 1;
 		}
@@ -91,7 +112,7 @@ unsigned int FC_startup_fans(void)
 	//then wait for it to go low again (then the fan is spinning)
 	if(tachometer_test == 1)
 	{
-		if(gpio_get_pin_value(FAN_TACH) == 0)
+		if(gpio_get_pin_value(FAN1_TACH) == 0 && gpio_get_pin_value(FAN2_TACH) == 0 gpio_get_pin_value(FAN3_TACH) == 0 gpio_get_pin_value(FAN5_TACH) == 0)
 		{
 			//fan is spinning go to startup
 			fc_state = FC_STATE_STARTUP_H2;
@@ -202,7 +223,14 @@ unsigned int FC_repressurize(void)
 
 unsigned int FC_manual_depressurize(void)
 {
-	gpio_set_gpio_pin(LED_STAT1); // Turn on manual_depressurize LED
+	gpio_set_gpio_pin(LED_STAT2); // Turn on manual_depressurize LED
+	
+	// Open Relays
+	gpio_clr_gpio_pin(START_RELAY);
+	gpio_clr_gpio_pin(CAP_RELAY);
+	gpio_clr_gpio_pin(RES_RELAY);
+	gpio_clr_gpio_pin(MOTOR_RELAY);
+	
 	if(gpio_get_gpio_pin_output_value(PURGE_VALVE) == 0) // If the purge valve is closed
 	{
 		purge_timer = millis(); // Start timer
@@ -220,6 +248,11 @@ unsigned int FC_manual_depressurize(void)
 	{
 		gpio_clr_gpio_pin(PURGE_VALVE); // close purge valve
 		gpio_clr_gpio_pin(LED0); // turn off purge LED
+		gpio_set_gpio_pin(START_RELAY); // Close relays
+		gpio_set_gpio_pin(CAP_RELAY);
+		gpio_set_gpio_pin(RES_RELAY);
+		gpio_set_gpio_pin(MOTOR_RELAY);
+		gpio_clr_gpio_pin(LED_STAT2); // Turn off manual_depressurize LED
 		fc_state = FC_STATE_ALARM; // go to alarm state
 	}
 	return(fc_state);

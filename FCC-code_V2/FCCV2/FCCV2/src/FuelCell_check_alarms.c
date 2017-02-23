@@ -23,15 +23,6 @@ unsigned int FC_check_alarms(unsigned int fc_state)
 	{
 		error_msg |= FC_ERR_BOD;
 	}
-	//check fccon sysok capcon always
-	if(gpio_get_pin_value(FCCON) == 0)
-	{
-		error_msg |= FC_ERR_FC_DISC;
-	}
-	if(gpio_get_pin_value(CAPCON) == 0)
-	{
-		error_msg |= FC_ERR_CAP_DISC;
-	}
 	if(gpio_get_pin_value(SYSOK) == 0)
 	{
 		error_msg |= FC_ERR_H2OK_LOW;

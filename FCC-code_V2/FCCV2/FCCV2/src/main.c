@@ -43,6 +43,8 @@ unsigned int fc_state = FC_STATE_STANDBY;
 unsigned int past_fc_state = 0;
 unsigned int man_depress_check = 0;
 unsigned int air_starve_check = 0;
+unsigned int btncount = 0;
+unsigned int air_starve_LED_time = 0;
 int main (void){
 	board_init();
 	
@@ -66,54 +68,81 @@ int main (void){
 		
 		// The following code checks to see if the button 1 (corresponding to manual depressurize) has been pressed for 5 seconds
 		
-		if(gpio_get_pin_value(MODEBTN1) && (count == 0) && (fc_state == FC_STATE_STANDBY))
+		if(gpio_get_pin_value(MODEBTN1) && (btncount == 0) && (fc_state == FC_STATE_STANDBY))
 		{
 			
-			btn1count = millis();
+			btncount = millis();
 			
 		}
 		
 		else if(!gpio_get_pin_value(MODEBTN1))
 		{
 			
-			btn1count = 0;
+			btncount = 0;
 			
 		}
 		
-		if((millis() - btn1count >= 5000) && (btn1count != 0)) 
+		if((millis() - btncount >= 5000) && (btncount != 0)) 
 		{
 			
 			man_depress_check = 1;
 			air_starve_check = 0;
-			btn1count = 0;
+			btncount = 0;
 			
 		}
 
 		// The following code checks that button 2 has been pressed for 5 seconds
 		
-		if(gpio_get_pin_value(MODEBTN2) && (count == 0) && (fc_state == FC_STATE_STANDBY))
+		if(gpio_get_pin_value(MODEBTN2) && (btncount == 0) && (fc_state == FC_STATE_STANDBY))
 		{
 			
-			btn1count = millis();
+			btncount = millis();
 			
 		}
 		
-		else if(!gpio_get_pin_value(MODEBTN1))
+		else if(!gpio_get_pin_value(MODEBTN2))
 		{
 			
-			btn1count = 0;
+			btncount = 0;
 			
 		}
 		
-		if((millis() - btn1count >= 5000) && (btn1count != 0)) 
+		if((millis() - btncount >= 5000) && (btncount != 0)) 
 		{
 			
 			man_depress_check = 0;
 			air_starve_check = 1;
-			btn1count = 0;
+			btncount = 0;
 			
 		}
 		
+		// The following causes the air starve LED to blink
+		
+		if ((air_starve_check) || (fc_state == FC_STATE_AIR_STARVE))
+		{
+			if (air_starve_LED_time == 0) // First time
+			{
+				air_starve_LED_time = millis()
+			}
+			if (millis() - air_starve_LED_time >= 250) // Set a blink rate of 250 ms 
+			{
+				if (gpio_get_pin_value(LED_STAT1) == 1) // If on turn off, reset timer
+				{
+					gpio_clr_gpio_pin(LED_STAT1);
+					air_starve_LED_time = millis();
+				}
+				else if (gpio_get_pin_value(LED_STAT1) == 0) // If off turn on, reset timer
+				{
+					gpio_set_gpio_pin(LED_STAT1);
+					air_starve_LED_time = millis();
+				}
+			}
+		}
+		else if ((~air_starve_check) && (fc_state != FC_STATE_AIR_STARVE))
+		{
+			gpio_clr_gpio_pin(LED_STAT1)
+		}
+			
 		error_msg |= FC_check_alarms(fc_state); // Becomes true if FC_check_alarms returns true, and stays true
 		
 		if(error_msg)
