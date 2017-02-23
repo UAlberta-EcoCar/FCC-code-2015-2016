@@ -59,8 +59,11 @@
 #define H2_VALVE OP_8
 
 // Openlog
-#define OPENLOG_RX PC5
-#define OPENLOG_DTR PC6
+#define OPENLOG_RX AVR32_PIN_PC05
+#define OPENLOG_DTR AVR32_PIN_PC06
 
+// CVM signals
+#define CVM_PURGE_V_R AVR32_PIN_PC07
+#define CVM_PROBE_DISCONNECT AVR32_PIN_PC17
 
 #endif /* INCFILE1_H_ */
