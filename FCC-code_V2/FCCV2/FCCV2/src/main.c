@@ -43,8 +43,8 @@ unsigned int fc_state = FC_STATE_STANDBY;
 unsigned int past_fc_state = 0;
 unsigned int man_depress_check = 0;
 unsigned int air_starve_check = 0;
-unsigned int btncount = 0;
-unsigned int air_starve_LED_time = 0;
+unsigned long btncount = 0;
+unsigned long air_starve_LED_time = 0;
 int main (void){
 	board_init();
 	
@@ -131,7 +131,7 @@ int main (void){
 					gpio_clr_gpio_pin(LED_STAT1);
 					air_starve_LED_time = millis();
 				}
-				else if (gpio_get_pin_value(LED_STAT1) == 0) // If off turn on, reset timer
+				else if (gpio_get_pin_value(LED_STAT1) == 0) // If off turn on, reset timer don't need
 				{
 					gpio_set_gpio_pin(LED_STAT1);
 					air_starve_LED_time = millis();

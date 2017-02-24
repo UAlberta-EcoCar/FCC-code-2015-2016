@@ -19,8 +19,9 @@ unsigned long delay_timer1;
 unsigned long delay_timer2;
 unsigned long repress_delay;
 unsigned long start_delay;
+unsigned long CVM_purge_signal_timer;
 
-unsigned int man_depress_LED_time = 0; // Timer used to control LED Blinking
+unsigned long man_depress_LED_time = 0; // Timer used to control LED Blinking
 unsigned int FC_standby(int manual_depressurize_check)
 {
 	unsigned int fc_state;
@@ -331,11 +332,16 @@ unsigned int FC_startup_charge(air_starve_check)
 		uJ_since_last_purge += delta_purge_time * get_FCCURR() * get_FCVOLT() / 1000;
 		purge_integration_timer = millis();
 	}
-	
+	if (CVM_purge_signal_timer == 0)
+			{
+				CVM_purge_signal_timer = millis();
+			}
 	if (CVM_probe_disconnect == 0) // if probe is connected
 	{
-		if ((mAms_since_last_purge > PURGE_THRESHOLD) || (CVM_purge_now == 1)) //time to purge
+		if ((mAms_since_last_purge > PURGE_THRESHOLD) || ((CVM_purge_now == 1) && (millis - CVM_purge_signal_timer >= 2000))) //time to purge
 		{
+			CVM_purge_signal_timer = millis();
+			
 			//open purge valve
 			gpio_set_gpio_pin(PURGE_VALVE);
 		
@@ -597,8 +603,9 @@ unsigned int FC_run(void)
 	}
 	if (CVM_probe_disconnect == 0) // if probe is connected
 	{
-		if ((mAms_since_last_purge > PURGE_THRESHOLD) || (CVM_purge_now == 1)) //time to purge
+		if ((mAms_since_last_purge > PURGE_THRESHOLD) || ((CVM_purge_now == 1) && (millis - CVM_purge_signal_timer >= 2000)) //time to purge
 		{
+			CVM_purge_signal_timer = millis();
 			//open purge valve
 			gpio_set_gpio_pin(PURGE_VALVE);
 		
@@ -675,7 +682,7 @@ unsigned int FC_run(void)
 			gpio_set_gpio_pin(LED0);
 		}
 	
-		if(purge_state == PURGE_VALVE_OPEN) //if purge valve is open
+		if(purge_state == PURGE_VALVE_OPEN) //if purge valve is open ***MOVE this outside of if
 		{
 			if(millis() - purge_timer > PURGE_TIME) //if it has completed purge //is there some way to use flow meter instead of a fixed time?
 			{
@@ -688,7 +695,7 @@ unsigned int FC_run(void)
 			}
 		}
 	
-		//energy and charge integration for datalogging
+		//energy and charge integration for datalogging  ***MOVE this outside of if
 		unsigned int delta_t = millis() - total_charge_energy_integration_timer;
 		if(delta_t > TOTAL_CHARGE_ENERGY_INTEGRATION_INTERVAL)
 		{
@@ -708,7 +715,7 @@ unsigned int FC_air_starve(void);
 	FANUpdate(0);
 	
 	// Turn on air starve LED
-	gpio_set_gpio_pin(LED_STAT1);
+//	gpio_set_gpio_pin(LED_STAT1);
 	
 	//purge control: //purge based on amount of charge extracted from hydrogen (1 C = amp * sec)
 	delta_purge_time = millis() - purge_integration_timer;
@@ -721,8 +728,9 @@ unsigned int FC_air_starve(void);
 	}
 	if (CVM_probe_disconnect == 0) // if probe is connected
 	{
-		if ((mAms_since_last_purge > PURGE_THRESHOLD) || (CVM_purge_now == 1)) //time to purge
+		if ((mAms_since_last_purge > PURGE_THRESHOLD) || ((CVM_purge_now == 1) && (millis() - CVM_purge_signal_timer >= 2000))) //time to purge
 		{
+			CVM_purge_signal_timer = millis();
 			//open purge valve
 			gpio_set_gpio_pin(PURGE_VALVE);
 		
