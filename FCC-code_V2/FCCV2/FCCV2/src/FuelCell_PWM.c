@@ -276,10 +276,10 @@ int FANUpdate(int duty_cycle)
 	fan3_pwm_channel.cdtyupd = FANSpeed;
 	fan5_pwm_channel.cdtyupd = FANSpeed;
 	
-	pwm_update_duty_cycle(FAN1_PWM_CHANNEL_ID,&fan1_pwm_channel)
-	pwm_update_duty_cycle(FAN2_PWM_CHANNEL_ID,&fan2_pwm_channel)
-	pwm_update_duty_cycle(FAN3_PWM_CHANNEL_ID,&fan3_pwm_channel)
-	pwm_update_duty_cycle(FAN5_PWM_CHANNEL_ID,&fan5_pwm_channel)
+	pwm_update_duty_cycle(FAN1_PWM_CHANNEL_ID,&fan1_pwm_channel);
+	pwm_update_duty_cycle(FAN2_PWM_CHANNEL_ID,&fan2_pwm_channel);
+	pwm_update_duty_cycle(FAN3_PWM_CHANNEL_ID,&fan3_pwm_channel);
+	pwm_update_duty_cycle(FAN5_PWM_CHANNEL_ID,&fan5_pwm_channel);
 	return;
 }
 
