@@ -51,10 +51,117 @@ int main (void){
 	StartADC_Sequencers(); //start ADC conversion
 	ReadADC_Sequencers(); //read conversion results	
 	
-//	error_msg |= wdt_scheduler(); //start watchdog timer
+	error_msg |= wdt_scheduler(); //start watchdog timer
 	//comment out for debugging (debugger is supposed to disable wdt automatically but it doesn't always)
 
-	
+//int led_timer2 = millis();
+//int led_state = 0;
+//while (0) {
+	//StartADC_Sequencers(); //start another conversion
+	//ReadADC_Sequencers(); //read conversion
+	//
+	//switch(millis() - led_timer2)
+	//{
+		//
+		//case 0:
+		//gpio_set_gpio_pin(LED0);
+		//break;
+		//case 250:
+		//gpio_clr_gpio_pin(LED0);
+		//gpio_set_gpio_pin(LED1);
+		//break;
+		//case 500:
+		//gpio_clr_gpio_pin(LED1);
+		//gpio_set_gpio_pin(LED2);
+		//break;
+		//case 750:
+		//gpio_clr_gpio_pin(LED2);
+		//gpio_set_gpio_pin(LED3);
+		//break;
+		//case 1000:
+		//gpio_clr_gpio_pin(LED3);
+		//gpio_set_gpio_pin(LED_RUN);
+		//break;
+		//case 1250:
+		//gpio_clr_gpio_pin(LED_RUN);
+		//gpio_set_gpio_pin(LED_START);
+		//break;
+		//case 1500:
+		//gpio_clr_gpio_pin(LED_START);
+		//gpio_set_gpio_pin(LED_STOP);
+		//break;
+		//case 1750:
+		//gpio_clr_gpio_pin(LED_STOP);
+		//gpio_set_gpio_pin(LED_ERROR);
+		//break;	
+		//case 2000:
+		//gpio_clr_gpio_pin(LED_ERROR);
+		//gpio_set_gpio_pin(LED_STAT1);
+		//break;
+		//case 2250:
+		//gpio_clr_gpio_pin(LED_STAT1);
+		//gpio_set_gpio_pin(LED_STAT2);
+		//break;
+		//case 2500:
+		//gpio_clr_gpio_pin(LED_STAT2);
+		//gpio_set_gpio_pin(LED_STAT3);
+		//break;
+		//case 2750:
+		//gpio_clr_gpio_pin(LED_STAT3);
+		//gpio_set_gpio_pin(LED_STAT4);
+		//break;
+		//case 3000:
+		//gpio_clr_gpio_pin(LED_STAT4);
+		//gpio_set_gpio_pin(LED_STAT3);
+		//break;
+		//case 3250:
+		//gpio_clr_gpio_pin(LED_STAT3);
+		//gpio_set_gpio_pin(LED_STAT2);
+		//break;
+		//case 3500:
+		//gpio_clr_gpio_pin(LED_STAT2);
+		//gpio_set_gpio_pin(LED_STAT1);
+		//break;
+		//case 3750:
+		//gpio_clr_gpio_pin(LED_STAT1);
+		//gpio_set_gpio_pin(LED_ERROR);
+		//break;
+		//case 4000:
+		//gpio_clr_gpio_pin(LED_ERROR);
+		//gpio_set_gpio_pin(LED_STOP);
+		//break;
+		//case 4250:
+		//gpio_clr_gpio_pin(LED_STOP);
+		//gpio_set_gpio_pin(LED_START);
+		//break;
+		//case 4500:
+		//gpio_clr_gpio_pin(LED_START);
+		//gpio_set_gpio_pin(LED_RUN);
+		//break;
+		//case 4750:
+		//gpio_clr_gpio_pin(LED_RUN);
+		//gpio_set_gpio_pin(LED3);
+		//break;
+		//case 5000:
+		//gpio_clr_gpio_pin(LED3);
+		//gpio_set_gpio_pin(LED2);
+		//break;
+		//case 5250:
+		//gpio_clr_gpio_pin(LED2);
+		//gpio_set_gpio_pin(LED1);
+		//break;
+		//case 5500:
+		//gpio_clr_gpio_pin(LED1);
+		//gpio_set_gpio_pin(LED0);
+		//break;
+		//case 5750:
+		//gpio_clr_gpio_pin(LED0);
+		//led_timer2 = millis();
+		//break;
+	//
+	//}
+//
+//}
 	//Start of main loop
 	while(1)
 	{
@@ -122,7 +229,7 @@ int main (void){
 		{
 			if (air_starve_LED_time == 0) // First time
 			{
-				air_starve_LED_time = millis()
+				air_starve_LED_time = millis();
 			}
 			if (millis() - air_starve_LED_time >= 250) // Set a blink rate of 250 ms 
 			{
@@ -140,7 +247,7 @@ int main (void){
 		}
 		else if ((~air_starve_check) && (fc_state != FC_STATE_AIR_STARVE))
 		{
-			gpio_clr_gpio_pin(LED_STAT1)
+			gpio_clr_gpio_pin(LED_STAT1);
 		}
 			
 		error_msg |= FC_check_alarms(fc_state); // Becomes true if FC_check_alarms returns true, and stays true
