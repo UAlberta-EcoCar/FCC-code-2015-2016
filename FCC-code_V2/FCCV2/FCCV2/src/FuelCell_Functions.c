@@ -104,7 +104,7 @@ unsigned int FC_startup_fans(void)
 	//increment if tach is 0 and reads 1
 	if(tachometer_test == 0)
 	{
-		if(gpio_get_pin_value(FAN1_TACH)== 1 && gpio_get_pin_value(FAN2_TACH)== 1 && gpio_get_pin_value(FAN3_TACH)== 1 && gpio_get_pin_value(FAN5_TACH)== 1)
+		if(gpio_get_pin_value(FAN1_TACH_R)== 1 && gpio_get_pin_value(FAN2_TACH_R)== 1 && gpio_get_pin_value(FAN3_TACH_R)== 1 && gpio_get_pin_value(FAN5_TACH_R)== 1)
 		{
 			tachometer_test = 1;
 		}
@@ -114,7 +114,7 @@ unsigned int FC_startup_fans(void)
 	//then wait for it to go low again (then the fan is spinning)
 	if(tachometer_test == 1)
 	{
-		if(gpio_get_pin_value(FAN1_TACH) == 0 && gpio_get_pin_value(FAN2_TACH) == 0 && gpio_get_pin_value(FAN3_TACH) == 0 && gpio_get_pin_value(FAN5_TACH) == 0)
+		if(gpio_get_pin_value(FAN1_TACH_R) == 0 && gpio_get_pin_value(FAN2_TACH_R) == 0 && gpio_get_pin_value(FAN3_TACH_R) == 0 && gpio_get_pin_value(FAN5_TACH_R) == 0)
 		{
 			//fan is spinning go to startup
 			fc_state = FC_STATE_STARTUP_H2;
@@ -870,7 +870,7 @@ unsigned int FC_shutdown(void)
 
 unsigned int FC_alarm(void)
 {
-	//unsigned int fc_state;
+	unsigned int fc_state;
 	//if ((millis() - led_timer) > 500)
 	//{
 		//if (gpio_get_pin_value(LED_START) == 1)
