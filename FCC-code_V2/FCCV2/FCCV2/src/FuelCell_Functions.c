@@ -20,7 +20,6 @@ unsigned long delay_timer2;
 unsigned long repress_delay;
 unsigned long start_delay;
 unsigned long CVM_purge_signal_timer;
-unsigned long led_timer; //temporary - for led testing
 
 unsigned long man_depress_LED_time = 0; // Timer used to control LED Blinking
 unsigned int FC_standby(int manual_depressurize_check)
@@ -30,7 +29,7 @@ unsigned int FC_standby(int manual_depressurize_check)
 	{
 		if (man_depress_LED_time == 0) // First time
 		{
-			man_depress_LED_time = millis();
+			man_depress_LED_time = millis()
 		}
 		if (millis() - man_depress_LED_time >= 250) // Set a blink rate of 250 ms 
 		{
@@ -49,7 +48,7 @@ unsigned int FC_standby(int manual_depressurize_check)
 	if (gpio_get_pin_value(START))
 	{
 		if (manual_depressurize_check)
-			fc_state = FC_STATE_MANUAL_DEPRESSURIZE;
+			fc_state = FC_STATE_MANUAL_DEPRESSURIZE
 		else
 			fc_state = FC_STATE_STARTUP_FANS;
 		gpio_clr_gpio_pin(LED_STOP);
@@ -104,7 +103,7 @@ unsigned int FC_startup_fans(void)
 	//increment if tach is 0 and reads 1
 	if(tachometer_test == 0)
 	{
-		if(gpio_get_pin_value(FAN1_TACH)== 1 && gpio_get_pin_value(FAN2_TACH)== 1 && gpio_get_pin_value(FAN3_TACH)== 1 && gpio_get_pin_value(FAN5_TACH)== 1)
+		if(gpio_get_pin_value(FAN1_TACH)== 1 && gpio_get_pin_value(FAN2_TACH)== 1 && gpio_get_pin_value(FAN3_TACH)== 1 gpio_get_pin_value(FAN5_TACH)== 1)
 		{
 			tachometer_test = 1;
 		}
@@ -114,7 +113,7 @@ unsigned int FC_startup_fans(void)
 	//then wait for it to go low again (then the fan is spinning)
 	if(tachometer_test == 1)
 	{
-		if(gpio_get_pin_value(FAN1_TACH) == 0 && gpio_get_pin_value(FAN2_TACH) == 0 && gpio_get_pin_value(FAN3_TACH) == 0 && gpio_get_pin_value(FAN5_TACH) == 0)
+		if(gpio_get_pin_value(FAN1_TACH) == 0 && gpio_get_pin_value(FAN2_TACH) == 0 gpio_get_pin_value(FAN3_TACH) == 0 gpio_get_pin_value(FAN5_TACH) == 0)
 		{
 			//fan is spinning go to startup
 			fc_state = FC_STATE_STARTUP_H2;
@@ -225,7 +224,6 @@ unsigned int FC_repressurize(void)
 
 unsigned int FC_manual_depressurize(void)
 {
-	unsigned int fc_state;
 	gpio_set_gpio_pin(LED_STAT2); // Turn on manual_depressurize LED
 	
 	// Open Relays
@@ -306,13 +304,11 @@ unsigned int time_since_last_purge; //keep track of time between purges
 unsigned int purge_state = FIRST_PURGE_CYCLE; //used for keeping track of switching b/w purge valve open closed
 unsigned int fan_update_timer; //used for timing pwm code
 unsigned int charge_thres = 35000;
-int CVM_purge_now = 0;
-int CVM_probe_disconnect = 0;
+unsigned int CVM_purge_now = gpio_get_pin_value(CVM_PURGE_V_R);
+unsigned int CVM_probe_disconnect = gpio_get_pin_value(CVM_PROBE_DISCONNECT);
 unsigned int FC_startup_charge(air_starve_check)
 {
 	unsigned int fc_state = FC_STATE_STARTUP_CHARGE; //will keep charging until state exits
-	CVM_purge_now = gpio_get_pin_value(CVM_PURGE_V_R);
-	CVM_probe_disconnect = gpio_get_pin_value(CVM_PROBE_DISCONNECT);
 	
 	if(millis() - delay_timer1 < 1000)
 	{
@@ -585,10 +581,9 @@ int calc_max_temp(void)
 
 unsigned int fan_update_timer;
 unsigned int FC_run(void)
-{
 	unsigned int fc_state;
-	CVM_purge_now = gpio_get_pin_value(CVM_PURGE_V_R);
-	CVM_probe_disconnect = gpio_get_pin_value(CVM_PROBE_DISCONNECT);
+{
+	
 	//pid fan control to maintain temperature
 	if(millis() - fan_update_timer > FANUPDATE_INTERVAL)
 	{
@@ -608,7 +603,7 @@ unsigned int FC_run(void)
 	}
 	if (CVM_probe_disconnect == 0) // if probe is connected
 	{
-		if ((mAms_since_last_purge > PURGE_THRESHOLD) || ((CVM_purge_now == 1)) && (millis - CVM_purge_signal_timer >= 2000)) //time to purge
+		if ((mAms_since_last_purge > PURGE_THRESHOLD) || ((CVM_purge_now == 1) && (millis - CVM_purge_signal_timer >= 2000)) //time to purge
 		{
 			CVM_purge_signal_timer = millis();
 			//open purge valve
@@ -713,13 +708,11 @@ unsigned int FC_run(void)
 	return(fc_state);
 }
 
-unsigned int FC_air_starve(void) 
+
+unsigned int FC_air_starve(void);
 {
-	unsigned int fc_state;
 	// Turn fans off
 	FANUpdate(0);
-	CVM_purge_now = gpio_get_pin_value(CVM_PURGE_V_R);
-	CVM_probe_disconnect = gpio_get_pin_value(CVM_PROBE_DISCONNECT);
 	
 	// Turn on air starve LED
 //	gpio_set_gpio_pin(LED_STAT1);
@@ -871,21 +864,8 @@ unsigned int FC_shutdown(void)
 unsigned int FC_alarm(void)
 {
 	unsigned int fc_state;
-	if ((millis() - led_timer) > 500)
-	{
-		if (gpio_get_pin_value(LED_START) == 1)
-		{
-			gpio_clr_gpio_pin(LED_START);
-		}
-		else if (gpio_get_pin_value(LED_START) == 0)
-		{
-			gpio_set_gpio_pin(LED_START);
-		}
-		led_timer = millis();
-	}
-	
 	gpio_clr_gpio_pin(LED_RUN);
-	//gpio_clr_gpio_pin(LED_START);
+	gpio_clr_gpio_pin(LED_START);
 	gpio_set_gpio_pin(LED_ERROR);
 	gpio_set_gpio_pin(LED_STOP);
 	//close valves
