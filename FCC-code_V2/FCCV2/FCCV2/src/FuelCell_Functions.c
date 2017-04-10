@@ -26,26 +26,26 @@ unsigned long man_depress_LED_time = 0; // Timer used to control LED Blinking
 unsigned int FC_standby(int manual_depressurize_check)
 {
 	unsigned int fc_state;
-	if (manual_depressurize_check)
-	{
-		if (man_depress_LED_time == 0) // First time
-		{
-			man_depress_LED_time = millis();
-		}
-		if (millis() - man_depress_LED_time >= 250) // Set a blink rate of 250 ms 
-		{
-			if (gpio_get_pin_value(LED_STAT2) == 1) // If on turn off, reset timer
-			{
-				gpio_clr_gpio_pin(LED_STAT2);
-				man_depress_LED_time = millis();
-			}
-			else if (gpio_get_pin_value(LED_STAT2) == 0) // If off turn on, reset timer
-			{
-				gpio_set_gpio_pin(LED_STAT2);
-				man_depress_LED_time = millis();
-			}
-		}
-	}
+	//if (manual_depressurize_check)
+	//{
+		//if (man_depress_LED_time == 0) // First time
+		//{
+			//man_depress_LED_time = millis();
+		//}
+		//if (millis() - man_depress_LED_time >= 250) // Set a blink rate of 250 ms 
+		//{
+			//if (gpio_get_pin_value(LED_STAT2) == 1) // If on turn off, reset timer
+			//{
+				//gpio_clr_gpio_pin(LED_STAT2);
+				//man_depress_LED_time = millis();
+			//}
+			//else if (gpio_get_pin_value(LED_STAT2) == 0) // If off turn on, reset timer
+			//{
+				//gpio_set_gpio_pin(LED_STAT2);
+				//man_depress_LED_time = millis();
+			//}
+		//}
+	//}
 	if (gpio_get_pin_value(START))
 	{
 		if (manual_depressurize_check)
@@ -72,14 +72,14 @@ unsigned int FC_standby(int manual_depressurize_check)
 		gpio_clr_gpio_pin(LED_STOP);
 		//fan low
 		FANUpdate(0);
-		if (manual_depressurize_check == 1)
-		{
-			fc_state = FC_STATE_MANUAL_DEPRESSURIZE;
-		}
-		else if (manual_depressurize_check == 0)
-		{
-			fc_state = FC_STATE_STANDBY;
-		}
+		//if (manual_depressurize_check == 1)
+		//{
+			//fc_state = FC_STATE_MANUAL_DEPRESSURIZE;
+		//}
+		//else if (manual_depressurize_check == 0)
+		//{
+			//fc_state = FC_STATE_STANDBY;
+		//}
 	}
 	return(fc_state);
 }
@@ -886,8 +886,17 @@ unsigned int FC_alarm(void)
 	
 	gpio_clr_gpio_pin(LED_RUN);
 	gpio_clr_gpio_pin(LED_START);
+	gpio_clr_gpio_pin(LED0);
+	gpio_clr_gpio_pin(LED1);
+	gpio_clr_gpio_pin(LED2);
+	gpio_clr_gpio_pin(LED3);
+	gpio_clr_gpio_pin(LED_STAT1);
+	gpio_clr_gpio_pin(LED_STAT2);
+	gpio_clr_gpio_pin(LED_STAT3);
+	gpio_clr_gpio_pin(LED_STAT4);
 	gpio_set_gpio_pin(LED_ERROR);
 	gpio_set_gpio_pin(LED_STOP);
+	
 	//close valves
 	gpio_clr_gpio_pin(H2_VALVE);
 	gpio_clr_gpio_pin(PURGE_VALVE);
