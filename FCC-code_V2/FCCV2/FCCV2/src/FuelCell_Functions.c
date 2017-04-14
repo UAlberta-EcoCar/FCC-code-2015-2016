@@ -71,7 +71,7 @@ unsigned int FC_startup_fans(void)
 	//increment if tach is 0 and reads 1
 	if(tachometer_test == 0)
 	{
-		if(gpio_get_pin_value(FAN_TACH)==1)
+		if(gpio_get_pin_value(FAN1_TACH_R)==1)
 		{
 			tachometer_test = 1;
 		}
@@ -81,7 +81,7 @@ unsigned int FC_startup_fans(void)
 	//then wait for it to go low again (then the fan is spinning)
 	if(tachometer_test == 1)
 	{
-		if(gpio_get_pin_value(FAN_TACH) == 0)
+		if(gpio_get_pin_value(FAN1_TACH_R) == 0)
 		{
 			//fan is spinning go to startup
 			fc_state = FC_STATE_STARTUP_H2;
