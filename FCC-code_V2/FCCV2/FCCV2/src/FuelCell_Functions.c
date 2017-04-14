@@ -1,8 +1,8 @@
 /*
  * FuelCell_Functions.c
- * 
+ *
  * Created: 2015-11-09 11:07:53 AM
- *  Author: Reegan 
+ *  Author: Reegan
  */ 
 
 #include "asf.h"
@@ -19,39 +19,13 @@ unsigned long delay_timer1;
 unsigned long delay_timer2;
 unsigned long repress_delay;
 unsigned long start_delay;
-unsigned long CVM_purge_signal_timer;
-unsigned long led_timer; //temporary - for led testing
 
-unsigned long man_depress_LED_time = 0; // Timer used to control LED Blinking
-unsigned int FC_standby(int manual_depressurize_check)
+unsigned int FC_standby(void)
 {
 	unsigned int fc_state;
-	//if (manual_depressurize_check)
-	//{
-		//if (man_depress_LED_time == 0) // First time
-		//{
-			//man_depress_LED_time = millis();
-		//}
-		//if (millis() - man_depress_LED_time >= 250) // Set a blink rate of 250 ms 
-		//{
-			//if (gpio_get_pin_value(LED_STAT2) == 1) // If on turn off, reset timer
-			//{
-				//gpio_clr_gpio_pin(LED_STAT2);
-				//man_depress_LED_time = millis();
-			//}
-			//else if (gpio_get_pin_value(LED_STAT2) == 0) // If off turn on, reset timer
-			//{
-				//gpio_set_gpio_pin(LED_STAT2);
-				//man_depress_LED_time = millis();
-			//}
-		//}
-	//}
 	if (gpio_get_pin_value(START))
 	{
-		if (manual_depressurize_check)
-			fc_state = FC_STATE_MANUAL_DEPRESSURIZE;
-		else
-			fc_state = FC_STATE_STARTUP_FANS;
+		fc_state = FC_STATE_STARTUP_FANS;
 		gpio_clr_gpio_pin(LED_STOP);
 		gpio_set_gpio_pin(LED_START);
 	}
@@ -72,14 +46,7 @@ unsigned int FC_standby(int manual_depressurize_check)
 		gpio_clr_gpio_pin(LED_STOP);
 		//fan low
 		FANUpdate(0);
-		//if (manual_depressurize_check == 1)
-		//{
-			//fc_state = FC_STATE_MANUAL_DEPRESSURIZE;
-		//}
-		//else if (manual_depressurize_check == 0)
-		//{
-			//fc_state = FC_STATE_STANDBY;
-		//}
+		fc_state = FC_STATE_STANDBY;
 	}
 	return(fc_state);
 }
@@ -104,7 +71,7 @@ unsigned int FC_startup_fans(void)
 	//increment if tach is 0 and reads 1
 	if(tachometer_test == 0)
 	{
-		if(gpio_get_pin_value(FAN1_TACH_R)== 1 && gpio_get_pin_value(FAN2_TACH_R)== 1 && gpio_get_pin_value(FAN3_TACH_R)== 1 && gpio_get_pin_value(FAN5_TACH_R)== 1)
+		if(gpio_get_pin_value(FAN_TACH)==1)
 		{
 			tachometer_test = 1;
 		}
@@ -114,7 +81,7 @@ unsigned int FC_startup_fans(void)
 	//then wait for it to go low again (then the fan is spinning)
 	if(tachometer_test == 1)
 	{
-		if(gpio_get_pin_value(FAN1_TACH_R) == 0 && gpio_get_pin_value(FAN2_TACH_R) == 0 && gpio_get_pin_value(FAN3_TACH_R) == 0 && gpio_get_pin_value(FAN5_TACH_R) == 0)
+		if(gpio_get_pin_value(FAN_TACH) == 0)
 		{
 			//fan is spinning go to startup
 			fc_state = FC_STATE_STARTUP_H2;
@@ -223,44 +190,6 @@ unsigned int FC_repressurize(void)
 	return(fc_state);
 }
 
-unsigned int FC_manual_depressurize(void)
-{
-	unsigned int fc_state;
-	gpio_set_gpio_pin(LED_STAT2); // Turn on manual_depressurize LED
-	
-	// Open Relays
-	gpio_clr_gpio_pin(START_RELAY);
-	gpio_clr_gpio_pin(CAP_RELAY);
-	gpio_clr_gpio_pin(RES_RELAY);
-	gpio_clr_gpio_pin(MOTOR_RELAY);
-	
-	if(gpio_get_gpio_pin_output_value(PURGE_VALVE) == 0) // If the purge valve is closed
-	{
-		purge_timer = millis(); // Start timer
-	}
-	
-	gpio_set_gpio_pin(PURGE_VALVE); // open purge valve
-	gpio_set_gpio_pin(LED0); // turn on LED to notify that purge valve is on
-	
-	if (millis() - purge_timer < 500) // loop through function
-	{
-		fc_state = FC_STATE_MANUAL_DEPRESSURIZE;
-	}
-
-	else // 500 ms over
-	{
-		gpio_clr_gpio_pin(PURGE_VALVE); // close purge valve
-		gpio_clr_gpio_pin(LED0); // turn off purge LED
-		gpio_set_gpio_pin(START_RELAY); // Close relays
-		gpio_set_gpio_pin(CAP_RELAY);
-		gpio_set_gpio_pin(RES_RELAY);
-		gpio_set_gpio_pin(MOTOR_RELAY);
-		gpio_clr_gpio_pin(LED_STAT2); // Turn off manual_depressurize LED
-		fc_state = FC_STATE_ALARM; // go to alarm state
-	}
-	return(fc_state);
-}
-
 unsigned int total_charge_energy_integration_timer;
 
 unsigned int time_between_last_purges;
@@ -306,13 +235,9 @@ unsigned int time_since_last_purge; //keep track of time between purges
 unsigned int purge_state = FIRST_PURGE_CYCLE; //used for keeping track of switching b/w purge valve open closed
 unsigned int fan_update_timer; //used for timing pwm code
 unsigned int charge_thres = 35000;
-int CVM_purge_now = 0;
-int CVM_probe_disconnect = 0;
-unsigned int FC_startup_charge(air_starve_check)
+unsigned int FC_startup_charge(void)
 {
 	unsigned int fc_state = FC_STATE_STARTUP_CHARGE; //will keep charging until state exits
-	CVM_purge_now = gpio_get_pin_value(CVM_PURGE_V_R);
-	CVM_probe_disconnect = gpio_get_pin_value(CVM_PROBE_DISCONNECT);
 	
 	if(millis() - delay_timer1 < 1000)
 	{
@@ -336,233 +261,115 @@ unsigned int FC_startup_charge(air_starve_check)
 		uJ_since_last_purge += delta_purge_time * get_FCCURR() * get_FCVOLT() / 1000;
 		purge_integration_timer = millis();
 	}
-	if (CVM_purge_signal_timer == 0)
-			{
-				CVM_purge_signal_timer = millis();
-			}
-	if (CVM_probe_disconnect == 0) // if probe is connected
+	
+	if (mAms_since_last_purge > PURGE_THRESHOLD) //time to purge
 	{
-		if ((mAms_since_last_purge > PURGE_THRESHOLD) || ((CVM_purge_now == 1) && (millis - CVM_purge_signal_timer >= 2000))) //time to purge
-		{
-			CVM_purge_signal_timer = millis();
-			
-			//open purge valve
-			gpio_set_gpio_pin(PURGE_VALVE);
+		//open purge valve
+		gpio_set_gpio_pin(PURGE_VALVE);
 		
-			purge_counter++; //increment number of purges
+		purge_counter++; //increment number of purges
 		
-			//we restart counting mAms as soon as valve opens
-			//reset mAms sum
-			mAms_since_last_purge = 0;
+		//we restart counting mAms as soon as valve opens
+		//reset mAms sum
+		mAms_since_last_purge = 0;
 		
-			//reset energy
-			uJ_since_last_purge = 0; 
+		//reset energy
+		uJ_since_last_purge = 0; 
 		
-			//record time
-			time_between_last_purges = time_since_last_purge;
-			time_since_last_purge = 0; //reset timer
-			//reset timer
-			purge_integration_timer = millis();
+		//record time
+		time_between_last_purges = time_since_last_purge;
+		time_since_last_purge = 0; //reset timer
+		//reset timer
+		purge_integration_timer = millis();
 		
-			//start purge timer to time purge
-			purge_timer = millis();
-			purge_state = PURGE_VALVE_OPEN; //purge valve open
-			//set led0 on because why not
-			gpio_set_gpio_pin(LED0);
-		}
-	
-		if(purge_state == PURGE_VALVE_OPEN) //if purge valve is open
-		{
-			if(millis() - purge_timer > PURGE_TIME) //if it has completed purge 
-			{
-				//close purge valve
-				gpio_clr_gpio_pin(PURGE_VALVE);
-				purge_state = PURGE_VALVE_CLOSED; //purge valve closed
-			
-				//turn led0 off
-				gpio_clr_gpio_pin(LED0);
-			}
-		}
-		
-		//pid fan control to maintain temperature
-		if(millis() - fan_update_timer > FANUPDATE_INTERVAL)
-		{
-			//pid fan control for temp regulation
-			FANUpdate(PID( get_FCTEMP() , ((53*get_FCCURR()) / 100 + 299160)));
-			fan_update_timer = millis();
-		}
-	
-		//energy and charge integration for datalogging
-		unsigned int delta_t = millis() - total_charge_energy_integration_timer;
-		if(delta_t > TOTAL_CHARGE_ENERGY_INTEGRATION_INTERVAL)
-		{
-			estimated_total_E += get_FCVOLT() * get_FCCURR() * delta_t / 1000 / 1000;
-			estimated_total_charge_extracted += get_FCCURR() * delta_t / 1000;
-			total_charge_energy_integration_timer = millis();
-		}
-	
-		//charging capacitors through resistor to avoid temporary short circuit
-		if (get_CAPVOLT() < charge_thres) //if voltage is less than 35V
-		{
-			//close resistor relay
-			gpio_set_gpio_pin(RES_RELAY);
-			gpio_set_gpio_pin(LED1); //make led1 indicate charging state?
-			//other relays open still
-			gpio_clr_gpio_pin(START_RELAY);
-			gpio_clr_gpio_pin(MOTOR_RELAY);
-			gpio_clr_gpio_pin(CAP_RELAY);
-			//H2_valve open
-			gpio_set_gpio_pin(H2_VALVE);
-			//purge valve still closed
-			//gpio_clr_gpio_pin(PURGE_VALVE);
-			//fc_State still charge
-			delay_timer2 = millis();
-		}
-		else //caps are charged
-		{
-			charge_thres = 33000; //set threshold lower to stop above if from running
-			//turn off led1
-			gpio_clr_gpio_pin(LED1);
-		
-			//start relay still open
-			gpio_clr_gpio_pin(START_RELAY);
-		
-			//open resistor relay
-			gpio_clr_gpio_pin(RES_RELAY);
-		
-			if(millis() - delay_timer2 < 2000)
-			{
-				return(FC_STATE_STARTUP_CHARGE);
-			}
-		
-			gpio_set_gpio_pin(CAP_RELAY);
-		
-			if(millis() - delay_timer2 < 4000)
-			{
-				return(FC_STATE_STARTUP_CHARGE);
-			}
-		
-			//close motor relay
-			gpio_set_gpio_pin(MOTOR_RELAY);
-		}
-	}
-	else if (CVM_probe_disconnect == 1) // if probe is disconnected
-	{
-		if (mAms_since_last_purge > PURGE_THRESHOLD) //time to purge
-		{
-			//open purge valve
-			gpio_set_gpio_pin(PURGE_VALVE);
-		
-			purge_counter++; //increment number of purges
-		
-			//we restart counting mAms as soon as valve opens
-			//reset mAms sum
-			mAms_since_last_purge = 0;
-		
-			//reset energy
-			uJ_since_last_purge = 0; 
-		
-			//record time
-			time_between_last_purges = time_since_last_purge;
-			time_since_last_purge = 0; //reset timer
-			//reset timer
-			purge_integration_timer = millis();
-		
-			//start purge timer to time purge
-			purge_timer = millis();
-			purge_state = PURGE_VALVE_OPEN; //purge valve open
-			//set led0 on because why not
-			gpio_set_gpio_pin(LED0);
-		}
-	
-		if(purge_state == PURGE_VALVE_OPEN) //if purge valve is open
-		{
-			if(millis() - purge_timer > PURGE_TIME) //if it has completed purge 
-			{
-				//close purge valve
-				gpio_clr_gpio_pin(PURGE_VALVE);
-				purge_state = PURGE_VALVE_CLOSED; //purge valve closed
-			
-				//turn led0 off
-				gpio_clr_gpio_pin(LED0);
-			}
-		}
-		
-		//pid fan control to maintain temperature
-		if(millis() - fan_update_timer > FANUPDATE_INTERVAL)
-		{
-			//pid fan control for temp regulation
-			FANUpdate(PID( get_FCTEMP() , ((53*get_FCCURR()) / 100 + 299160)));
-			fan_update_timer = millis();
-		}
-	
-		//energy and charge integration for datalogging
-		unsigned int delta_t = millis() - total_charge_energy_integration_timer;
-		if(delta_t > TOTAL_CHARGE_ENERGY_INTEGRATION_INTERVAL)
-		{
-			estimated_total_E += get_FCVOLT() * get_FCCURR() * delta_t / 1000 / 1000;
-			estimated_total_charge_extracted += get_FCCURR() * delta_t / 1000;
-			total_charge_energy_integration_timer = millis();
-		}
-	
-		//charging capacitors through resistor to avoid temporary short circuit
-		if (get_CAPVOLT() < charge_thres) //if voltage is less than 35V
-		{
-			//close resistor relay
-			gpio_set_gpio_pin(RES_RELAY);
-			gpio_set_gpio_pin(LED1); //make led1 indicate charging state?
-			//other relays open still
-			gpio_clr_gpio_pin(START_RELAY);
-			gpio_clr_gpio_pin(MOTOR_RELAY);
-			gpio_clr_gpio_pin(CAP_RELAY);
-			//H2_valve open
-			gpio_set_gpio_pin(H2_VALVE);
-			//purge valve still closed
-			//gpio_clr_gpio_pin(PURGE_VALVE);
-			//fc_State still charge
-			delay_timer2 = millis();
-		}
-		else //caps are charged
-		{
-			charge_thres = 33000; //set threshold lower to stop above if from running
-			//turn off led1
-			gpio_clr_gpio_pin(LED1);
-		
-			//start relay still open
-			gpio_clr_gpio_pin(START_RELAY);
-		
-			//open resistor relay
-			gpio_clr_gpio_pin(RES_RELAY);
-		
-			if(millis() - delay_timer2 < 2000)
-			{
-				return(FC_STATE_STARTUP_CHARGE);
-			}
-		
-			gpio_set_gpio_pin(CAP_RELAY);
-		
-			if(millis() - delay_timer2 < 4000)
-			{
-				return(FC_STATE_STARTUP_CHARGE);
-			}
-		
-			//close motor relay
-			gpio_set_gpio_pin(MOTOR_RELAY);
-		}
+		//start purge timer to time purge
+		purge_timer = millis();
+		purge_state = PURGE_VALVE_OPEN; //purge valve open
+		//set led0 on because why not
+		gpio_set_gpio_pin(LED0);
 	}
 	
+	if(purge_state == PURGE_VALVE_OPEN) //if purge valve is open
+	{
+		if(millis() - purge_timer > PURGE_TIME) //if it has completed purge 
+		{
+			//close purge valve
+			gpio_clr_gpio_pin(PURGE_VALVE);
+			purge_state = PURGE_VALVE_CLOSED; //purge valve closed
+			
+			//turn led0 off
+			gpio_clr_gpio_pin(LED0);
+		}
+	}
+		
+	//pid fan control to maintain temperature
+	if(millis() - fan_update_timer > FANUPDATE_INTERVAL)
+	{
+		//pid fan control for temp regulation
+		FANUpdate(PID( get_FCTEMP() , ((53*get_FCCURR()) / 100 + 299160)));
+		fan_update_timer = millis();
+	}
+	
+	//energy and charge integration for datalogging
+	unsigned int delta_t = millis() - total_charge_energy_integration_timer;
+	if(delta_t > TOTAL_CHARGE_ENERGY_INTEGRATION_INTERVAL)
+	{
+		estimated_total_E += get_FCVOLT() * get_FCCURR() * delta_t / 1000 / 1000;
+		estimated_total_charge_extracted += get_FCCURR() * delta_t / 1000;
+		total_charge_energy_integration_timer = millis();
+	}
+	
+	//charging capacitors through resistor to avoid temporary short circuit
+	if (get_CAPVOLT() < charge_thres) //if voltage is less than 35V
+	{
+		//close resistor relay
+		gpio_set_gpio_pin(RES_RELAY);
+		gpio_set_gpio_pin(LED1); //make led1 indicate charging state?
+		//other relays open still
+		gpio_clr_gpio_pin(START_RELAY);
+		gpio_clr_gpio_pin(MOTOR_RELAY);
+		gpio_clr_gpio_pin(CAP_RELAY);
+		//H2_valve open
+		gpio_set_gpio_pin(H2_VALVE);
+		//purge valve still closed
+		//gpio_clr_gpio_pin(PURGE_VALVE);
+		//fc_State still charge
+		delay_timer2 = millis();
+	}
+	else //caps are charged
+	{
+		charge_thres = 33000; //set threshold lower to stop above if from running
+		//turn off led1
+		gpio_clr_gpio_pin(LED1);
+		
+		//start relay still open
+		gpio_clr_gpio_pin(START_RELAY);
+		
+		//open resistor relay
+		gpio_clr_gpio_pin(RES_RELAY);
+		
+		if(millis() - delay_timer2 < 2000)
+		{
+			return(FC_STATE_STARTUP_CHARGE);
+		}
+		
+		gpio_set_gpio_pin(CAP_RELAY);
+		
+		if(millis() - delay_timer2 < 4000)
+		{
+			return(FC_STATE_STARTUP_CHARGE);
+		}
+		
+		//close motor relay
+		gpio_set_gpio_pin(MOTOR_RELAY);
+		
+		
 		//go to main run state
-		if (air_starve_check == 1)
-		{
-			fc_state = FC_STATE_AIR_STARVE;
-		}
-		else if (air_starve_check == 0)
-		{
-			fc_state = FC_STATE_RUN;	
-		}
+		fc_state = FC_STATE_RUN;
 		gpio_clr_gpio_pin(LED_START);
 		gpio_set_gpio_pin(LED_RUN);
 		
+	}
 	return(fc_state);
 }
 
@@ -587,8 +394,7 @@ unsigned int fan_update_timer;
 unsigned int FC_run(void)
 {
 	unsigned int fc_state;
-	CVM_purge_now = gpio_get_pin_value(CVM_PURGE_V_R);
-	CVM_probe_disconnect = gpio_get_pin_value(CVM_PROBE_DISCONNECT);
+	
 	//pid fan control to maintain temperature
 	if(millis() - fan_update_timer > FANUPDATE_INTERVAL)
 	{
@@ -606,239 +412,60 @@ unsigned int FC_run(void)
 		purge_integration_timer = millis();
 		time_since_last_purge += delta_purge_time;
 	}
-	if (CVM_probe_disconnect == 0) // if probe is connected
+	
+	if (mAms_since_last_purge > PURGE_THRESHOLD) //time to purge
 	{
-		if ((mAms_since_last_purge > PURGE_THRESHOLD) || ((CVM_purge_now == 1)) && (millis - CVM_purge_signal_timer >= 2000)) //time to purge
-		{
-			CVM_purge_signal_timer = millis();
-			//open purge valve
-			gpio_set_gpio_pin(PURGE_VALVE);
+		//open purge valve
+		gpio_set_gpio_pin(PURGE_VALVE);
 		
-			purge_counter++; //increment number of purges
+		purge_counter++; //increment number of purges
 				
-			//we restart counting mAms as soon as valve opens
-			//reset mAms sum
-			mAms_since_last_purge = 0;
+		//we restart counting mAms as soon as valve opens
+		//reset mAms sum
+		mAms_since_last_purge = 0;
 		
-			//reset energy
-			uJ_since_last_purge = 0; 
+		//reset energy
+		uJ_since_last_purge = 0; 
 		
-			//record time
-			time_between_last_purges = time_since_last_purge;
-			time_since_last_purge = 0; //reset timer		
-			//reset timer
-			purge_integration_timer = millis();
+		//record time
+		time_between_last_purges = time_since_last_purge;
+		time_since_last_purge = 0; //reset timer		
+		//reset timer
+		purge_integration_timer = millis();
 		
-			//start purge timer to time purge
-			purge_timer = millis();
-			purge_state = PURGE_VALVE_OPEN; //purge valve open
-			//set led0 on because why not
-			gpio_set_gpio_pin(LED0);
-		}
+		//start purge timer to time purge
+		purge_timer = millis();
+		purge_state = PURGE_VALVE_OPEN; //purge valve open
+		//set led0 on because why not
+		gpio_set_gpio_pin(LED0);
+	}
 	
-		if(purge_state == PURGE_VALVE_OPEN) //if purge valve is open
+	if(purge_state == PURGE_VALVE_OPEN) //if purge valve is open
+	{
+		if(millis() - purge_timer > PURGE_TIME) //if it has completed purge //is there some way to use flow meter instead of a fixed time?
 		{
-			if(millis() - purge_timer > PURGE_TIME) //if it has completed purge //is there some way to use flow meter instead of a fixed time?
-			{
-				//close purge valve
-				gpio_clr_gpio_pin(PURGE_VALVE);
-				purge_state = PURGE_VALVE_CLOSED; //purge valve closed
+			//close purge valve
+			gpio_clr_gpio_pin(PURGE_VALVE);
+			purge_state = PURGE_VALVE_CLOSED; //purge valve closed
 			
-				//turn led0 off
-				gpio_clr_gpio_pin(LED0);
-			}
-		}
-	
-		//energy and charge integration for datalogging
-		unsigned int delta_t = millis() - total_charge_energy_integration_timer;
-		if(delta_t > TOTAL_CHARGE_ENERGY_INTEGRATION_INTERVAL)
-		{
-			estimated_total_E += get_FCVOLT() * get_FCCURR() * delta_t / 1000 / 1000;
-			estimated_total_charge_extracted += get_FCCURR() * delta_t / 1000;
-			total_charge_energy_integration_timer = millis();
+			//turn led0 off
+			gpio_clr_gpio_pin(LED0);
 		}
 	}
-	else if (CVM_probe_disconnect == 1) // if probe is disconnected
+	
+	//energy and charge integration for datalogging
+	unsigned int delta_t = millis() - total_charge_energy_integration_timer;
+	if(delta_t > TOTAL_CHARGE_ENERGY_INTEGRATION_INTERVAL)
 	{
-		if (mAms_since_last_purge > PURGE_THRESHOLD) //time to purge
-		{
-			//open purge valve
-			gpio_set_gpio_pin(PURGE_VALVE);
-		
-			purge_counter++; //increment number of purges
-				
-			//we restart counting mAms as soon as valve opens
-			//reset mAms sum
-			mAms_since_last_purge = 0;
-		
-			//reset energy
-			uJ_since_last_purge = 0; 
-		
-			//record time
-			time_between_last_purges = time_since_last_purge;
-			time_since_last_purge = 0; //reset timer		
-			//reset timer
-			purge_integration_timer = millis();
-		
-			//start purge timer to time purge
-			purge_timer = millis();
-			purge_state = PURGE_VALVE_OPEN; //purge valve open
-			//set led0 on because why not
-			gpio_set_gpio_pin(LED0);
-		}
-	
-		if(purge_state == PURGE_VALVE_OPEN) //if purge valve is open ***MOVE this outside of if
-		{
-			if(millis() - purge_timer > PURGE_TIME) //if it has completed purge //is there some way to use flow meter instead of a fixed time?
-			{
-				//close purge valve
-				gpio_clr_gpio_pin(PURGE_VALVE);
-				purge_state = PURGE_VALVE_CLOSED; //purge valve closed
-			
-				//turn led0 off
-				gpio_clr_gpio_pin(LED0);
-			}
-		}
-	
-		//energy and charge integration for datalogging  ***MOVE this outside of if
-		unsigned int delta_t = millis() - total_charge_energy_integration_timer;
-		if(delta_t > TOTAL_CHARGE_ENERGY_INTEGRATION_INTERVAL)
-		{
-			estimated_total_E += get_FCVOLT() * get_FCCURR() * delta_t / 1000 / 1000;
-			estimated_total_charge_extracted += get_FCCURR() * delta_t / 1000;
-			total_charge_energy_integration_timer = millis();
-		}
+		estimated_total_E += get_FCVOLT() * get_FCCURR() * delta_t / 1000 / 1000;
+		estimated_total_charge_extracted += get_FCCURR() * delta_t / 1000;
+		total_charge_energy_integration_timer = millis();
 	}
+	
 	fc_state = FC_STATE_RUN;
 	return(fc_state);
 }
 
-unsigned int FC_air_starve(void) 
-{
-	unsigned int fc_state;
-	// Turn fans off
-	FANUpdate(0);
-	CVM_purge_now = gpio_get_pin_value(CVM_PURGE_V_R);
-	CVM_probe_disconnect = gpio_get_pin_value(CVM_PROBE_DISCONNECT);
-	
-	// Turn on air starve LED
-//	gpio_set_gpio_pin(LED_STAT1);
-	
-	//purge control: //purge based on amount of charge extracted from hydrogen (1 C = amp * sec)
-	delta_purge_time = millis() - purge_integration_timer;
-	if(delta_purge_time > PURGE_INTEGRATION_INTERVAL)
-	{
-		mAms_since_last_purge += delta_purge_time * (get_FCCURR());
-		uJ_since_last_purge += delta_purge_time * get_FCCURR() * get_FCVOLT() / 1000;
-		purge_integration_timer = millis();
-		time_since_last_purge += delta_purge_time;
-	}
-	if (CVM_probe_disconnect == 0) // if probe is connected
-	{
-		if ((mAms_since_last_purge > PURGE_THRESHOLD) || ((CVM_purge_now == 1) && (millis() - CVM_purge_signal_timer >= 2000))) //time to purge
-		{
-			CVM_purge_signal_timer = millis();
-			//open purge valve
-			gpio_set_gpio_pin(PURGE_VALVE);
-		
-			purge_counter++; //increment number of purges
-				
-			//we restart counting mAms as soon as valve opens
-			//reset mAms sum
-			mAms_since_last_purge = 0;
-		
-			//reset energy
-			uJ_since_last_purge = 0; 
-		
-			//record time
-			time_between_last_purges = time_since_last_purge;
-			time_since_last_purge = 0; //reset timer		
-			//reset timer
-			purge_integration_timer = millis();
-		
-			//start purge timer to time purge
-			purge_timer = millis();
-			purge_state = PURGE_VALVE_OPEN; //purge valve open
-			//set led0 on because why not
-			gpio_set_gpio_pin(LED0);
-		}
-		
-		if(purge_state == PURGE_VALVE_OPEN) //if purge valve is open
-		{
-			if(millis() - purge_timer > PURGE_TIME) //if it has completed purge //is there some way to use flow meter instead of a fixed time?
-			{
-				//close purge valve
-				gpio_clr_gpio_pin(PURGE_VALVE);
-				purge_state = PURGE_VALVE_CLOSED; //purge valve closed
-				
-				//turn led0 off
-				gpio_clr_gpio_pin(LED0);
-			}
-		}
-	
-		//energy and charge integration for datalogging
-		unsigned int delta_t = millis() - total_charge_energy_integration_timer;
-		if(delta_t > TOTAL_CHARGE_ENERGY_INTEGRATION_INTERVAL)
-		{
-			estimated_total_E += get_FCVOLT() * get_FCCURR() * delta_t / 1000 / 1000;
-			estimated_total_charge_extracted += get_FCCURR() * delta_t / 1000;
-			total_charge_energy_integration_timer = millis();
-		}
-	}
-	else if (CVM_probe_disconnect == 1) // if probe is disconnected
-	{
-		if (mAms_since_last_purge > PURGE_THRESHOLD) //time to purge
-		{
-			//open purge valve
-			gpio_set_gpio_pin(PURGE_VALVE);
-		
-			purge_counter++; //increment number of purges
-				
-			//we restart counting mAms as soon as valve opens
-			//reset mAms sum
-			mAms_since_last_purge = 0;
-		
-			//reset energy
-			uJ_since_last_purge = 0; 
-		
-			//record time
-			time_between_last_purges = time_since_last_purge;
-			time_since_last_purge = 0; //reset timer		
-			//reset timer
-			purge_integration_timer = millis();
-		
-			//start purge timer to time purge
-			purge_timer = millis();
-			purge_state = PURGE_VALVE_OPEN; //purge valve open
-			//set led0 on because why not
-			gpio_set_gpio_pin(LED0);
-		}
-		
-		if(purge_state == PURGE_VALVE_OPEN) //if purge valve is open
-		{
-			if(millis() - purge_timer > PURGE_TIME) //if it has completed purge //is there some way to use flow meter instead of a fixed time?
-			{
-				//close purge valve
-				gpio_clr_gpio_pin(PURGE_VALVE);
-				purge_state = PURGE_VALVE_CLOSED; //purge valve closed
-				
-				//turn led0 off
-				gpio_clr_gpio_pin(LED0);
-			}
-		}
-	
-		//energy and charge integration for datalogging
-		unsigned int delta_t = millis() - total_charge_energy_integration_timer;
-		if(delta_t > TOTAL_CHARGE_ENERGY_INTEGRATION_INTERVAL)
-		{
-			estimated_total_E += get_FCVOLT() * get_FCCURR() * delta_t / 1000 / 1000;
-			estimated_total_charge_extracted += get_FCCURR() * delta_t / 1000;
-			total_charge_energy_integration_timer = millis();
-		}
-	}
-	fc_state = FC_STATE_AIR_STARVE;
-	return(fc_state);
-}
 
 unsigned int FC_shutdown(void)
 {
@@ -871,32 +498,10 @@ unsigned int FC_shutdown(void)
 unsigned int FC_alarm(void)
 {
 	unsigned int fc_state;
-	//if ((millis() - led_timer) > 500)
-	//{
-		//if (gpio_get_pin_value(LED_START) == 1)
-		//{
-			//gpio_clr_gpio_pin(LED_START);
-		//}
-		//else if (gpio_get_pin_value(LED_START) == 0)
-		//{
-			//gpio_set_gpio_pin(LED_START);
-		//}
-		//led_timer = millis();
-	//}
-	
 	gpio_clr_gpio_pin(LED_RUN);
 	gpio_clr_gpio_pin(LED_START);
-	gpio_clr_gpio_pin(LED0);
-	gpio_clr_gpio_pin(LED1);
-	gpio_clr_gpio_pin(LED2);
-	gpio_clr_gpio_pin(LED3);
-	gpio_clr_gpio_pin(LED_STAT1);
-	gpio_clr_gpio_pin(LED_STAT2);
-	gpio_clr_gpio_pin(LED_STAT3);
-	gpio_clr_gpio_pin(LED_STAT4);
 	gpio_set_gpio_pin(LED_ERROR);
 	gpio_set_gpio_pin(LED_STOP);
-	
 	//close valves
 	gpio_clr_gpio_pin(H2_VALVE);
 	gpio_clr_gpio_pin(PURGE_VALVE);
