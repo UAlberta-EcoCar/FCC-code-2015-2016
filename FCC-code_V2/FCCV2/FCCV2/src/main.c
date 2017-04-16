@@ -64,7 +64,7 @@ int main (void){
 			{
 				past_fc_state = fc_state; //fc_state before error is triggered
 			}
-			fc_state = FC_STATE_ALARM;
+			//fc_state = FC_STATE_ALARM;
 		}
 		
 		//main state machine

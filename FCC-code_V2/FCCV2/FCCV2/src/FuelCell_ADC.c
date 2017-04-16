@@ -117,27 +117,20 @@ int get_FCTEMP(void)
 {
 	return(convert_temp((FCTEMP1Reading + FCTEMP2Reading)/2));
 }
-//one (or more) of these pressure conversions is wrong
-int get_TANKPRES(void)
-{
-	return(TANKPRESReading * TANKPRESCoefficient - TANKPRESConst);
-}
+
 int get_FCPRES(void)
 {
 	return(FCPRESReading * FCPRESCoefficient - FCPRESConst); 
 }
-/*not used
+
 int get_CAPCURR(void)
 {
-	return(((CAPCURRReading * (316 + 470) / 470 * 3000 / (2048 - 1) - 2500) * 1000 / 40));
+	return(CAPCURRReading * CAPCURRCoefficient);
 }
-*/
-
 
 int get_FCCURR(void)
 {
-	int val = FCCURRReading * FCCURRCoefficient - FCCURRConst;
-	//val = val *(-1); //I have sensor connected backwards 
+	int val = FCCURRReading * FCCURRCoefficient;
 	if(val < 0) //filter out negative numbers b/c they mess with the current integration algorithm
 	{
 		return(0);
@@ -150,37 +143,18 @@ int get_FCCURR(void)
 
 int get_CAPVOLT(void)
 {
-	return(CAPVOLTReading * CAPVOLTCoefficient);
-	//47k and 3k voltage divider
+	return((CAPVOLTReading * CAPVOLTCoefficient) - CAPVOLTConst);
+	//9.53k and 0.744k voltage divider
 	//3V reference
-	//CAPVOLT = ADCreading * 3000mV/(2^11-1) * (47 + 3) / 3
+	//Check drive for calibration Excel document
 	//should result in a voltage in mV
 }
 
 int get_FCVOLT(void)
 {
-	return((FCVOLTReading) * FCVOLTCoefficient);
-	//47k and 3k voltage divider
+	return((FCVOLTReading * FCVOLTCoefficient) - FCVOLTConst);
+	//9.53k and 0.744k voltage divider
 	//3V reference
-	//FCVolt = ADCreading * 3000mV/(2^11-1) * (47 + 3) / 3
+	//Check drive for calibration Excel document
 	//should result in a voltage in mV
 }
-
-/*
-int get_AMBTEMP0(void)
-{
-	return(convert_temp(AMBTEMP0Reading));
-}
-int get_AMBTEMP1(void)
-{
-	return(convert_temp(AMBTEMP1Reading));
-}
-int get_AMBTEMP2(void)
-{
-	return(convert_temp(AMBTEMP2Reading));
-}
-int get_AMBTEMP3(void)
-{
-	return(convert_temp(AMBTEMP3Reading));
-}
-*/

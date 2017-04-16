@@ -107,6 +107,7 @@ unsigned int FC_startup_h2(void)
 	gpio_clr_gpio_pin(CAP_RELAY);
 	
 	//input h2 until voltage reaches 30
+	//prev value was 30000
 	if ((get_FCVOLT() < 30000)|(millis()-start_delay<1000)) //if voltage is less than 30V
 	{
 		//keep the hydrogen coming
@@ -234,7 +235,7 @@ U64 get_coulumbs_since_last_purge(void)
 unsigned int time_since_last_purge; //keep track of time between purges
 unsigned int purge_state = FIRST_PURGE_CYCLE; //used for keeping track of switching b/w purge valve open closed
 unsigned int fan_update_timer; //used for timing pwm code
-unsigned int charge_thres = 35000;
+unsigned int charge_thres = 35000;//prev value was 35000
 unsigned int FC_startup_charge(void)
 {
 	unsigned int fc_state = FC_STATE_STARTUP_CHARGE; //will keep charging until state exits
@@ -338,6 +339,7 @@ unsigned int FC_startup_charge(void)
 	}
 	else //caps are charged
 	{
+		//prev value was 33000
 		charge_thres = 33000; //set threshold lower to stop above if from running
 		//turn off led1
 		gpio_clr_gpio_pin(LED1);
