@@ -3,6 +3,7 @@
  *
  * Created: 2016-01-15 8:48:56 PM
  *  Author: Reegan
+ * edited Adnan 2017, may
  */ 
 
 
@@ -29,10 +30,10 @@
 #ifdef TEST_BENCH_MODE
 #define FCCURRCoefficient ((3000 * 10) / (2048-1)) //100 gain, Shunt resistance is 0.001 ohms
 #define CAPCURRCoefficient ((3000 * 10.60603) / (2048-1)) //94.286 gain, Shunt resistance is 0.001 ohms
-#define CAPVOLTCoefficient 19474
-#define CAPVOLTConst 1144.6
-#define FCVOLTCoefficient 20075
-#define FCVOLTConst 1294.9
+#define CAPVOLTCoefficient 18822
+#define CAPVOLTConst 1331
+#define FCVOLTCoefficient 18987
+#define FCVOLTConst 1216
 #define FCPRESCoefficient 24
 #define FCPRESConst 24648
 #define TEMPCoefficient -62
