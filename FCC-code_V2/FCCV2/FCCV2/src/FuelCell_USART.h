@@ -22,9 +22,5 @@ void USARTInit(void);
 #define OPEN_LOG_USART_TX_PIN       AVR32_USART2_TXD_1_PIN //defined as gpio pin 68 (page 14 of data sheet)
 #define OPEN_LOG_USART_TX_FUNCTION  AVR32_USART2_TXD_FUNCTION //gpio function C
 #define OPEN_LOG_USART_CLOCK_MASK   AVR32_USART2_CLK_PBA //usart 0,2,3 are on clock PBA (page 64 of datasheet)
-//The next two lines don't seem to be used anywhere so I commented them out
-//#define OPEN_LOG_PDCA_CLOCK_HSB		AVR32_PDCA_CLK_HSB //i forget what this setting does
-//#define OPEN_LOG_PDCA_CLOCK_PB		AVR32_PDCA_CLK_PBC //i forget this one as well
-
 
 #endif /* FUELCELL_USART_H_ */

@@ -51,11 +51,11 @@ int calc_min_temp(void);
 int calc_max_temp(void);
 
 //state functions
-unsigned int FC_standby(int);
+unsigned int FC_standby(void);
 unsigned int FC_startup_fans(void);
 unsigned int FC_startup_h2(void);
 unsigned int FC_startup_purge(void);
-unsigned int FC_startup_charge(int);
+unsigned int FC_startup_charge(void);
 unsigned int FC_repressurize(void);
 unsigned int FC_manual_depressurize(void);
 

@@ -3,6 +3,7 @@
  *
  * Created: 2016-01-15 8:48:56 PM
  *  Author: Reegan
+ * edited Adnan 2017, may
  */ 
 
 
@@ -19,8 +20,6 @@
 #define FCVOLTCoefficient (3000 * 50 / 3 / (2048-1) * 12) //FCC will think 5V is 60 Volts
 #define FCPRESCoefficient 0 //I don't know pressure sensor conversion
 #define FCPRESConst -4000 //will always read as 4 PSI
-#define TANKPRESCoefficient 0 // I don't know pressure sensor conversion
-#define TANKPRESConst 0 //tank isn't connected anyway
 #define TEMPCoefficient 0
 #define TEMPConst 313000 //Unable to connect Thermistors to test bench. Will always read 40degC
 #endif
@@ -29,15 +28,14 @@
 
 
 #ifdef TEST_BENCH_MODE
-#define FCCURRCoefficient (161) //13.2mV per Amp
-#define FCCURRConst (110068 + 500)
-#define CAPCURRCoefficient ((316 + 470) / 470 * 3000 / (2048 - 1) * 10 / 132) //13.2 mV per Amp
-#define CAPVOLTCoefficient ((3000 * 50 / 3) / (2048-1))
-#define FCVOLTCoefficient (3000 * 50 / 3 / (2048-1))
+#define FCCURRCoefficient ((3000 * 10) / (2048-1)) //100 gain, Shunt resistance is 0.001 ohms
+#define CAPCURRCoefficient ((3000 * 10.60603) / (2048-1)) //94.286 gain, Shunt resistance is 0.001 ohms
+#define CAPVOLTCoefficient 18822
+#define CAPVOLTConst 1331
+#define FCVOLTCoefficient 18987
+#define FCVOLTConst 1216
 #define FCPRESCoefficient 24
 #define FCPRESConst 24648
-#define TANKPRESCoefficient 0
-#define TANKPRESConst 0
 #define TEMPCoefficient -62
 #define TEMPConst 367572
 #endif

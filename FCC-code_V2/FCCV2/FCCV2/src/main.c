@@ -1,17 +1,5 @@
 /*
 to do list:
-Set up an air starve mode (new run mode)
-Update microcontroller pins
-program the buttons to choose run modes, as well as LEDs to indicate run mode
-
-Air Starve Mode:
-	- Disable alarm conditions
-	- Turn off fans
-	
-Manual Depressurize:
-	- Close supply valve
-	- Open purge valve only for 500 ms
-	- Open relays
 
 pressure readings
 temp conversion
@@ -38,22 +26,20 @@ Fix startup_fans state
 #include "FuelCell_DataLogging.h"
 
 
-unsigned int error_msg; // Used to check if error occurs
+unsigned int error_msg;
 unsigned int fc_state = FC_STATE_STANDBY;
 unsigned int past_fc_state = 0;
-unsigned int man_depress_check = 0;
-unsigned int air_starve_check = 0;
-unsigned long btncount = 0;
-unsigned long air_starve_LED_time = 0;
+
 int main (void){
 	board_init();
 	
 	StartADC_Sequencers(); //start ADC conversion
 	ReadADC_Sequencers(); //read conversion results	
 	
-	//error_msg |= wdt_scheduler(); //start watchdog timer
+//	error_msg |= wdt_scheduler(); //start watchdog timer
 	//comment out for debugging (debugger is supposed to disable wdt automatically but it doesn't always)
 
+	
 	//Start of main loop
 	while(1)
 	{
@@ -65,84 +51,8 @@ int main (void){
 		wdt_clear();
 		//if code gets hung up wdt won't clear and a reset will occur
 		
-		// The following code checks to see if the button 1 (corresponding to manual depressurize) has been pressed for 5 seconds
 		
-		//if(gpio_get_pin_value(MODEBTN1) && (btncount == 0) && (fc_state == FC_STATE_STANDBY))
-		//{
-			//
-			//btncount = millis();
-			//
-		//}
-		//
-		//else if(!gpio_get_pin_value(MODEBTN1))
-		//{
-			//
-			//btncount = 0;
-			//
-		//}
-		//
-		//if((millis() - btncount >= 5000) && (btncount != 0)) 
-		//{
-			//
-			//man_depress_check = 1;
-			//air_starve_check = 0;
-			//btncount = 0;
-			//
-		//}
-//
-		//// The following code checks that button 2 has been pressed for 5 seconds
-		//
-		//if(gpio_get_pin_value(MODEBTN2) && (btncount == 0) && (fc_state == FC_STATE_STANDBY))
-		//{
-			//
-			//btncount = millis();
-			//
-		//}
-		//
-		//else if(!gpio_get_pin_value(MODEBTN2))
-		//{
-			//
-			//btncount = 0;
-			//
-		//}
-		//
-		//if((millis() - btncount >= 5000) && (btncount != 0)) 
-		//{
-			//
-			//man_depress_check = 0;
-			//air_starve_check = 1;
-			//btncount = 0;
-			//
-		//}
-		//
-		//// The following causes the air starve LED to blink
-		//
-		//if ((air_starve_check) || (fc_state == FC_STATE_AIR_STARVE))
-		//{
-			//if (air_starve_LED_time == 0) // First time
-			//{
-				//air_starve_LED_time = millis();
-			//}
-			//if (millis() - air_starve_LED_time >= 250) // Set a blink rate of 250 ms 
-			//{
-				//if (gpio_get_pin_value(LED_STAT1) == 1) // If on turn off, reset timer
-				//{
-					//gpio_clr_gpio_pin(LED_STAT1);
-					//air_starve_LED_time = millis();
-				//}
-				//else if (gpio_get_pin_value(LED_STAT1) == 0) // If off turn on, reset timer don't need
-				//{
-					//gpio_set_gpio_pin(LED_STAT1);
-					//air_starve_LED_time = millis();
-				//}
-			//}
-		//}
-		//else if ((~air_starve_check) && (fc_state != FC_STATE_AIR_STARVE))
-		//{
-			//gpio_clr_gpio_pin(LED_STAT1);
-		//}
-			
-		error_msg |= FC_check_alarms(fc_state); // Becomes true if FC_check_alarms returns true, and stays true
+		error_msg |= FC_check_alarms(fc_state);
 		
 		if(error_msg)
 		{
@@ -154,14 +64,14 @@ int main (void){
 			{
 				past_fc_state = fc_state; //fc_state before error is triggered
 			}
-			fc_state = FC_STATE_ALARM;
+			//fc_state = FC_STATE_ALARM;
 		}
 		
 		//main state machine
 		switch (fc_state)
 		{
 		case FC_STATE_STANDBY:
-			fc_state = FC_standby(man_depress_check);
+			fc_state = FC_standby();
 			break;
 			
 		case FC_STATE_SHUTDOWN:
@@ -181,15 +91,11 @@ int main (void){
 			break;
 			
 		case FC_STATE_STARTUP_CHARGE:
-			fc_state = FC_startup_charge(air_starve_check);	
+			fc_state = FC_startup_charge();	
 			break;
 			
 		case FC_STATE_RUN:
 			fc_state = FC_run();
-			break;
-			
-		case FC_STATE_AIR_STARVE:
-			fc_state = FC_air_starve();
 			break;
 			
 		case FC_STATE_ALARM:
@@ -199,11 +105,8 @@ int main (void){
 		case FC_STATE_REPRESSURIZE:
 			fc_state = FC_repressurize();
 			break;
-			
-		case FC_STATE_MANUAL_DEPRESSURIZE:
-			fc_state = FC_manual_depressurize();
-			break;
 		}
+		
 	usart_can_bridge(fc_state, error_msg,past_fc_state);
 			
 	}
