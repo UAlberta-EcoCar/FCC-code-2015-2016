@@ -392,6 +392,9 @@ int calc_max_temp(void)
 	return((355*get_FCCURR())/1000 + 325150);
 }
 
+
+
+
 unsigned int fan_update_timer;
 unsigned int FC_run(void)
 {

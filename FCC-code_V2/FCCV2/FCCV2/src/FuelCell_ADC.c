@@ -143,7 +143,7 @@ int get_FCCURR(void)
 
 int get_CAPVOLT(void)
 {
-	return((CAPVOLTReading * CAPVOLTCoefficient) - CAPVOLTConst);
+	return(((CAPVOLTReading * CAPVOLTCoefficient) - CAPVOLTConst)/1000);
 	//9.53k and 0.744k voltage divider
 	//3V reference
 	//Check drive for calibration Excel document
@@ -152,7 +152,7 @@ int get_CAPVOLT(void)
 
 int get_FCVOLT(void)
 {
-	return((FCVOLTReading * FCVOLTCoefficient) - FCVOLTConst);
+	return(((FCVOLTReading * FCVOLTCoefficient) - FCVOLTConst)/1000);
 	//9.53k and 0.744k voltage divider
 	//3V reference
 	//Check drive for calibration Excel document
