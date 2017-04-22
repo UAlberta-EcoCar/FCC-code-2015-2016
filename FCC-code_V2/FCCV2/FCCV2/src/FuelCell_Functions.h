@@ -7,6 +7,14 @@
 */
 #ifndef FUELCELL_FUNCTIONS_H_
 
+// The following block creates the template for the LED struct:
+//******************************************************************************************************//
+typedef struct LED {
+	uint8_t LEDpin;
+	int LEDstate;
+	unsigned long LEDtimer;
+};
+//******************************************************************************************************//
 
 //different fuel cell states
 #define FC_STATE_STANDBY 0
@@ -51,7 +59,7 @@ int calc_min_temp(void);
 int calc_max_temp(void);
 
 //state functions
-unsigned int FC_standby(void);
+unsigned int FC_standby(int);
 unsigned int FC_startup_fans(void);
 unsigned int FC_startup_h2(void);
 unsigned int FC_startup_purge(void);
@@ -66,5 +74,9 @@ unsigned int FC_shutdown(void);
 unsigned int FC_alarm(void);
 
 unsigned int pid_temp_control(void);
+
+// Useful Functions
+void changeLEDstate(struct LED *LEDstruct, int mode); // The function takes a pointer to the LED structure, as well as an integer that updates the state of the LED
+void LEDblink(struct LED *LEDstruct, long delay); // This function sets the LED to blink with the given delay
 
 #endif /* FUELCELL_FUNCTIONS_H_ */

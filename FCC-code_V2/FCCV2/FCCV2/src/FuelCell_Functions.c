@@ -20,12 +20,17 @@ unsigned long delay_timer2;
 unsigned long repress_delay;
 unsigned long start_delay;
 
-unsigned int FC_standby(void)
+unsigned long man_depress_LED_time = 0; // Timer used to control LED Blinking
+
+unsigned int FC_standby(int manual_depressurize_check)
 {
 	unsigned int fc_state;
 	if (gpio_get_pin_value(START))
 	{
-		fc_state = FC_STATE_STARTUP_FANS;
+		if (manual_depressurize_check)
+			fc_state = FC_STATE_MANUAL_DEPRESSURIZE;
+		else
+			fc_state = FC_STATE_STARTUP_FANS;
 		gpio_clr_gpio_pin(LED_STOP);
 		gpio_set_gpio_pin(LED_START);
 	}
@@ -187,6 +192,43 @@ unsigned int FC_repressurize(void)
 	if( millis() - repress_delay > 1000)
 	{
 		fc_state = FC_STATE_STARTUP_CHARGE;
+	}
+	return(fc_state);
+}
+
+unsigned int FC_manual_depressurize(void)
+{
+	unsigned int fc_state;
+	gpio_set_gpio_pin(LED_STAT2); // Turn on manual_depressurize LED
+	// Open Relays
+	gpio_clr_gpio_pin(START_RELAY);
+	gpio_clr_gpio_pin(CAP_RELAY);
+	gpio_clr_gpio_pin(RES_RELAY);
+	gpio_clr_gpio_pin(MOTOR_RELAY);
+	
+	if(gpio_get_gpio_pin_output_value(PURGE_VALVE) == 0) // If the purge valve is closed
+	{
+		purge_timer = millis(); // Start timer
+	}
+	
+	gpio_set_gpio_pin(PURGE_VALVE); // open purge valve
+	gpio_set_gpio_pin(LED0); // turn on LED to notify that purge valve is on
+	
+	if ((millis() - purge_timer) < 500) // loop through function
+	{
+		fc_state = FC_STATE_MANUAL_DEPRESSURIZE;
+	}
+
+	else // 500 ms over
+	{
+		gpio_clr_gpio_pin(PURGE_VALVE); // close purge valve
+		gpio_clr_gpio_pin(LED0); // turn off purge LED
+		gpio_set_gpio_pin(START_RELAY); // Close relays
+		gpio_set_gpio_pin(CAP_RELAY);
+		gpio_set_gpio_pin(RES_RELAY);
+		gpio_set_gpio_pin(MOTOR_RELAY);
+		gpio_clr_gpio_pin(LED_STAT2); // Turn off manual_depressurize LED
+		fc_state = FC_STATE_ALARM; // go to alarm state
 	}
 	return(fc_state);
 }
@@ -500,6 +542,7 @@ unsigned int FC_shutdown(void)
 unsigned int FC_alarm(void)
 {
 	unsigned int fc_state;
+	gpio_clr_gpio_pin(LED3);
 	gpio_clr_gpio_pin(LED_RUN);
 	gpio_clr_gpio_pin(LED_START);
 	gpio_set_gpio_pin(LED_ERROR);
@@ -516,4 +559,37 @@ unsigned int FC_alarm(void)
 	fc_state = FC_STATE_ALARM;
 	//manual reset required to exit alarm state
 	return(fc_state);
+}
+
+/***************************************************************************************************/
+// Useful Functions for LED structs:
+void changeLEDstate(struct LED *LEDstruct, int mode) {
+	if (mode == 1) {
+		gpio_set_gpio_pin(LEDstruct->LEDpin);
+		LEDstruct->LEDstate = 1;
+		LEDstruct->LEDtimer = 0.0;
+	}
+	else if (mode == 0) {
+		gpio_clr_gpio_pin(LEDstruct->LEDpin);
+		LEDstruct->LEDstate = 0;
+		LEDstruct->LEDtimer = 0.0;
+	}
+}
+
+void LEDblink(struct LED *LEDstruct, long delay) {
+	if (LEDstruct->LEDtimer == 0.0) {
+		LEDstruct->LEDtimer = millis();
+	}
+	if (((LEDstruct->LEDtimer) - millis()) > delay) {
+		if(LEDstruct->LEDstate == 0) {
+			LEDstruct->LEDstate = 1;
+			gpio_set_gpio_pin(LEDstruct->LEDpin);
+			LEDstruct->LEDtimer = millis();
+		}
+		else if (LEDstruct->LEDstate == 0) {
+			LEDstruct->LEDstate = 0;
+			gpio_clr_gpio_pin(LEDstruct->LEDpin);
+			LEDstruct->LEDtimer = millis();
+		}
+	}
 }
