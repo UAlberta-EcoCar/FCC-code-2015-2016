@@ -11,7 +11,7 @@
 #define MODEBTN2 AVR32_PIN_PA24
 #define MODEBTN3 AVR32_PIN_PA23
 #define MODEBTN4 AVR32_PIN_PA22
-#define FAN5_TACH_R AVR32_PIN_PD03
+#define FAN5_TACH_R AVR32_PIN_PC16
 #define CVM_PROBE_DISCONNECT AVR32_PIN_PC17
 #define FAN3_TACH_R AVR32_PIN_PC18
 #define FAN2_TACH_R AVR32_PIN_PC19
@@ -51,10 +51,10 @@
 //digital outputs
 //relays
 #define START_RELAY OP_1
-#define RES_RELAY OP_2
+#define RES_RELAY OP_4
 #define CAP_RELAY OP_3
-#define MOTOR_RELAY OP_4
+#define MOTOR_RELAY OP_2
 //valves
-#define PURGE_VALVE OP_9
-#define H2_VALVE OP_8
+#define PURGE_VALVE OP_6
+#define H2_VALVE OP_5
 #endif /* INCFILE1_H_ */
